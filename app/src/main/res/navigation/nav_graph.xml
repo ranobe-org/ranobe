@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@+id/browse_fragment">
+
+    <fragment
+        android:id="@+id/browse_fragment"
+        android:name="org.ranobe.ranobe.ui.browse.Browse"
+        android:label="fragment_browse"
+        tools:layout="@layout/fragment_browse" />
+
+    <fragment
+        android:id="@+id/library_fragment"
+        android:name="org.ranobe.ranobe.ui.library.Library"
+        android:label="fragment_library"
+        tools:layout="@layout/fragment_library" />
+
+    <fragment
+        android:id="@+id/explore_fragment"
+        android:name="org.ranobe.ranobe.ui.explore.Explore"
+        android:label="fragment_explore"
+        tools:layout="@layout/fragment_explore" />
+
+    <fragment
+        android:id="@+id/settings_fragment"
+        android:name="org.ranobe.ranobe.ui.settings.Settings"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+
+
+</navigation>
