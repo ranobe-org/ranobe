@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="blue">#90caf9</color>
+
+    <color name="windowBackground">#212121</color>
+    <color name="widgetsColor">#fafafa</color>
+    <color name="systemBarsColor">#313131</color>
+
+    <!--    background colors -->
+    <color name="colorBackgroundHigh">#212121</color>
+
+    <!--  text colors -->
+    <color name="colorTextHigh">#FAFAFA</color>
+    <color name="colorTextMed">#EEEEEE</color>
+    <color name="colorTextLow">#E0E0E0</color>
+</resources>
