@@ -6,6 +6,7 @@ import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.models.NovelItem;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface Source {
@@ -15,11 +16,11 @@ public interface Source {
     List<NovelItem> novels(int page) throws Exception;
 
     // get all the fields for a single novel
-    Novel details(String url);
+    Novel details(String url) throws IOException;
 
     // get all chapters for a novel
-    List<ChapterItem> chapters(String url);
+    List<ChapterItem> chapters(String url) throws IOException;
 
     // get content of the chapter from the url
-    Chapter chapter(String url);
+    Chapter chapter(String url) throws IOException;
 }

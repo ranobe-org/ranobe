@@ -29,5 +29,10 @@
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
 
+    <fragment
+        android:id="@+id/details_fragment"
+        android:name="org.ranobe.ranobe.ui.details.Details"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details" />
 
 </navigation>

@@ -8,9 +8,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.databinding.FragmentBrowseBinding;
 import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.sources.Source;
@@ -21,9 +24,9 @@ import org.ranobe.ranobe.ui.browse.viewmodel.BrowseViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Browse extends Fragment {
+public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickListener {
     private final List<NovelItem> list = new ArrayList<>();
-    private  FragmentBrowseBinding binding;
+    private FragmentBrowseBinding binding;
 
     private BrowseViewModel viewModel;
     private NovelAdapter adapter;
@@ -47,14 +50,14 @@ public class Browse extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentBrowseBinding.inflate(inflater, container, false);
 
-        adapter = new NovelAdapter(list);
+        adapter = new NovelAdapter(list, this);
         binding.novelList.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
         binding.novelList.setAdapter(adapter);
         binding.novelList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(!recyclerView.canScrollVertically(1)) {
+                if (!recyclerView.canScrollVertically(1)) {
                     page += 1;
                     fetchNovels();
                 }
@@ -73,5 +76,14 @@ public class Browse extends Fragment {
             list.addAll(novels);
             adapter.notifyItemRangeInserted(old, novels.size());
         });
+    }
+
+    @Override
+    public void onNovelItemClick(NovelItem item) {
+        NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+
+        Bundle bundle = new Bundle();
+        bundle.putString("novel", item.url);
+        controller.navigate(R.id.details_fragment, bundle);
     }
 }

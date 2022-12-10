@@ -3,12 +3,13 @@ package org.ranobe.ranobe.models;
 import androidx.annotation.NonNull;
 
 public class ChapterItem {
-    public int id;
+    public float id;
     public String name;
     public String updated;
     public String url;
 
-    public ChapterItem(){}
+    public ChapterItem() {
+    }
 
     @NonNull
     @Override

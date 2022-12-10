@@ -15,9 +15,10 @@ import java.util.List;
 
 public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.MyViewHolder> {
     private final List<NovelItem> items;
-
-    public NovelAdapter(List<NovelItem> items) {
+    private final OnNovelItemClickListener listener;
+    public NovelAdapter(List<NovelItem> items, OnNovelItemClickListener listener) {
         this.items = items;
+        this.listener = listener;
     }
 
     @NonNull
@@ -41,11 +42,19 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.MyViewHolder
         return items.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public interface OnNovelItemClickListener {
+        void onNovelItemClick(NovelItem item);
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         private final ItemNovelBinding binding;
+
         public MyViewHolder(@NonNull ItemNovelBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
+            binding.novelCoverLayout.setOnClickListener(v ->
+                    listener.onNovelItemClick(items.get(getAdapterPosition())));
         }
     }
 }

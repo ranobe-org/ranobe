@@ -9,7 +9,8 @@ public class NovelItem {
     public String cover;
     public String url;
 
-    public NovelItem() {}
+    public NovelItem() {
+    }
 
     @NonNull
     @Override

@@ -13,7 +13,7 @@ public class Novel extends NovelItem {
     public float rating;
     public int year;
 
-    public  Novel () {
+    public Novel() {
     }
 
     @NonNull

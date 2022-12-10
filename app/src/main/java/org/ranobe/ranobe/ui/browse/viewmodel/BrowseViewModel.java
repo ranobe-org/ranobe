@@ -16,7 +16,7 @@ public class BrowseViewModel extends ViewModel {
     private MutableLiveData<List<NovelItem>> items;
     private MutableLiveData<String> error;
 
-    public MutableLiveData<List<NovelItem>> getNovels () {
+    public MutableLiveData<List<NovelItem>> getNovels() {
         if (items == null) {
             items = new MutableLiveData<>();
         }
@@ -30,11 +30,11 @@ public class BrowseViewModel extends ViewModel {
             public void onComplete(List<NovelItem> result) {
                 items.postValue(result);
             }
+
             @Override
             public void onError(Exception e) {
                 error.postValue(e.getLocalizedMessage());
             }
         });
     }
-
 }

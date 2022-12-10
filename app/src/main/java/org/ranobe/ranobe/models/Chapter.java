@@ -2,10 +2,11 @@ package org.ranobe.ranobe.models;
 
 import androidx.annotation.NonNull;
 
-public class Chapter extends ChapterItem{
+public class Chapter extends ChapterItem {
     public String content;
 
-    public Chapter() {}
+    public Chapter() {
+    }
 
     @NonNull
     @Override
