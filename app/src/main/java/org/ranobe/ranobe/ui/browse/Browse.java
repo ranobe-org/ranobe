@@ -20,6 +20,8 @@ import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
 import org.ranobe.ranobe.ui.browse.viewmodel.BrowseViewModel;
+import org.ranobe.ranobe.ui.views.SpacingDecorator;
+import org.ranobe.ranobe.util.DisplayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,9 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
         binding = FragmentBrowseBinding.inflate(inflater, container, false);
 
         adapter = new NovelAdapter(list, this);
-        binding.novelList.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
+        DisplayUtils utils = new DisplayUtils(requireContext(), R.layout.item_novel);
+        binding.novelList.setLayoutManager(new GridLayoutManager(requireActivity(), utils.noOfCols()));
+        binding.novelList.addItemDecoration(new SpacingDecorator(utils.spacing()));
         binding.novelList.setAdapter(adapter);
         binding.novelList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
