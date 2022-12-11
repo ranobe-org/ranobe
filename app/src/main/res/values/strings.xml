@@ -14,5 +14,6 @@
     <string name="status_info">Status</string>
     <string name="summary_info">Summary</string>
     <string name="chapters_info">See Chapters</string>
-    <string name="n_a_info">N.A.</string>
+    <string name="n_a_info">....</string>
+    <string name="read_info">Read</string>
 </resources>

@@ -17,9 +17,11 @@ public class DetailsViewModel extends ViewModel {
     private final MutableLiveData<String> error = new MutableLiveData<>();
     private MutableLiveData<Novel> details;
     private MutableLiveData<List<ChapterItem>> chapters;
+    private String oldUrl = "";
 
-    public MutableLiveData<Novel> getDetails() {
-        if (details == null) {
+    public MutableLiveData<Novel> getDetails(String novelUrl) {
+        if (details == null || !oldUrl.equals(novelUrl)) {
+            oldUrl = novelUrl;
             details = new MutableLiveData<>();
         }
         return details;

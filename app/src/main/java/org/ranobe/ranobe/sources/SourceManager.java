@@ -8,7 +8,7 @@ public class SourceManager {
     public static Source getSource(int sourceId) {
         try {
             Class<?> klass = getSources().get(sourceId);
-            if(klass == null) {
+            if (klass == null) {
                 throw new ClassNotFoundException("Source not found with source id : " + sourceId);
             }
             return (Source) klass.newInstance();
@@ -18,7 +18,7 @@ public class SourceManager {
         }
     }
 
-    public static HashMap<Integer, Class<?>> getSources () {
+    public static HashMap<Integer, Class<?>> getSources() {
         HashMap<Integer, Class<?>> sources = new HashMap<>();
         sources.put(1, ReadLightNovel.class);
 
