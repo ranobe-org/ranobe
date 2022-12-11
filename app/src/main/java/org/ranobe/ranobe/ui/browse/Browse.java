@@ -32,7 +32,7 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
     private NovelAdapter adapter;
     private Source source;
 
-    private int page = 1;
+    private boolean isLoading = false;
 
     public Browse() {
     }
@@ -57,11 +57,20 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1)) {
-                    page += 1;
+                if (!recyclerView.canScrollVertically(1) && !isLoading) {
+                    binding.progress.setVisibility(View.VISIBLE);
+                    isLoading = true;
                     fetchNovels();
                 }
             }
+        });
+
+        viewModel.getNovels().observe(requireActivity(), (novels) -> {
+            binding.progress.setVisibility(View.GONE);
+            isLoading = false;
+            int old = list.size();
+            list.addAll(novels);
+            adapter.notifyItemRangeInserted(old, list.size());
         });
 
         fetchNovels();
@@ -69,13 +78,7 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
     }
 
     private void fetchNovels() {
-        viewModel.novels(source, page);
-        viewModel.getNovels().observe(requireActivity(), (novels) -> {
-            binding.progress.setVisibility(View.GONE);
-            int old = list.size();
-            list.addAll(novels);
-            adapter.notifyItemRangeInserted(old, novels.size());
-        });
+        viewModel.novels(source);
     }
 
     @Override

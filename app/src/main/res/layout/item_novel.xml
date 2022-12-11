@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="15dp">
+    android:layout_marginTop="20dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/novel_cover_layout"
@@ -14,7 +13,7 @@
         android:clickable="true"
         android:focusable="true"
         app:cardCornerRadius="10dp"
-        app:cardElevation="10dp"
+        app:cardElevation="12dp"
         app:rippleColor="?colorPrimary">
 
         <ImageView
@@ -34,7 +33,8 @@
         android:layout_below="@id/novel_cover_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
+        android:textColor="@color/colorTextHigh"
+        android:textSize="15sp"
         android:maxLines="2"
-        android:padding="2dp"
-        tools:ignore="RtlCompat" />
+        android:padding="2dp" />
 </RelativeLayout>
