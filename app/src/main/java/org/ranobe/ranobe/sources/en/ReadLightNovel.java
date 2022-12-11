@@ -70,7 +70,7 @@ public class ReadLightNovel implements Source {
             } else if (header.toLowerCase().contains("author")) {
                 novel.authors = Arrays.asList(value.split("\n"));
             } else if (header.toLowerCase().contains("genre")) {
-                novel.genres = Arrays.asList(value.split("\n"));
+                novel.genres = Arrays.asList(value.split(" "));
             } else if (header.toLowerCase().contains("rating")) {
                 novel.rating = NumberUtils.toFloat(value);
             } else if (header.toLowerCase().contains("description")) {
