@@ -106,9 +106,13 @@ public class ReadLightNovel implements Source {
     @Override
     public Chapter chapter(String url) throws IOException {
         Chapter chapter = new Chapter();
+        chapter.content = "";
         Element doc = Jsoup.connect(url).headers(HEADERS).userAgent(USER_AGENT).get().body();
-        chapter.content = doc.select("div#chapterhidden > p").text().trim();
 
-        return null;
+        for (Element element : doc.select("div#chapterhidden > p")) {
+            String text = element.text().trim();
+            chapter.content = chapter.content.concat("\n\n").concat(text);
+        }
+        return chapter;
     }
 }

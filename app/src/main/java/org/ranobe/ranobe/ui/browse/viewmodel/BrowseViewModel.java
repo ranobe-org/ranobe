@@ -13,8 +13,8 @@ import java.util.concurrent.Executors;
 
 public class BrowseViewModel extends ViewModel {
     private final ExecutorService executor = Executors.newCachedThreadPool();
+    private final MutableLiveData<String> error = new MutableLiveData<>();
     private MutableLiveData<List<NovelItem>> items;
-    private MutableLiveData<String> error;
     private int page = 0;
 
     public MutableLiveData<List<NovelItem>> getNovels() {

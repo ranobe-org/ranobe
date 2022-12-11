@@ -14,9 +14,9 @@ import java.util.concurrent.Executors;
 
 public class DetailsViewModel extends ViewModel {
     private final ExecutorService executor = Executors.newCachedThreadPool();
+    private final MutableLiveData<String> error = new MutableLiveData<>();
     private MutableLiveData<Novel> details;
     private MutableLiveData<List<ChapterItem>> chapters;
-    private MutableLiveData<String> error;
 
     public MutableLiveData<Novel> getDetails() {
         if (details == null) {

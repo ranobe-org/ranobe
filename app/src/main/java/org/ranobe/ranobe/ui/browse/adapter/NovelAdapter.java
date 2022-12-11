@@ -16,6 +16,7 @@ import java.util.List;
 public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.MyViewHolder> {
     private final List<NovelItem> items;
     private final OnNovelItemClickListener listener;
+
     public NovelAdapter(List<NovelItem> items, OnNovelItemClickListener listener) {
         this.items = items;
         this.listener = listener;

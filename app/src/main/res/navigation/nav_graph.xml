@@ -35,4 +35,17 @@
         android:label="fragment_details"
         tools:layout="@layout/fragment_details" />
 
+    <fragment
+        android:id="@+id/chapters_fragment"
+        android:name="org.ranobe.ranobe.ui.chapters.Chapters"
+        android:label="fragment_chapters"
+        tools:layout="@layout/fragment_chapters" />
+
+    <fragment
+        android:id="@+id/reader_fragment"
+        android:name="org.ranobe.ranobe.ui.reader.Reader"
+        android:label="fragment_reader"
+        tools:layout="@layout/fragment_reader" />
+
+
 </navigation>

@@ -1,9 +1,281 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".ui.details.Details">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
 
-</FrameLayout>
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/novel_cover_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/novel_cover_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="12dp"
+            app:rippleColor="?colorPrimary">
+
+            <ImageView
+                android:id="@+id/novel_cover"
+                android:layout_width="220dp"
+                android:layout_height="300dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/image"
+                android:scaleType="centerCrop" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/novel_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/novel_cover_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:maxLines="2"
+            android:padding="2dp"
+            android:textColor="@color/colorTextHigh"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <RatingBar
+            android:id="@+id/rating"
+            style="@style/Widget.AppCompat.RatingBar.Indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/novel_name"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/details_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rating"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:maxLines="2"
+            android:padding="2dp"
+            android:text="@string/details_info"
+            android:textColor="@color/colorTextMed"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/details_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/details_info"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/author_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:maxLines="2"
+                    android:padding="2dp"
+                    android:text="@string/authors_info"
+                    android:textColor="@color/colorTextMed" />
+
+                <TextView
+                    android:id="@+id/authors"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_weight="2"
+                    android:maxLines="2"
+                    android:padding="2dp"
+                    android:textColor="@color/colorTextHigh" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/alternative_names_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:maxLines="2"
+                    android:padding="2dp"
+                    android:text="@string/alternate_names_info"
+                    android:textColor="@color/colorTextMed" />
+
+                <TextView
+                    android:id="@+id/alternative_names"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:maxLines="2"
+                    android:padding="2dp"
+                    android:textColor="@color/colorTextHigh" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/genres_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:maxLines="2"
+                    android:padding="2dp"
+                    android:text="@string/genres_info"
+                    android:textColor="@color/colorTextMed" />
+
+                <TextView
+                    android:id="@+id/genres"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:maxLines="2"
+                    android:padding="2dp"
+                    android:textColor="@color/colorTextHigh" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/year_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:maxLines="2"
+                    android:padding="2dp"
+                    android:text="@string/year_info"
+                    android:textColor="@color/colorTextMed" />
+
+                <TextView
+                    android:id="@+id/year"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:maxLines="2"
+                    android:padding="2dp"
+                    android:textColor="@color/colorTextHigh" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/status_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:maxLines="2"
+                    android:padding="2dp"
+                    android:text="@string/status_info"
+                    android:textColor="@color/colorTextMed" />
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:maxLines="2"
+                    android:padding="2dp"
+                    android:textColor="@color/colorTextHigh" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/summary_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/details_layout"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:maxLines="2"
+            android:padding="2dp"
+            android:text="@string/summary_info"
+            android:textColor="@color/colorTextMed"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/summary_info"
+            android:layout_marginBottom="10dp"
+            android:padding="2dp"
+            android:textColor="@color/colorTextHigh" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/chapter_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/summary"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="20dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardElevation="3dp"
+            app:rippleColor="?colorPrimary">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="15dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chapters_info"
+                    android:textColor="@color/colorTextMed"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/chapter_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextLow"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>

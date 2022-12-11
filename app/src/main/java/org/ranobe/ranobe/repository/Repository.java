@@ -1,5 +1,6 @@
 package org.ranobe.ranobe.repository;
 
+import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.models.NovelItem;
@@ -11,6 +12,7 @@ import java.util.concurrent.Executor;
 public class Repository {
     private final Executor executor;
     private final Source source;
+
     public Repository(Executor executor, Source source) {
         this.executor = executor;
         this.source = source;
@@ -43,6 +45,17 @@ public class Repository {
             try {
                 List<ChapterItem> items = source.chapters(novelUrl);
                 callback.onComplete(items);
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        });
+    }
+
+    public void chapter(String chapterUrl, Callback<Chapter> callback) {
+        executor.execute(() -> {
+            try {
+                Chapter item = source.chapter(chapterUrl);
+                callback.onComplete(item);
             } catch (Exception e) {
                 callback.onError(e);
             }

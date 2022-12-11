@@ -15,6 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/BaseTheme.Blue"
         tools:targetApi="31">
+
+        <activity
+            android:name=".ui.reader.ReaderActivity"
+            android:exported="false" />
+
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true"
