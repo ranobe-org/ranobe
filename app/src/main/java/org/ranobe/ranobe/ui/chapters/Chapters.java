@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.ranobe.ranobe.databinding.FragmentChaptersBinding;
 import org.ranobe.ranobe.models.ChapterItem;
+import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.chapters.adapter.ChapterAdapter;
 import org.ranobe.ranobe.ui.details.viewmodel.DetailsViewModel;
 import org.ranobe.ranobe.ui.reader.ReaderActivity;
@@ -22,6 +24,7 @@ import java.util.List;
 public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemClickListener {
     private FragmentChaptersBinding binding;
     private DetailsViewModel viewModel;
+    private String novelUrl;
 
     public Chapters() {
         // Required empty public constructor
@@ -30,6 +33,9 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            novelUrl = getArguments().getString("novel");
+        }
         viewModel = new ViewModelProvider(requireActivity()).get(DetailsViewModel.class);
     }
 
@@ -38,7 +44,10 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
                              Bundle savedInstanceState) {
         binding = FragmentChaptersBinding.inflate(inflater, container, false);
         binding.chapterList.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        binding.chapterList.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
+
         viewModel.getChapters().observe(requireActivity(), this::setChapter);
+        viewModel.chapters(SourceManager.getSource(1), novelUrl);
 
         return binding.getRoot();
     }
