@@ -8,6 +8,7 @@ import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.models.NovelItem;
+import org.ranobe.ranobe.network.HttpClient;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
 
@@ -19,8 +20,8 @@ import java.util.List;
 
 public class ReadLightNovel implements Source {
     public final String baseUrl = "https://www.readlightnovel.me";
-    public final String USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; rv:2.2) Gecko/20110201";
     public final HashMap<String, String> HEADERS = new HashMap<String, String>() {{
+        put("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.1; rv:2.2) Gecko/20110201");
         put("Cache-Control", "public max-age=604800");
         put("x-requested-with", "XMLHttpRequest");
     }};
@@ -37,7 +38,7 @@ public class ReadLightNovel implements Source {
     public List<NovelItem> novels(int page) throws Exception {
         List<NovelItem> items = new ArrayList<>();
         String url = baseUrl + "/top-novels/most-viewed/" + page;
-        Element doc = Jsoup.connect(url).headers(HEADERS).userAgent(USER_AGENT).get().body();
+        Element doc = Jsoup.parse(HttpClient.GET(url, HEADERS));
 
         for (Element element : doc.select("div.top-novel-block")) {
             NovelItem item = new NovelItem();
@@ -54,7 +55,7 @@ public class ReadLightNovel implements Source {
     @Override
     public Novel details(String url) throws IOException {
         Novel novel = new Novel();
-        Element doc = Jsoup.connect(url).headers(HEADERS).userAgent(USER_AGENT).get().body();
+        Element doc = Jsoup.parse(HttpClient.GET(url, HEADERS));
 
         novel.sourceId = 1;
         novel.url = url;
@@ -74,7 +75,11 @@ public class ReadLightNovel implements Source {
             } else if (header.toLowerCase().contains("rating")) {
                 novel.rating = NumberUtils.toFloat(value);
             } else if (header.toLowerCase().contains("description")) {
-                novel.summary = value;
+                String summary = "";
+                for(Element ele: element.select("div.novel-detail-body > p")) {
+                    summary = summary.concat(ele.text().trim()).concat("\n\n");
+                }
+                novel.summary = summary;
             } else if (header.toLowerCase().contains("status")) {
                 novel.status = value;
             } else if (header.toLowerCase().contains("year")) {
@@ -88,7 +93,7 @@ public class ReadLightNovel implements Source {
     @Override
     public List<ChapterItem> chapters(String url) throws IOException {
         List<ChapterItem> items = new ArrayList<>();
-        Element doc = Jsoup.connect(url).headers(HEADERS).userAgent(USER_AGENT).get().body();
+        Element doc = Jsoup.parse(HttpClient.GET(url, HEADERS));
 
         Elements main = doc.select("div.tab-content");
         for (Element element : main.select("a")) {
@@ -107,7 +112,7 @@ public class ReadLightNovel implements Source {
     public Chapter chapter(String url) throws IOException {
         Chapter chapter = new Chapter();
         chapter.content = "";
-        Element doc = Jsoup.connect(url).headers(HEADERS).userAgent(USER_AGENT).get().body();
+        Element doc = Jsoup.parse(HttpClient.GET(url, HEADERS));
 
         for (Element element : doc.select("div#chapterhidden > p")) {
             String text = element.text().trim();
