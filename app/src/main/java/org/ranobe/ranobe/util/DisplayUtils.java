@@ -20,7 +20,7 @@ public class DisplayUtils {
         int noOfCols = metrics.widthPixels / width;
         empty = metrics.widthPixels - (noOfCols * width);
 
-        if (empty / (2 * noOfCols) < 15) {
+        if (empty / (2 * noOfCols) < 5) {
             noOfCols--;
             empty = metrics.widthPixels - (noOfCols * width);
         }
