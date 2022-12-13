@@ -1,11 +1,14 @@
 package org.ranobe.ranobe.ui.reader;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.ActivityReaderBinding;
@@ -31,6 +34,7 @@ public class ReaderActivity extends AppCompatActivity {
 
         Source source = SourceManager.getSource(1);
         viewModel.getChapter().observe(this, this::setChapter);
+        viewModel.getError().observe(this, this::setError);
         viewModel.chapter(source, chapterUrl);
 
     }
@@ -38,5 +42,13 @@ public class ReaderActivity extends AppCompatActivity {
     private void setChapter(Chapter chapter) {
         binding.content.setText(chapter.content);
         binding.progress.setVisibility(View.GONE);
+    }
+
+    private void setError(String msg) {
+        Log.d(Ranobe.DEBUG, "ATUL" + msg);
+
+        if(msg.length() == 0) return;
+        Log.d(Ranobe.DEBUG, "ATUL" + msg);
+        Snackbar.make(binding.getRoot(), msg, Snackbar.LENGTH_SHORT).show();
     }
 }

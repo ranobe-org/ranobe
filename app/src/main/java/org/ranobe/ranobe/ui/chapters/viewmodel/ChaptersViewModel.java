@@ -1,35 +1,36 @@
-package org.ranobe.ranobe.ui.details.viewmodel;
+package org.ranobe.ranobe.ui.chapters.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import org.ranobe.ranobe.models.Novel;
+import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.repository.Repository;
 import org.ranobe.ranobe.sources.Source;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class DetailsViewModel extends ViewModel {
+public class ChaptersViewModel extends ViewModel {
     private final ExecutorService executor = Executors.newCachedThreadPool();
     private final MutableLiveData<String> error = new MutableLiveData<>();
-    private MutableLiveData<Novel> details;
+    private MutableLiveData<List<ChapterItem>> chapters;
     private String oldUrl = "";
 
-    public MutableLiveData<Novel> getDetails(String novelUrl) {
-        if (details == null || !oldUrl.equals(novelUrl)) {
+    public MutableLiveData<List<ChapterItem>> getChapters(String novelUrl) {
+        if (chapters == null || !oldUrl.equals(novelUrl)) {
             oldUrl = novelUrl;
-            details = new MutableLiveData<>();
+            chapters = new MutableLiveData<>();
         }
-        return details;
+        return chapters;
     }
 
-    public void details(Source source, String novelUrl) {
+    public void chapters(Source source, String novelUrl) {
         Repository repository = new Repository(executor, source);
-        repository.details(novelUrl, new Repository.Callback<Novel>() {
+        repository.chapters(novelUrl, new Repository.Callback<List<ChapterItem>>() {
             @Override
-            public void onComplete(Novel result) {
-                details.postValue(result);
+            public void onComplete(List<ChapterItem> result) {
+                chapters.postValue(result);
             }
 
             @Override

@@ -5,6 +5,57 @@
     android:layout_height="match_parent"
     tools:context=".ui.chapters.Chapters">
 
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/header_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/colorBackgroundHigh"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/chapter_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:textColor="@color/colorTextHigh"
+                android:textSize="@dimen/text_head" />
+
+            <ImageView
+                android:id="@+id/search"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/image"
+                android:paddingHorizontal="15dp"
+                android:src="@drawable/ic_search" />
+
+            <ImageView
+                android:id="@+id/sort"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/image"
+                android:paddingHorizontal="15dp"
+                android:src="@drawable/ic_sort" />
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/search_view"
+            style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    </LinearLayout>
+
     <ProgressBar
         android:id="@+id/progress"
         android:layout_width="wrap_content"
@@ -14,6 +65,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chapter_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_layout" />
 
 </RelativeLayout>

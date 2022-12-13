@@ -16,11 +16,12 @@
 
 - [x] basic source browsing and reading
 - [x] improve ui for details and chapters page
-- [ ] chapter sort and search
+- [x] chapter sort
+- [ ] chapter search
 - [ ] continuous vertical scroll for reader
 - [ ] complete search page with keyword search
 - [ ] reader text formatting
-- [ ] add settings page with theme selection
+- [x] add settings page with theme selection
 - [ ] sources list selection
 - [ ] add to library, only store novel in db
 - [ ] download chapters for offline view, save everything to db

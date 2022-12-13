@@ -48,13 +48,14 @@ public class Details extends Fragment {
         binding.progress.show();
 
         Source source = SourceManager.getSource(1);
-        viewModel.getDetails(novelUrl).observe(requireActivity(), this::setupUi);
+        viewModel.getDetails(novelUrl).observe(getViewLifecycleOwner(), this::setupUi);
         viewModel.details(source, novelUrl);
 
         return binding.getRoot();
     }
 
     private void navigateToChapterList() {
+        if(novelUrl == null) return;
         NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
         Bundle bundle = new Bundle();
         bundle.putString("novel", novelUrl);

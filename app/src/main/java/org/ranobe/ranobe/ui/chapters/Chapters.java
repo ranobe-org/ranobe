@@ -16,15 +16,20 @@ import org.ranobe.ranobe.databinding.FragmentChaptersBinding;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.chapters.adapter.ChapterAdapter;
-import org.ranobe.ranobe.ui.details.viewmodel.DetailsViewModel;
+import org.ranobe.ranobe.ui.chapters.viewmodel.ChaptersViewModel;
 import org.ranobe.ranobe.ui.reader.ReaderActivity;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemClickListener {
     private FragmentChaptersBinding binding;
-    private DetailsViewModel viewModel;
+    private ChaptersViewModel viewModel;
     private String novelUrl;
+    private final List<ChapterItem> originalItems = new ArrayList<>();
+    private ChapterAdapter adapter;
 
     public Chapters() {
         // Required empty public constructor
@@ -36,25 +41,36 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
         if (getArguments() != null) {
             novelUrl = getArguments().getString("novel");
         }
-        viewModel = new ViewModelProvider(requireActivity()).get(DetailsViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ChaptersViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentChaptersBinding.inflate(inflater, container, false);
+
+        adapter = new ChapterAdapter(originalItems, this);
+        binding.sort.setOnClickListener(v -> sort());
         binding.chapterList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.chapterList.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
+        binding.chapterList.setAdapter(adapter);
 
-        viewModel.getChapters().observe(requireActivity(), this::setChapter);
+        viewModel.getChapters(novelUrl).observe(getViewLifecycleOwner(), this::setChapter);
         viewModel.chapters(SourceManager.getSource(1), novelUrl);
 
         return binding.getRoot();
     }
 
     private void setChapter(List<ChapterItem> chapters) {
-        binding.chapterList.setAdapter(new ChapterAdapter(chapters, this));
+        originalItems.addAll(chapters);
+        adapter.notifyItemRangeInserted(0, chapters.size());
+        binding.chapterCount.setText(String.format(Locale.getDefault(), "%d Chapters", chapters.size()));
         binding.progress.setVisibility(View.GONE);
+    }
+
+    private void sort() {
+        Collections.reverse(originalItems);
+        adapter.notifyItemRangeChanged(0, originalItems.size());
     }
 
     @Override

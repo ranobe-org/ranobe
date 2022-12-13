@@ -22,6 +22,10 @@ public class ReaderViewModel extends ViewModel {
         return chapter;
     }
 
+    public MutableLiveData<String> getError() {
+        return error = new MutableLiveData<>();
+    }
+
     public void chapter(Source source, String chapterUrl) {
         Repository repository = new Repository(executor, source);
         repository.chapter(chapterUrl, new Repository.Callback<Chapter>() {
@@ -32,8 +36,6 @@ public class ReaderViewModel extends ViewModel {
 
             @Override
             public void onError(Exception e) {
-                e.printStackTrace();
-                error = new MutableLiveData<>();
                 error.postValue(e.getLocalizedMessage());
             }
         });
