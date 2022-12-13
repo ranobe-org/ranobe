@@ -5,20 +5,27 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.navigation.NavigationBarView;
 
 import org.ranobe.ranobe.R;
+import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.ActivityMainBinding;
+import org.ranobe.ranobe.util.ThemeUtils;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        org.ranobe.ranobe.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setTheme(ThemeUtils.getTheme(Ranobe.getTheme(getApplicationContext())));
+        AppCompatDelegate.setDefaultNightMode(Ranobe.getThemeMode(getApplicationContext()));
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         binding.navbar.setOnItemSelectedListener(this);

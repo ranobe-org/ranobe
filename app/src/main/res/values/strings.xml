@@ -16,4 +16,14 @@
     <string name="chapters_info">See Chapters</string>
     <string name="n_a_info">....</string>
     <string name="read_info">Read</string>
+    <string name="choose_your_favorite_color_of_choice">Choose your favorite color of choice</string>
+    <string name="select_accent_color">Select accent color</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="automatic">Auto</string>
+    <string name="theme_mode_sub_text">change the look and feel as per your preferences</string>
+    <string name="select_default_theme">Select default theme</string>
+    <string name="ui">UI</string>
+    <string name="general">GENERAL</string>
+
 </resources>
