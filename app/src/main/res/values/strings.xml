@@ -6,25 +6,13 @@
     <string name="nav_explore">Explore</string>
     <string name="nav_settings">Settings</string>
     <string name="image">image</string>
-    <string name="details_info">Details</string>
-    <string name="authors_info">Authors</string>
-    <string name="alternate_names_info">Alternate \nNames</string>
-    <string name="genres_info">Genres</string>
-    <string name="year_info">Year</string>
-    <string name="status_info">Status</string>
-    <string name="summary_info">Summary</string>
-    <string name="chapters_info">See Chapters</string>
-    <string name="n_a_info">....</string>
     <string name="read_info">Read</string>
-    <string name="choose_your_favorite_color_of_choice">Choose your favorite color of choice</string>
-    <string name="select_accent_color">Select accent color</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="automatic">Auto</string>
     <string name="theme_mode_sub_text">change the look and feel as per your preferences</string>
     <string name="select_default_theme">Select default theme</string>
     <string name="ui">UI</string>
-    <string name="general">GENERAL</string>
     <string name="start_typing">Start typing…</string>
 
 </resources>

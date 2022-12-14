@@ -57,14 +57,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="@string/select_default_theme"
-                        android:textColor="@color/colorTextHigh"
+                        android:textColor="?colorOnSurface"
                         android:textSize="@dimen/text_big" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="@string/theme_mode_sub_text"
-                        android:textColor="@color/colorTextLow"
+                        android:textColor="?colorOnSurfaceVariant"
                         android:textSize="@dimen/text_big_med" />
 
                 </LinearLayout>
@@ -108,58 +108,6 @@
                     app:chipIcon="@drawable/ic_theme_mode_light" />
 
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/accent_option"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="?selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="horizontal"
-                android:padding="10dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/image"
-                    android:src="@drawable/ic_theme_option"
-                    app:tint="?colorPrimary" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="10dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="@string/select_accent_color"
-                        android:textColor="@color/colorTextHigh"
-                        android:textSize="@dimen/text_big" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="@string/choose_your_favorite_color_of_choice"
-                        android:textColor="@color/colorTextLow"
-                        android:textSize="@dimen/text_big_med" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/accent_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:visibility="gone" />
 
         </LinearLayout>
 

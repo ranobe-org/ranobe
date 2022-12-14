@@ -14,7 +14,7 @@
         android:focusable="true"
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp"
-        app:rippleColor="?colorPrimary">
+        style="@style/Widget.Material3.CardView.Elevated">
 
         <ImageView
             android:id="@+id/novel_cover"
@@ -35,6 +35,6 @@
         android:layout_marginTop="5dp"
         android:maxLines="2"
         android:padding="2dp"
-        android:textColor="@color/colorTextHigh"
+        android:textColor="?colorOnSurface"
         android:textSize="12sp" />
 </RelativeLayout>

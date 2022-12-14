@@ -13,8 +13,9 @@
         <entry key="app/src/main/res/drawable/ic_theme_mode_auto.xml" value="0.248" />
         <entry key="app/src/main/res/drawable/ic_theme_mode_light.xml" value="0.248" />
         <entry key="app/src/main/res/drawable/ic_theme_mode_night.xml" value="0.211" />
+        <entry key="app/src/main/res/drawable/ic_theme_option.xml" value="0.248" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1816123188405797" />
-        <entry key="app/src/main/res/layout/activity_reader.xml" value="0.32518115942028986" />
+        <entry key="app/src/main/res/layout/activity_reader.xml" value="0.67" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.234375" />
         <entry key="app/src/main/res/layout/fragment_browse.xml" value="0.234375" />
         <entry key="app/src/main/res/layout/fragment_chapters.xml" value="0.35625" />

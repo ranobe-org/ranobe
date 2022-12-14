@@ -8,12 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentSettingsBinding;
-import org.ranobe.ranobe.ui.settings.adapter.AccentAdapter;
 
 public class Settings extends Fragment {
 
@@ -33,13 +31,9 @@ public class Settings extends Fragment {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
 
         binding.themeModeOption.setOnClickListener(v -> binding.themeModeView.setVisibility(getPolarVisibility(binding.themeModeView)));
-        binding.accentOption.setOnClickListener(v -> binding.accentView.setVisibility(getPolarVisibility(binding.accentView)));
         binding.lightChip.setOnClickListener(v -> selectTheme(AppCompatDelegate.MODE_NIGHT_NO));
         binding.nightChip.setOnClickListener(v -> selectTheme(AppCompatDelegate.MODE_NIGHT_YES));
         binding.autoChip.setOnClickListener(v -> selectTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM));
-
-        binding.accentView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        binding.accentView.setAdapter(new AccentAdapter(requireActivity()));
 
         setCurrentThemeMode();
         return binding.getRoot();

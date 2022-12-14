@@ -14,16 +14,14 @@ import com.google.android.material.navigation.NavigationBarView;
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.ActivityMainBinding;
-import org.ranobe.ranobe.util.ThemeUtils;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(ThemeUtils.getTheme(Ranobe.getTheme(getApplicationContext())));
-        AppCompatDelegate.setDefaultNightMode(Ranobe.getThemeMode(getApplicationContext()));
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        AppCompatDelegate.setDefaultNightMode(Ranobe.getThemeMode(getApplicationContext()));
         setContentView(binding.getRoot());
 
         binding.navbar.setOnItemSelectedListener(this);

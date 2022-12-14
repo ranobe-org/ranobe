@@ -15,7 +15,6 @@ import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.reader.viewmodel.ReaderViewModel;
-import org.ranobe.ranobe.util.ThemeUtils;
 
 public class ReaderActivity extends AppCompatActivity {
     private ActivityReaderBinding binding;
@@ -24,7 +23,6 @@ public class ReaderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityReaderBinding.inflate(getLayoutInflater());
-        setTheme(ThemeUtils.getTheme(Ranobe.getTheme(getApplicationContext())));
         AppCompatDelegate.setDefaultNightMode(Ranobe.getThemeMode(getApplicationContext()));
         setContentView(binding.getRoot());
 

@@ -19,19 +19,20 @@
 - [x] chapter sort
 - [x] cache http responses (reduce load on sources)
 - [x] chapter search
-- [ ] continuous vertical scroll for reader
 - [ ] complete search page with keyword search
-- [ ] reader text formatting
+- [ ] reader text formatting with font size and bg/text color selection
+- [ ] continuous vertical scroll for reader
+- [ ] design and theme improvements
 - [x] add settings page with theme selection
 - [ ] sources list selection
-- [ ] add to library, only store novel in db
-- [ ] download chapters for offline view, save everything to db
-- [ ] reading state for each item
+- [ ] database
+    - [ ] add to library, only store novel in db
+    - [ ] download chapters for offline view, save everything to db
+    - [ ] saving read state for each item
 - [ ] more sources
 
 #### could have
 
-- [ ] advanced text formatting
 - [ ] advanced search techniques
 - [ ] source management tools ?
 - [ ] export into x formats
