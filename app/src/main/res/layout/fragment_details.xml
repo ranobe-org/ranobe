@@ -34,7 +34,7 @@
                 android:focusable="true"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="10dp"
-                app:rippleColor="?colorPrimary">
+                style="@style/Widget.Material3.CardView.Elevated">
 
                 <ImageView
                     android:id="@+id/novel_cover"
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:maxLines="2"
                     android:padding="2dp"
-                    android:textColor="@color/colorTextHigh"
+                    android:textColor="?colorOnSurface"
                     android:textSize="20sp" />
 
                 <RatingBar
@@ -72,7 +72,7 @@
                     android:id="@+id/alternative_names"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorTextLow" />
+                    android:textColor="?colorOnSurfaceVariant" />
 
                 <TextView
                     android:id="@+id/authors"
@@ -84,13 +84,13 @@
                     android:id="@+id/status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorTextLow" />
+                    android:textColor="?colorOnSurfaceVariant" />
 
                 <TextView
                     android:id="@+id/year"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorTextLow" />
+                    android:textColor="?colorOnSurfaceVariant" />
 
             </LinearLayout>
 
@@ -112,11 +112,11 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:padding="10dp"
-            android:textColor="@color/colorTextHigh" />
+            android:textColor="?colorOnSurface" />
 
         <Button
             android:id="@+id/chapter_info"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/summary"
