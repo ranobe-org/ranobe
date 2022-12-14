@@ -37,3 +37,5 @@
 - [ ] export into x formats
 - [ ] metrics if possible
 - [ ] backup data, migrations
+- [ ] novel updates
+

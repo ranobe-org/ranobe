@@ -73,6 +73,7 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
             binding.progress.setVisibility(View.GONE);
             isLoading = false;
             int old = list.size();
+            list.clear();
             list.addAll(novels);
             adapter.notifyItemRangeInserted(old, list.size());
         });
