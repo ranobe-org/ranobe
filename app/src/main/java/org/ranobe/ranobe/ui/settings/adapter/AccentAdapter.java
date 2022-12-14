@@ -42,6 +42,7 @@ public class AccentAdapter extends RecyclerView.Adapter<AccentAdapter.MyViewHold
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private final ItemAccentBinding binding;
+
         public MyViewHolder(@NonNull ItemAccentBinding binding) {
             super(binding.getRoot());
             this.binding = binding;

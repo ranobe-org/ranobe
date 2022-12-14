@@ -3,8 +3,6 @@ package org.ranobe.ranobe.ui.browse.viewmodel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import org.ranobe.ranobe.models.ChapterItem;
-import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.repository.Repository;
 import org.ranobe.ranobe.sources.Source;
@@ -34,7 +32,7 @@ public class BrowseViewModel extends ViewModel {
             @Override
             public void onComplete(List<NovelItem> result) {
                 List<NovelItem> old = items.getValue();
-                if(old == null) {
+                if (old == null) {
                     old = new ArrayList<>();
                 }
                 old.addAll(result);

@@ -55,7 +55,7 @@ public class Details extends Fragment {
     }
 
     private void navigateToChapterList() {
-        if(novelUrl == null) return;
+        if (novelUrl == null) return;
         NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
         Bundle bundle = new Bundle();
         bundle.putString("novel", novelUrl);

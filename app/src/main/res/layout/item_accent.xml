@@ -9,9 +9,9 @@
         android:id="@+id/accent"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        app:cardCornerRadius="50dp"
-        app:cardBackgroundColor="@color/cyan_300"
         android:clickable="true"
-        android:focusable="true"/>
+        android:focusable="true"
+        app:cardBackgroundColor="@color/cyan_300"
+        app:cardCornerRadius="50dp" />
 
 </RelativeLayout>

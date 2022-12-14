@@ -25,5 +25,6 @@
     <string name="select_default_theme">Select default theme</string>
     <string name="ui">UI</string>
     <string name="general">GENERAL</string>
+    <string name="start_typing">Start typing…</string>
 
 </resources>

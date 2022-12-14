@@ -76,7 +76,7 @@ public class ReadLightNovel implements Source {
                 novel.rating = NumberUtils.toFloat(value);
             } else if (header.toLowerCase().contains("description")) {
                 String summary = "";
-                for(Element ele: element.select("div.novel-detail-body > p")) {
+                for (Element ele : element.select("div.novel-detail-body > p")) {
                     summary = summary.concat(ele.text().trim()).concat("\n\n");
                 }
                 novel.summary = summary;

@@ -48,6 +48,7 @@
 
     <!--  background colors -->
     <color name="colorBackgroundHigh">#FAFAFA</color>
+    <color name="colorBackground">#FCFCFC</color>
 
     <!--  text colors -->
     <color name="colorTextHigh">#212121</color>

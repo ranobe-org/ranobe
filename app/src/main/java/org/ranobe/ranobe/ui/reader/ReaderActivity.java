@@ -1,7 +1,6 @@
 package org.ranobe.ranobe.ui.reader;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,10 +44,7 @@ public class ReaderActivity extends AppCompatActivity {
     }
 
     private void setError(String msg) {
-        Log.d(Ranobe.DEBUG, "ATUL" + msg);
-
-        if(msg.length() == 0) return;
-        Log.d(Ranobe.DEBUG, "ATUL" + msg);
+        if (msg.length() == 0) return;
         Snackbar.make(binding.getRoot(), msg, Snackbar.LENGTH_SHORT).show();
     }
 }

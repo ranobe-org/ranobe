@@ -2,6 +2,8 @@ package org.ranobe.ranobe.ui.chapters;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.chapters.adapter.ChapterAdapter;
 import org.ranobe.ranobe.ui.chapters.viewmodel.ChaptersViewModel;
 import org.ranobe.ranobe.ui.reader.ReaderActivity;
+import org.ranobe.ranobe.util.ListUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,10 +28,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemClickListener {
+    private final List<ChapterItem> originalItems = new ArrayList<>();
     private FragmentChaptersBinding binding;
     private ChaptersViewModel viewModel;
     private String novelUrl;
-    private final List<ChapterItem> originalItems = new ArrayList<>();
     private ChapterAdapter adapter;
 
     public Chapters() {
@@ -48,9 +51,26 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentChaptersBinding.inflate(inflater, container, false);
+        binding.search.setOnClickListener(this::setSearchView);
+        binding.sort.setOnClickListener(v -> sort());
+        binding.searchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                searchResults(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         adapter = new ChapterAdapter(originalItems, this);
-        binding.sort.setOnClickListener(v -> sort());
         binding.chapterList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.chapterList.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
         binding.chapterList.setAdapter(adapter);
@@ -59,6 +79,21 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
         viewModel.chapters(SourceManager.getSource(1), novelUrl);
 
         return binding.getRoot();
+    }
+
+    private void searchResults(String keyword) {
+        if (keyword.length() > 0) {
+            List<ChapterItem> filtered = ListUtils.searchByName(keyword.toLowerCase(), originalItems);
+            ChapterAdapter searchAdapter = new ChapterAdapter(filtered, this);
+            binding.chapterList.setAdapter(searchAdapter);
+        } else {
+            binding.chapterList.setAdapter(adapter);
+        }
+    }
+
+    private void setSearchView(View view) {
+        int mode = binding.searchView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE;
+        binding.searchView.setVisibility(mode);
     }
 
     private void setChapter(List<ChapterItem> chapters) {

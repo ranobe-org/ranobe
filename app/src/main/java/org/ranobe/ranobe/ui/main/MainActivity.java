@@ -16,8 +16,6 @@ import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.ActivityMainBinding;
 import org.ranobe.ranobe.util.ThemeUtils;
 
-import java.util.Random;
-
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     @Override

@@ -18,7 +18,7 @@
 - [x] improve ui for details and chapters page
 - [x] chapter sort
 - [x] cache http responses (reduce load on sources)
-- [ ] chapter search
+- [x] chapter search
 - [ ] continuous vertical scroll for reader
 - [ ] complete search page with keyword search
 - [ ] reader text formatting
