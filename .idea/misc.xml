@@ -31,6 +31,8 @@
         <entry key="app/src/main/res/layout/item_novel.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.234375" />
         <entry key="app/src/main/res/menu/menu_navbar.xml" value="0.35520833333333335" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.248" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.248" />
       </map>
     </option>
   </component>
