@@ -14,8 +14,9 @@
         <entry key="app/src/main/res/drawable/ic_theme_mode_light.xml" value="0.248" />
         <entry key="app/src/main/res/drawable/ic_theme_mode_night.xml" value="0.211" />
         <entry key="app/src/main/res/drawable/ic_theme_option.xml" value="0.248" />
+        <entry key="app/src/main/res/layout-land/sheet_customize_reader.xml" value="0.30158730158730157" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1816123188405797" />
-        <entry key="app/src/main/res/layout/activity_reader.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/activity_reader.xml" value="0.2" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.234375" />
         <entry key="app/src/main/res/layout/fragment_browse.xml" value="0.234375" />
         <entry key="app/src/main/res/layout/fragment_chapters.xml" value="0.35625" />
@@ -29,6 +30,8 @@
         <entry key="app/src/main/res/layout/item_accent.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/item_chapter.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/item_novel.xml" value="0.35520833333333335" />
+        <entry key="app/src/main/res/layout/item_reader_theme.xml" value="0.35520833333333335" />
+        <entry key="app/src/main/res/layout/sheet_customize_reader.xml" value="0.33" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.234375" />
         <entry key="app/src/main/res/menu/menu_navbar.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.248" />

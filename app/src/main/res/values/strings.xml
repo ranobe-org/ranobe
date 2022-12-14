@@ -14,5 +14,9 @@
     <string name="select_default_theme">Select default theme</string>
     <string name="ui">UI</string>
     <string name="start_typing">Start typing…</string>
+    <string name="set_the_font_size">Font Size</string>
+    <string name="set_the_theme">Page Theme</string>
+    <string name="aa">Aa</string>
+    <string name="customize_info">Customize</string>
 
 </resources>

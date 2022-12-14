@@ -116,7 +116,7 @@ public class ReadLightNovel implements Source {
 
         for (Element element : doc.select("div#chapterhidden > p")) {
             String text = element.text().trim();
-            chapter.content = chapter.content.concat("\n\n").concat(text);
+            chapter.content = chapter.content.concat("\n").concat(text);
         }
         return chapter;
     }

@@ -1,6 +1,7 @@
 package org.ranobe.ranobe.ui.reader;
 
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,9 +15,10 @@ import org.ranobe.ranobe.databinding.ActivityReaderBinding;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.sources.SourceManager;
+import org.ranobe.ranobe.ui.reader.sheet.CustomizeReader;
 import org.ranobe.ranobe.ui.reader.viewmodel.ReaderViewModel;
 
-public class ReaderActivity extends AppCompatActivity {
+public class ReaderActivity extends AppCompatActivity implements CustomizeReader.OnOptionSelection {
     private ActivityReaderBinding binding;
 
     @Override
@@ -26,6 +28,8 @@ public class ReaderActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(Ranobe.getThemeMode(getApplicationContext()));
         setContentView(binding.getRoot());
 
+        binding.customize.setOnClickListener(v-> setUpCustomizeReader());
+
         String chapterUrl = getIntent().getStringExtra("chapter");
         ReaderViewModel viewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
 
@@ -33,7 +37,11 @@ public class ReaderActivity extends AppCompatActivity {
         viewModel.getChapter().observe(this, this::setChapter);
         viewModel.getError().observe(this, this::setError);
         viewModel.chapter(source, chapterUrl);
+    }
 
+    private void setUpCustomizeReader() {
+        CustomizeReader sheet = new CustomizeReader(this);
+        sheet.show(getSupportFragmentManager(), "customize-sheet");
     }
 
     private void setChapter(Chapter chapter) {
@@ -44,5 +52,21 @@ public class ReaderActivity extends AppCompatActivity {
     private void setError(String msg) {
         if (msg.length() == 0) return;
         Snackbar.make(binding.getRoot(), msg, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setFontSize(float size) {
+        binding.content.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+    }
+
+    @Override
+    public void setReaderTheme() {
+
+    }
+
+    @Override
+    public float getFontSize() {
+        float px = binding.content.getTextSize();
+        return px / getResources().getDisplayMetrics().scaledDensity;
     }
 }
