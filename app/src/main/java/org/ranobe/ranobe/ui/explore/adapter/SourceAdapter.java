@@ -12,6 +12,7 @@ import org.ranobe.ranobe.databinding.ItemSourceBinding;
 import org.ranobe.ranobe.models.DataSource;
 
 import java.util.List;
+import java.util.Locale;
 
 public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHolder> {
     private final List<DataSource> sources;
@@ -32,7 +33,10 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.sourceName.setText(sources.get(position).name);
-        holder.binding.sourceContent.setText(sources.get(position).lang);
+        holder.binding.sourceContent.setText(String.format(
+                Locale.getDefault(),
+                "%s • %s", sources.get(position).lang, sources.get(position).dev
+        ));
         Glide.with(holder.binding.sourceLogo.getContext())
                 .load(sources.get(position).logo)
                 .into(holder.binding.sourceLogo);

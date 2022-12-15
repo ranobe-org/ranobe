@@ -12,14 +12,14 @@
         android:title="@string/search" />
 
     <item
-        android:id="@+id/library"
-        android:icon="@drawable/ic_library"
-        android:title="@string/nav_library" />
-
-    <item
         android:id="@+id/explore"
         android:icon="@drawable/ic_explore"
         android:title="@string/nav_explore" />
+
+    <item
+        android:id="@+id/library"
+        android:icon="@drawable/ic_library"
+        android:title="@string/nav_library" />
 
     <item
         android:id="@+id/settings"
