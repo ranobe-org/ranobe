@@ -1,3 +1,6 @@
+<p align="center">
+  <img width="300" src="https://github.com/ranobe-org/ranobe/raw/main/assets/app.gif" alt="app gif">
+</p>
 <div align="center">
     <h2><samp>R.A.N.O.B.E</samp></h2>
     <samp>A simple extensible light novel reader</samp>
