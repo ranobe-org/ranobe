@@ -5,10 +5,27 @@ import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
+import org.ranobe.ranobe.models.ReaderTheme;
+
+import java.util.HashMap;
+
 public class Ranobe {
     public static final String DEBUG = "ranobe.debug";
     public static final String PACKAGE_NAME = "org.ranobe.ranobe";
     public static final String SETTINGS_THEME_MODE = "shared_pref_theme_mode";
+    public static final String SETTINGS_READER_THEME = "shared_pref_reader_theme";
+    public static final String SETTINGS_READER_FONT = "shared_pref_reader_font";
+
+    public static final HashMap<String, ReaderTheme> themes = new HashMap<String, ReaderTheme>() {{
+        put("basic", new ReaderTheme("#fffbe0", "#222831"));
+        put("basic_inverse", new ReaderTheme("#222831", "#fffbe0"));
+        put("basic_dim", new ReaderTheme("#fef8e6", "#222831"));
+        put("basic_dim_inverse", new ReaderTheme("#222831", "#fef8e6"));
+        put("grey", new ReaderTheme("#eae7e7", "#161c2e"));
+        put("grey_inverse", new ReaderTheme("#161c2e", "#eae7e7"));
+        put("terminal", new ReaderTheme("#161c2e", "#feff89"));
+        put("green", new ReaderTheme("#161c2e", "#74f6a7"));
+    }};
 
     private static SharedPreferences.Editor getEditor(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
@@ -29,5 +46,21 @@ public class Ranobe {
 
     public static int getThemeMode(Context context) {
         return getSharedPref(context).getInt(Ranobe.SETTINGS_THEME_MODE, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+    }
+
+    public static void storeReaderTheme(Context context, String theme) {
+        getEditor(context).putString(Ranobe.SETTINGS_READER_THEME, theme).apply();
+    }
+
+    public static String getReaderTheme(Context context) {
+        return getSharedPref(context).getString(Ranobe.SETTINGS_READER_THEME, null);
+    }
+
+    public static void storeReaderFont(Context context, Float size) {
+        getEditor(context).putFloat(Ranobe.SETTINGS_READER_FONT, size).apply();
+    }
+
+    public static Float getReaderFont(Context context) {
+        return getSharedPref(context).getFloat(Ranobe.SETTINGS_READER_FONT, 0);
     }
 }

@@ -35,13 +35,13 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
     }
 
     @Override
-    public void select() {
-        listener.setReaderTheme();
+    public void select(String themeName) {
+        listener.setReaderTheme(themeName);
     }
 
     public interface OnOptionSelection {
         float getFontSize();
         void setFontSize(float size);
-        void setReaderTheme();
+        void setReaderTheme(String themeName);
     }
 }

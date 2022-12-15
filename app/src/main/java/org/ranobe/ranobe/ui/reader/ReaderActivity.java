@@ -13,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.ActivityReaderBinding;
 import org.ranobe.ranobe.models.Chapter;
+import org.ranobe.ranobe.models.ReaderTheme;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.reader.sheet.CustomizeReader;
@@ -27,8 +28,8 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         binding = ActivityReaderBinding.inflate(getLayoutInflater());
         AppCompatDelegate.setDefaultNightMode(Ranobe.getThemeMode(getApplicationContext()));
         setContentView(binding.getRoot());
-
         binding.customize.setOnClickListener(v-> setUpCustomizeReader());
+        setUpReaderTheme();
 
         String chapterUrl = getIntent().getStringExtra("chapter");
         ReaderViewModel viewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
@@ -37,6 +38,17 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         viewModel.getChapter().observe(this, this::setChapter);
         viewModel.getError().observe(this, this::setError);
         viewModel.chapter(source, chapterUrl);
+    }
+
+    private void setUpReaderTheme() {
+        String currentReaderTheme = Ranobe.getReaderTheme(this);
+        float currentFontSize = Ranobe.getReaderFont(this);
+        if(currentReaderTheme != null) {
+            setReaderTheme(currentReaderTheme);
+        }
+        if (currentFontSize != 0) {
+            setFontSize(currentFontSize);
+        }
     }
 
     private void setUpCustomizeReader() {
@@ -57,11 +69,17 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     @Override
     public void setFontSize(float size) {
         binding.content.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+        Ranobe.storeReaderFont(this, size);
     }
 
     @Override
-    public void setReaderTheme() {
-
+    public void setReaderTheme(String themeName) {
+        ReaderTheme theme = Ranobe.themes.get(themeName);
+        if(theme != null) {
+            binding.content.setBackgroundColor(theme.getBackground());
+            binding.content.setTextColor(theme.getText());
+            Ranobe.storeReaderTheme(this, themeName);
+        }
     }
 
     @Override
