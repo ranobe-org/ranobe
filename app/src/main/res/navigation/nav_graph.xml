@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_browse" />
 
     <fragment
+        android:id="@+id/search_fragment"
+        android:name="org.ranobe.ranobe.ui.search.Search"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+
+    <fragment
         android:id="@+id/library_fragment"
         android:name="org.ranobe.ranobe.ui.library.Library"
         android:label="fragment_library"

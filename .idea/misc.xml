@@ -18,13 +18,14 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1816123188405797" />
         <entry key="app/src/main/res/layout/activity_reader.xml" value="0.2" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.234375" />
-        <entry key="app/src/main/res/layout/fragment_browse.xml" value="0.234375" />
+        <entry key="app/src/main/res/layout/fragment_browse.xml" value="0.5911840968020743" />
         <entry key="app/src/main/res/layout/fragment_chapters.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_details.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_explore.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.21603260869565216" />
         <entry key="app/src/main/res/layout/fragment_library.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/fragment_reader.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.234375" />
         <entry key="app/src/main/res/layout/item_accent.xml" value="0.35520833333333335" />
