@@ -18,5 +18,7 @@
     <string name="set_the_theme">Page Theme</string>
     <string name="aa">Aa</string>
     <string name="customize_info">Customize</string>
+    <string name="search">Search</string>
+    <string name="sort">Sort</string>
 
 </resources>

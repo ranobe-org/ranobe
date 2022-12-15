@@ -20,9 +20,9 @@
 - [x] cache http responses (reduce load on sources)
 - [x] chapter search
 - [ ] complete search page with keyword search
-- [ ] reader text formatting with font size and bg/text color selection
+- [x] reader text formatting with font size and bg/text color selection
 - [ ] continuous vertical scroll for reader
-- [ ] design and theme improvements
+- [ ] design improvements for details page
 - [x] add settings page with theme selection
 - [ ] sources list selection
 - [ ] database
