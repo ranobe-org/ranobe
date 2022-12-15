@@ -103,7 +103,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/header_layout"
             android:layout_marginHorizontal="10dp"
-            app:chipSpacing="1dp" />
+            app:chipSpacingVertical="-10dp"
+            app:chipSpacingHorizontal="5dp" />
 
         <TextView
             android:id="@+id/summary"
