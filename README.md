@@ -19,7 +19,7 @@
 - [x] chapter sort
 - [x] cache http responses (reduce load on sources)
 - [x] chapter search
-- [ ] complete search page with keyword search
+- [x] complete search page with keyword search
 - [x] reader text formatting with font size and bg/text color selection
 - [ ] continuous vertical scroll for reader
 - [ ] design improvements for details page
