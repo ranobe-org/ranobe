@@ -3,6 +3,7 @@ package org.ranobe.ranobe.sources;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.DataSource;
+import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.models.NovelItem;
 
@@ -23,4 +24,7 @@ public interface Source {
 
     // get content of the chapter from the url
     Chapter chapter(String url) throws IOException;
+
+    // search novels
+    List<NovelItem> search(Filter filters, int page) throws IOException;
 }

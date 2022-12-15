@@ -2,6 +2,7 @@ package org.ranobe.ranobe.repository;
 
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ChapterItem;
+import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.sources.Source;
@@ -56,6 +57,17 @@ public class Repository {
             try {
                 Chapter item = source.chapter(chapterUrl);
                 callback.onComplete(item);
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        });
+    }
+
+    public void search(Filter filter, int page, Callback<List<NovelItem>> callback) {
+        executor.execute(() -> {
+            try {
+                List<NovelItem> items = source.search(filter, page);
+                callback.onComplete(items);
             } catch (Exception e) {
                 callback.onError(e);
             }

@@ -6,6 +6,7 @@ import org.jsoup.select.Elements;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.DataSource;
+import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.models.NovelItem;
@@ -35,15 +36,20 @@ public class ReadLightNovel implements Source {
         source.name = "Read Light Novel";
         source.lang = Lang.eng;
         source.dev = "ap-atul";
-        source.logo = "https://vipnovel.com/wp-content/uploads/2019/02/cropped-51918204_414359882667265_8706934217017131008_n-180x180.png";
+        source.logo = "https://www.readlightnovel.me/assets/images/logo-new-day.png";
         return source;
     }
 
     @Override
     public List<NovelItem> novels(int page) throws Exception {
-        List<NovelItem> items = new ArrayList<>();
         String url = baseUrl + "/top-novels/most-viewed/" + page;
-        Element doc = Jsoup.parse(HttpClient.GET(url, HEADERS));
+        String body = HttpClient.GET(url, HEADERS);
+        return parse(body);
+    }
+
+    public List<NovelItem> parse(String body) {
+        List<NovelItem> items = new ArrayList<>();
+        Element doc = Jsoup.parse(body);
 
         for (Element element : doc.select("div.top-novel-block")) {
             NovelItem item = new NovelItem();
@@ -124,5 +130,21 @@ public class ReadLightNovel implements Source {
             chapter.content = chapter.content.concat("\n").concat(text);
         }
         return chapter;
+    }
+
+    @Override
+    // returns only 50 results
+    public List<NovelItem> search(Filter filters, int page) throws IOException {
+        String url = "https://www.readlightnovel.me/detailed-search-210922";
+        if (page > 1) return new ArrayList<>();
+        if (filters.hashKeyword()) {
+            String keyword = filters.getKeyword();
+            HashMap<String, String> form = new HashMap<>();
+            form.put("keyword", keyword);
+            form.put("search", "1");
+            String body = HttpClient.POST(url, HEADERS, form);
+            return parse(body);
+        }
+        return new ArrayList<>();
     }
 }
