@@ -30,12 +30,7 @@ public class SearchViewModel extends ViewModel {
         repository.search(filter, page, new Repository.Callback<List<NovelItem>>() {
             @Override
             public void onComplete(List<NovelItem> result) {
-                List<NovelItem> old = items.getValue();
-                if (old == null) {
-                    old = new ArrayList<>();
-                }
-                old.addAll(result);
-                items.postValue(old);
+                items.postValue(result);
             }
 
             @Override
