@@ -31,6 +31,7 @@
         <entry key="app/src/main/res/layout/item_chapter.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/item_novel.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/item_reader_theme.xml" value="0.35520833333333335" />
+        <entry key="app/src/main/res/layout/item_source.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/sheet_customize_reader.xml" value="0.33" />
         <entry key="app/src/main/res/menu/menu_chapter_toolbar.xml" value="0.35625" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.234375" />

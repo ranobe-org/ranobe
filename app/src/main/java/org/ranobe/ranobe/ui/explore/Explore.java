@@ -5,11 +5,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import org.ranobe.ranobe.R;
+import com.google.android.material.snackbar.Snackbar;
 
-public class Explore extends Fragment {
+import org.ranobe.ranobe.databinding.FragmentExploreBinding;
+import org.ranobe.ranobe.models.DataSource;
+import org.ranobe.ranobe.sources.Source;
+import org.ranobe.ranobe.sources.SourceManager;
+import org.ranobe.ranobe.ui.explore.adapter.SourceAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public class Explore extends Fragment implements SourceAdapter.OnSourceSelected {
+    private FragmentExploreBinding binding;
 
     public Explore() {
         // Required empty public constructor
@@ -22,9 +35,29 @@ public class Explore extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_explore, container, false);
+        binding = FragmentExploreBinding.inflate(inflater, container, false);
+        binding.sourceList.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        setSourcesListToUi();
+
+        return binding.getRoot();
+    }
+
+    private void setSourcesListToUi() {
+        HashMap<Integer, Class<?>> sources = SourceManager.getSources();
+        List<DataSource> dataSources = new ArrayList<>();
+        for(Integer id: sources.keySet()) {
+            Source src = SourceManager.getSource(id);
+            if (src != null) {
+                dataSources.add(src.metadata());
+            }
+        }
+        binding.sourceList.setAdapter(new SourceAdapter(dataSources, this));
+    }
+
+    @Override
+    public void select(DataSource source) {
+        Snackbar.make(binding.getRoot(), "Select current source " + source.name, Snackbar.LENGTH_SHORT).show();
     }
 }

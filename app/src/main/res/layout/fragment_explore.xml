@@ -6,8 +6,19 @@
     tools:context=".ui.explore.Explore">
 
     <TextView
+        android:id="@+id/source_info"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Explore" />
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/sources"
+        android:textSize="@dimen/text_med"
+        android:textStyle="bold"
+        tools:ignore="TextContrastCheck" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/source_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/source_info"/>
 
 </RelativeLayout>

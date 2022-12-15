@@ -24,7 +24,7 @@
 - [ ] continuous vertical scroll for reader
 - [ ] design improvements for details page
 - [x] add settings page with theme selection
-- [ ] sources list selection
+- [x] sources list selection
 - [ ] database
     - [ ] add to library, only store novel in db
     - [ ] download chapters for offline view, save everything to db

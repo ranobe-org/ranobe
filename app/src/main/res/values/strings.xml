@@ -20,5 +20,6 @@
     <string name="customize_info">Customize</string>
     <string name="search">Search</string>
     <string name="sort">Sort</string>
+    <string name="sources">Sources</string>
 
 </resources>

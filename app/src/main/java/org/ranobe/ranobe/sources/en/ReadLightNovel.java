@@ -6,6 +6,7 @@ import org.jsoup.select.Elements;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.DataSource;
+import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.network.HttpClient;
@@ -31,6 +32,10 @@ public class ReadLightNovel implements Source {
         DataSource source = new DataSource();
         source.sourceId = 1;
         source.url = baseUrl;
+        source.name = "Read Light Novel";
+        source.lang = Lang.eng;
+        source.dev = "ap-atul";
+        source.logo = "https://vipnovel.com/wp-content/uploads/2019/02/cropped-51918204_414359882667265_8706934217017131008_n-180x180.png";
         return source;
     }
 
