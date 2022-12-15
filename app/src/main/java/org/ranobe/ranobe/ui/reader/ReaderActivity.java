@@ -76,7 +76,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     public void setReaderTheme(String themeName) {
         ReaderTheme theme = Ranobe.themes.get(themeName);
         if(theme != null) {
-            binding.content.setBackgroundColor(theme.getBackground());
+            binding.readerView.setBackgroundColor(theme.getBackground());
             binding.content.setTextColor(theme.getText());
             Ranobe.storeReaderTheme(this, themeName);
         }
