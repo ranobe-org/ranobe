@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:paddingBottom="?actionBarSize"
     tools:context=".ui.details.Details">
 
     <RelativeLayout
@@ -121,6 +120,7 @@
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
             android:layout_below="@id/summary"
             android:layout_alignParentEnd="true"
             android:layout_margin="10dp"

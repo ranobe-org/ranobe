@@ -24,7 +24,7 @@ public class Ranobe {
         put("grey", new ReaderTheme("#eae7e7", "#161c2e"));
         put("grey_inverse", new ReaderTheme("#161c2e", "#eae7e7"));
         put("terminal", new ReaderTheme("#161c2e", "#feff89"));
-        put("green", new ReaderTheme("#161c2e", "#74f6a7"));
+        put("green", new ReaderTheme("#74f6a7", "#161c2e"));
     }};
 
     private static SharedPreferences.Editor getEditor(Context context) {
