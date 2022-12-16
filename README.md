@@ -49,3 +49,4 @@
 
 1. Sources should not define `Novel` and `NovelItem`'s `id` field since it is calculated in constructor.
 2. Sources should not define `Chapter` and `ChapterItem`'s `novelId` field since it is calculated in constructor,
+whereas the `id` field should be the chapter no for the novel
