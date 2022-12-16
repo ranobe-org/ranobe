@@ -8,4 +8,17 @@ public class SourceUtils {
         }
         return hash;
     }
+
+    public static String cleanContent(String raw) {
+        return raw.replaceAll("/[\\n]{2,}/gim", "\n");
+    }
+
+    // does simple concatenation and nothing else
+    public static String buildUrl(String... args) {
+        String url = "";
+        for(String a: args) {
+            url = url.concat(a);
+        }
+        return url;
+    }
 }

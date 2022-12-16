@@ -41,7 +41,7 @@ public class ReadLightNovel implements Source {
     }
 
     @Override
-    public List<NovelItem> novels(int page) throws Exception {
+    public List<NovelItem> novels(int page) throws IOException {
         String url = baseUrl + "/top-novels/new/" + page;
         String body = HttpClient.GET(url, HEADERS);
         return parse(body);

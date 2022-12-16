@@ -1,6 +1,6 @@
 package org.ranobe.ranobe.sources;
 
-import org.ranobe.ranobe.sources.en.ReadLightNovel;
+import org.ranobe.ranobe.sources.en.*;
 
 import java.util.HashMap;
 
@@ -21,6 +21,7 @@ public class SourceManager {
     public static HashMap<Integer, Class<?>> getSources() {
         HashMap<Integer, Class<?>> sources = new HashMap<>();
         sources.put(1, ReadLightNovel.class);
+        sources.put(2, VipNovel.class);
 
         return sources;
     }

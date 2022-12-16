@@ -14,7 +14,7 @@ public interface Source {
     DataSource metadata();
 
     // get the list of novels based on page
-    List<NovelItem> novels(int page) throws Exception;
+    List<NovelItem> novels(int page) throws IOException;
 
     // get all the fields for a single novel
     Novel details(String url) throws IOException;
