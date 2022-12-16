@@ -1,22 +1,25 @@
 package org.ranobe.ranobe.repository;
 
+import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.sources.Source;
+import org.ranobe.ranobe.sources.SourceManager;
 
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class Repository {
     private final Executor executor;
     private final Source source;
 
-    public Repository(Executor executor, Source source) {
-        this.executor = executor;
-        this.source = source;
+    public Repository() {
+        this.executor = Executors.newCachedThreadPool();
+        this.source = SourceManager.getSource(Ranobe.getCurrentSource());
     }
 
     public void novels(int page, Callback<List<NovelItem>> callback) {

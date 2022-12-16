@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentExploreBinding;
 import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.sources.Source;
@@ -49,9 +50,7 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected 
         List<DataSource> dataSources = new ArrayList<>();
         for(Integer id: sources.keySet()) {
             Source src = SourceManager.getSource(id);
-            if (src != null) {
-                dataSources.add(src.metadata());
-            }
+            dataSources.add(src.metadata());
         }
         binding.sourceList.setAdapter(new SourceAdapter(dataSources, this));
     }
@@ -59,5 +58,6 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected 
     @Override
     public void select(DataSource source) {
         Snackbar.make(binding.getRoot(), "Select current source " + source.name, Snackbar.LENGTH_SHORT).show();
+        Ranobe.saveCurrentSource(source.sourceId);
     }
 }

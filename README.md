@@ -28,6 +28,7 @@
 - [ ] design improvements for details page
 - [x] add settings page with theme selection
 - [x] sources list selection
+- [x] remembering source selection (only one source at a time, that's the rule)
 - [ ] database
     - [ ] add to library, only store novel in db
     - [ ] download chapters for offline view, save everything to db
@@ -42,3 +43,8 @@
 - [ ] metrics if possible
 - [ ] backup data, migrations
 - [ ] novel updates
+
+### Guidelines
+
+1. Sources should not define `Novel` and `NovelItem`'s `id` field since it is calculated in constructor.
+2. Sources should not define `Chapter` and `ChapterItem`'s `novelId` field since it is calculated in constructor,

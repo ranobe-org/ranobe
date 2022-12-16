@@ -18,8 +18,6 @@ import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.databinding.FragmentSearchBinding;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.NovelItem;
-import org.ranobe.ranobe.sources.Source;
-import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
 import org.ranobe.ranobe.ui.search.viewmodel.SearchViewModel;
 import org.ranobe.ranobe.ui.views.SpacingDecorator;
@@ -32,7 +30,6 @@ import java.util.List;
 public class Search extends Fragment implements NovelAdapter.OnNovelItemClickListener{
     private FragmentSearchBinding binding;
     private SearchViewModel viewModel;
-    private Source source;
     private NovelAdapter adapter;
     private final List<NovelItem> list = new ArrayList<>();
 
@@ -47,7 +44,6 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(SearchViewModel.class);
-        source = SourceManager.getSource(1);
     }
 
     @Override
@@ -92,7 +88,7 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
         Filter filter = new Filter();
         filter.addFilter(Filter.FILTER_KEYWORD, keyword);
         binding.progress.setVisibility(View.VISIBLE);
-        viewModel.search(source, filter, page);
+        viewModel.search(filter, page);
     }
 
     private void searchNovels() {

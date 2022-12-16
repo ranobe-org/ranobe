@@ -14,8 +14,6 @@ import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.ActivityReaderBinding;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ReaderTheme;
-import org.ranobe.ranobe.sources.Source;
-import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.reader.sheet.CustomizeReader;
 import org.ranobe.ranobe.ui.reader.viewmodel.ReaderViewModel;
 
@@ -34,10 +32,9 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         String chapterUrl = getIntent().getStringExtra("chapter");
         ReaderViewModel viewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
 
-        Source source = SourceManager.getSource(1);
         viewModel.getChapter().observe(this, this::setChapter);
         viewModel.getError().observe(this, this::setError);
-        viewModel.chapter(source, chapterUrl);
+        viewModel.chapter(chapterUrl);
     }
 
     private void setUpReaderTheme() {

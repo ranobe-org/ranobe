@@ -17,8 +17,6 @@ import com.google.android.material.chip.Chip;
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.databinding.FragmentDetailsBinding;
 import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.sources.Source;
-import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.details.viewmodel.DetailsViewModel;
 
 import java.util.List;
@@ -47,9 +45,8 @@ public class Details extends Fragment {
         binding.chapterInfo.setOnClickListener(v -> navigateToChapterList());
         binding.progress.show();
 
-        Source source = SourceManager.getSource(1);
         viewModel.getDetails(novelUrl).observe(getViewLifecycleOwner(), this::setupUi);
-        viewModel.details(source, novelUrl);
+        viewModel.details(novelUrl);
 
         return binding.getRoot();
     }

@@ -14,7 +14,7 @@ public class SourceManager {
             return (Source) klass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return new ReadLightNovel();
         }
     }
 

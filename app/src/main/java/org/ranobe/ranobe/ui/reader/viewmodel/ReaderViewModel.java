@@ -5,13 +5,8 @@ import androidx.lifecycle.ViewModel;
 
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.repository.Repository;
-import org.ranobe.ranobe.sources.Source;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ReaderViewModel extends ViewModel {
-    private final ExecutorService executor = Executors.newCachedThreadPool();
     private MutableLiveData<Chapter> chapter;
     private MutableLiveData<String> error;
 
@@ -26,9 +21,8 @@ public class ReaderViewModel extends ViewModel {
         return error = new MutableLiveData<>();
     }
 
-    public void chapter(Source source, String chapterUrl) {
-        Repository repository = new Repository(executor, source);
-        repository.chapter(chapterUrl, new Repository.Callback<Chapter>() {
+    public void chapter(String chapterUrl) {
+        new Repository().chapter(chapterUrl, new Repository.Callback<Chapter>() {
             @Override
             public void onComplete(Chapter result) {
                 chapter.postValue(result);

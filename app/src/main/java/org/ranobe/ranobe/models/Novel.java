@@ -2,6 +2,8 @@ package org.ranobe.ranobe.models;
 
 import androidx.annotation.NonNull;
 
+import org.ranobe.ranobe.util.SourceUtils;
+
 import java.util.List;
 
 public class Novel extends NovelItem {
@@ -13,7 +15,10 @@ public class Novel extends NovelItem {
     public float rating;
     public int year;
 
-    public Novel() {
+    public Novel(String url) {
+        super(url);
+        this.id = SourceUtils.generateId(url);
+        this.url = url;
     }
 
     @NonNull

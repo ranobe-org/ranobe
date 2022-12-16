@@ -6,15 +6,11 @@ import androidx.lifecycle.ViewModel;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.repository.Repository;
-import org.ranobe.ranobe.sources.Source;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class SearchViewModel extends ViewModel {
-    private final ExecutorService executor = Executors.newCachedThreadPool();
     private final MutableLiveData<String> error = new MutableLiveData<>();
     private MutableLiveData<List<NovelItem>> items;
     private Filter oldFilter = new Filter();
@@ -26,9 +22,8 @@ public class SearchViewModel extends ViewModel {
         return items;
     }
 
-    public void search(Source source, Filter filter, int page) {
-        Repository repository = new Repository(executor, source);
-        repository.search(filter, page, new Repository.Callback<List<NovelItem>>() {
+    public void search(Filter filter, int page) {
+        new Repository().search(filter, page, new Repository.Callback<List<NovelItem>>() {
             @Override
             public void onComplete(List<NovelItem> result) {
                 List<NovelItem> old = items.getValue();

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
+import org.ranobe.ranobe.App;
 import org.ranobe.ranobe.models.ReaderTheme;
 
 import java.util.HashMap;
@@ -15,6 +16,7 @@ public class Ranobe {
     public static final String SETTINGS_THEME_MODE = "shared_pref_theme_mode";
     public static final String SETTINGS_READER_THEME = "shared_pref_reader_theme";
     public static final String SETTINGS_READER_FONT = "shared_pref_reader_font";
+    public static final String SETTING_SELECTED_SOURCE = "shared_pref_selected_source";
 
     public static final HashMap<String, ReaderTheme> themes = new HashMap<String, ReaderTheme>() {{
         put("basic", new ReaderTheme("#fffbe0", "#222831"));
@@ -62,5 +64,13 @@ public class Ranobe {
 
     public static Float getReaderFont(Context context) {
         return getSharedPref(context).getFloat(Ranobe.SETTINGS_READER_FONT, 0);
+    }
+
+    public static void saveCurrentSource(int sourceId) {
+        getEditor(App.getContext()).putInt(Ranobe.SETTING_SELECTED_SOURCE, sourceId).apply();
+    }
+
+    public static  int getCurrentSource() {
+        return getSharedPref(App.getContext()).getInt(Ranobe.SETTING_SELECTED_SOURCE, 1);
     }
 }

@@ -5,13 +5,8 @@ import androidx.lifecycle.ViewModel;
 
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.repository.Repository;
-import org.ranobe.ranobe.sources.Source;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class DetailsViewModel extends ViewModel {
-    private final ExecutorService executor = Executors.newCachedThreadPool();
     private final MutableLiveData<String> error = new MutableLiveData<>();
     private MutableLiveData<Novel> details;
     private String oldUrl = "";
@@ -24,9 +19,8 @@ public class DetailsViewModel extends ViewModel {
         return details;
     }
 
-    public void details(Source source, String novelUrl) {
-        Repository repository = new Repository(executor, source);
-        repository.details(novelUrl, new Repository.Callback<Novel>() {
+    public void details(String novelUrl) {
+        new Repository().details(novelUrl, new Repository.Callback<Novel>() {
             @Override
             public void onComplete(Novel result) {
                 details.postValue(result);

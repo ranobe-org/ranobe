@@ -2,14 +2,18 @@ package org.ranobe.ranobe.models;
 
 import androidx.annotation.NonNull;
 
+import org.ranobe.ranobe.util.SourceUtils;
+
 public class NovelItem {
-    public int id;
+    public long id;
     public int sourceId;
     public String name;
     public String cover;
     public String url;
 
-    public NovelItem() {
+    public NovelItem(String url) {
+        this.id = SourceUtils.generateId(url);
+        this.url = url;
     }
 
     @NonNull

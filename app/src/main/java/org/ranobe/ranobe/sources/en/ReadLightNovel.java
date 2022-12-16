@@ -42,7 +42,7 @@ public class ReadLightNovel implements Source {
 
     @Override
     public List<NovelItem> novels(int page) throws Exception {
-        String url = baseUrl + "/top-novels/most-viewed/" + page;
+        String url = baseUrl + "/top-novels/new/" + page;
         String body = HttpClient.GET(url, HEADERS);
         return parse(body);
     }
@@ -52,12 +52,15 @@ public class ReadLightNovel implements Source {
         Element doc = Jsoup.parse(body);
 
         for (Element element : doc.select("div.top-novel-block")) {
-            NovelItem item = new NovelItem();
-            item.sourceId = 1;
-            item.name = element.select("div.top-novel-header > h2 > a").text().trim();
-            item.url = element.select("div.top-novel-header > h2 > a").attr("href").trim();
-            item.cover = element.select("div.top-novel-cover > a > img").attr("src").trim();
-            items.add(item);
+            String url = element.select("div.top-novel-header > h2 > a").attr("href").trim();
+            if(url.length() > 0) {
+                NovelItem item = new NovelItem(url);
+                item.sourceId = 1;
+                item.name = element.select("div.top-novel-header > h2 > a").text().trim();
+                item.url = element.select("div.top-novel-header > h2 > a").attr("href").trim();
+                item.cover = element.select("div.top-novel-cover > a > img").attr("src").trim();
+                items.add(item);
+            }
         }
 
         return items;
@@ -65,7 +68,7 @@ public class ReadLightNovel implements Source {
 
     @Override
     public Novel details(String url) throws IOException {
-        Novel novel = new Novel();
+        Novel novel = new Novel(url);
         Element doc = Jsoup.parse(HttpClient.GET(url, HEADERS));
 
         novel.sourceId = 1;
@@ -108,7 +111,7 @@ public class ReadLightNovel implements Source {
 
         Elements main = doc.select("div.tab-content");
         for (Element element : main.select("a")) {
-            ChapterItem item = new ChapterItem();
+            ChapterItem item = new ChapterItem(url);
 
             item.name = element.text().trim();
             item.id = NumberUtils.toFloat(item.name);
@@ -121,7 +124,7 @@ public class ReadLightNovel implements Source {
 
     @Override
     public Chapter chapter(String url) throws IOException {
-        Chapter chapter = new Chapter();
+        Chapter chapter = new Chapter(url);
         chapter.content = "";
         Element doc = Jsoup.parse(HttpClient.GET(url, HEADERS));
 

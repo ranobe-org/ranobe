@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class BrowseViewModel extends ViewModel {
-    private final ExecutorService executor = Executors.newCachedThreadPool();
     private final MutableLiveData<String> error = new MutableLiveData<>();
     private MutableLiveData<List<NovelItem>> items;
     private int page = 0;
@@ -25,10 +24,9 @@ public class BrowseViewModel extends ViewModel {
         return items;
     }
 
-    public void novels(Source source) {
+    public void novels() {
         page += 1;
-        Repository repository = new Repository(executor, source);
-        repository.novels(page, new Repository.Callback<List<NovelItem>>() {
+        new Repository().novels(page, new Repository.Callback<List<NovelItem>>() {
             @Override
             public void onComplete(List<NovelItem> result) {
                 List<NovelItem> old = items.getValue();

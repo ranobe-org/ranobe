@@ -32,7 +32,6 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
 
     private BrowseViewModel viewModel;
     private NovelAdapter adapter;
-    private Source source;
 
     private boolean isLoading = false;
 
@@ -43,7 +42,6 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(BrowseViewModel.class);
-        source = SourceManager.getSource(1);
     }
 
     @Override
@@ -83,7 +81,7 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
     }
 
     private void fetchNovels() {
-        viewModel.novels(source);
+        viewModel.novels();
     }
 
     @Override
