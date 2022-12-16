@@ -1,6 +1,7 @@
 package org.ranobe.ranobe.models;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Filter {
     public static final String FILTER_KEYWORD = "keyword";
@@ -21,5 +22,18 @@ public class Filter {
 
     public String getKeyword() {
         return params.get(FILTER_KEYWORD);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Filter filter = (Filter) o;
+        return Objects.equals(params, filter.params);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(params);
     }
 }

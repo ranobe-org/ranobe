@@ -1,5 +1,6 @@
 package org.ranobe.ranobe.ui.search;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.databinding.FragmentSearchBinding;
@@ -23,11 +25,19 @@ import org.ranobe.ranobe.ui.search.viewmodel.SearchViewModel;
 import org.ranobe.ranobe.ui.views.SpacingDecorator;
 import org.ranobe.ranobe.util.DisplayUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Search extends Fragment implements NovelAdapter.OnNovelItemClickListener{
     private FragmentSearchBinding binding;
     private SearchViewModel viewModel;
     private Source source;
+    private NovelAdapter adapter;
+    private final List<NovelItem> list = new ArrayList<>();
+
+    private int page = 1;
+    private boolean isLoading = false;
 
     public Search() {
         // Required empty public constructor
@@ -46,23 +56,43 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         binding.submit.setOnClickListener(v -> searchNovels());
 
+        adapter = new NovelAdapter(list, this);
         DisplayUtils utils = new DisplayUtils(requireContext(), R.layout.item_novel);
         binding.novelList.setLayoutManager(new GridLayoutManager(requireActivity(), utils.noOfCols()));
         binding.novelList.addItemDecoration(new SpacingDecorator(utils.spacing()));
-
-        viewModel.getNovels().observe(requireActivity(), (novels) -> {
-            binding.progress.setVisibility(View.GONE);
-            binding.novelList.setAdapter(new NovelAdapter(novels, this));
+        binding.novelList.setAdapter(adapter);
+        binding.novelList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1) && !isLoading) {
+                    binding.progress.setVisibility(View.VISIBLE);
+                    isLoading = true;
+                    page += 1;
+                    searchNovels();
+                }
+            }
         });
+        viewModel.getNovels().observe(requireActivity(), this::setUpAdapter);
 
         return binding.getRoot();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void setUpAdapter(List<NovelItem> novels){
+        binding.progress.setVisibility(View.GONE);
+        isLoading = false;
+        // expand the current list without changing list reference
+        list.clear();
+        list.addAll(novels);
+        adapter.notifyDataSetChanged();
     }
 
     private void fetchNovels(String keyword) {
         Filter filter = new Filter();
         filter.addFilter(Filter.FILTER_KEYWORD, keyword);
         binding.progress.setVisibility(View.VISIBLE);
-        viewModel.search(source, filter, 1);
+        viewModel.search(source, filter, page);
     }
 
     private void searchNovels() {
