@@ -60,7 +60,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
 
     private void setError(String msg) {
         if (msg.length() == 0) return;
-        Snackbar.make(binding.getRoot(), msg, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(binding.getRoot(), msg, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

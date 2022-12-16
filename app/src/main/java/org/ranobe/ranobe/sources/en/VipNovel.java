@@ -69,7 +69,8 @@ public class VipNovel implements Source {
         novel.sourceId = sourceId;
         novel.name = doc.select(".post-title > h1").text().trim();
         novel.cover = cleanImg(doc.select(".summary_image > a > img").attr("Src").trim());
-        novel.summary = doc.select(".j_synopsis").text().trim();
+        doc.select(".j_synopsis").select("br").append("::");
+        novel.summary = doc.select("div.summary__content > div.mb48").text().replaceAll("::", "\n\n").trim();
         novel.rating = NumberUtils.toFloat(doc.select(".total_votes").text().trim());
         novel.authors = Arrays.asList(doc.select(".author-content > a").text().split(","));
 
@@ -118,9 +119,17 @@ public class VipNovel implements Source {
     public Chapter chapter(String url) throws IOException {
         Chapter chapter = new Chapter(url);
         Element doc = Jsoup.parse(HttpClient.GET(url, new HashMap<>()));
+        Element main = doc.select(".reading-content").first();
+
+        if(main == null) {
+            return null;
+        }
 
         chapter.url = url;
-        chapter.content = SourceUtils.cleanContent(doc.select(".reading-content").text().trim());
+        chapter.content = "";
+        main.select("p").append("::");
+        chapter.content = SourceUtils.cleanContent(main.text().replaceAll("::", "\n").trim());
+
         return chapter;
     }
 
