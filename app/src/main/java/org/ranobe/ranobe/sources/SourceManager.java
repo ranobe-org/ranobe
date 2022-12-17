@@ -22,6 +22,7 @@ public class SourceManager {
         HashMap<Integer, Class<?>> sources = new HashMap<>();
         sources.put(1, ReadLightNovel.class);
         sources.put(2, VipNovel.class);
+        sources.put(3, LightNovelBtt.class);
 
         return sources;
     }
