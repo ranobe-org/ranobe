@@ -33,6 +33,7 @@
         android:layout_below="@id/novel_cover_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
+        android:ellipsize="end"
         android:maxLines="2"
         android:padding="2dp"
         android:textColor="?colorOnSurface"

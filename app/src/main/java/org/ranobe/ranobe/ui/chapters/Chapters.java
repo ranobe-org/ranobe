@@ -73,7 +73,6 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
 
         adapter = new ChapterAdapter(originalItems, this);
         binding.chapterList.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        binding.chapterList.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
         binding.chapterList.setAdapter(adapter);
 
         viewModel.getChapters(novelUrl).observe(getViewLifecycleOwner(), this::setChapter);
@@ -98,6 +97,7 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     }
 
     private void setChapter(List<ChapterItem> chapters) {
+        originalItems.clear();
         originalItems.addAll(chapters);
         adapter.notifyItemRangeInserted(0, chapters.size());
         binding.toolbar.setTitle(String.format(Locale.getDefault(), "%d Chapters", chapters.size()));
@@ -114,6 +114,8 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
         requireActivity().startActivity(
                 new Intent(requireActivity(), ReaderActivity.class)
                         .putExtra("chapter", item.url)
+                        .putExtra("novel", novelUrl)
+                        .putExtra("currentChapter", item.url)
         );
     }
 

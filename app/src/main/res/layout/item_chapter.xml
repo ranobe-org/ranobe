@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?colorSurface"
+    android:layout_marginTop="10dp"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -12,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="?colorOnSurface"
         android:textSize="12sp" />
 
