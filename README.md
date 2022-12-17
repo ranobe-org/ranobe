@@ -25,7 +25,6 @@
 - [x] complete search page with keyword search
 - [x] reader text formatting with font size and bg/text color selection
 - [ ] continuous vertical scroll for reader
-- [ ] design improvements for details page
 - [ ] add error text/art to denote no results found in search
 - [x] add settings page with theme selection
 - [x] sources list selection
@@ -34,7 +33,7 @@
     - [ ] add to library, only store novel in db
     - [ ] download chapters for offline view, save everything to db
     - [ ] saving read state for each item
-- [ ] more sources (currently has 2)
+- [ ] more sources (currently has 3)
 
 #### could have
 
