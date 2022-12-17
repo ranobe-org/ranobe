@@ -33,11 +33,12 @@
         android:id="@+id/customize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:backgroundTint="?colorTertiaryContainer"
-        android:layout_margin="10dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        app:fabCustomSize="30dp"
+        android:layout_marginBottom="10dp"
         android:contentDescription="@string/image"
         android:src="@drawable/ic_color"
-        app:fabSize="mini"/>
+        app:backgroundTint="?colorTertiaryContainer"
+        app:fabSize="mini" />
 </RelativeLayout>

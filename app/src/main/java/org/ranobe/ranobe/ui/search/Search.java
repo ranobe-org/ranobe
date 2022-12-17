@@ -50,7 +50,7 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
-        binding.submit.setOnClickListener(v -> searchNovels());
+        binding.submit.setOnClickListener(v -> searchNovels(1));
 
         adapter = new NovelAdapter(list, this);
         DisplayUtils utils = new DisplayUtils(requireContext(), R.layout.item_novel);
@@ -65,7 +65,7 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
                     binding.progress.setVisibility(View.VISIBLE);
                     isLoading = true;
                     page += 1;
-                    searchNovels();
+                    searchNovels(page);
                 }
             }
         });
@@ -91,10 +91,11 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
         viewModel.search(filter, page);
     }
 
-    private void searchNovels() {
+    private void searchNovels(int page) {
         binding.searchField.clearFocus();
         if (binding.searchField.getText() != null) {
             String keyword = binding.searchField.getText().toString();
+            this.page = page;
             fetchNovels(keyword);
         }
     }
