@@ -1,9 +1,11 @@
 package org.ranobe.ranobe.ui.explore;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,6 +19,7 @@ import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.explore.adapter.SourceAdapter;
+import org.ranobe.ranobe.ui.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,7 +60,19 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected 
 
     @Override
     public void select(DataSource source) {
-        Snackbar.make(binding.getRoot(), "Select current source " + source.name, Snackbar.LENGTH_SHORT).show();
-        Ranobe.saveCurrentSource(source.sourceId);
+        Toast.makeText(requireActivity(), "Updating source to " + source.name, Toast.LENGTH_SHORT).show();
+        int oldSource = Ranobe.getCurrentSource();
+        int newSource = source.sourceId;
+
+        if(oldSource != newSource) {
+            Ranobe.saveCurrentSource(source.sourceId);
+            restartApp();
+        }
+    }
+
+    private void restartApp() {
+        Intent intent = new Intent(requireContext(), MainActivity.class);
+        requireActivity().startActivity(intent);
+        requireActivity().finishActivity(101);
     }
 }
