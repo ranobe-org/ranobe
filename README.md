@@ -24,7 +24,7 @@
 - [x] chapter search
 - [x] complete search page with keyword search
 - [x] reader text formatting with font size and bg/text color selection
-- [ ] continuous vertical scroll for reader
+- [x] continuous vertical scroll for reader
 - [ ] add error text/art to denote no results found in search
 - [x] update app when a new source is selected
 - [x] add settings page with theme selection

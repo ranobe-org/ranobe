@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import org.ranobe.ranobe.App;
+import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.SheetCustomizeReaderBinding;
 import org.ranobe.ranobe.ui.reader.sheet.adapter.ReaderThemeAdapter;
 
@@ -26,7 +28,7 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         SheetCustomizeReaderBinding binding = SheetCustomizeReaderBinding.inflate(inflater, container, false);
 
-        binding.fontSlider.setValue(listener.getFontSize());
+        binding.fontSlider.setValue(Ranobe.getReaderFont(App.getContext()));
         binding.fontSlider.addOnChangeListener((slider, value, fromUser) -> listener.setFontSize(value));
 
         binding.readerThemeList.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -40,7 +42,6 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
     }
 
     public interface OnOptionSelection {
-        float getFontSize();
         void setFontSize(float size);
         void setReaderTheme(String themeName);
     }

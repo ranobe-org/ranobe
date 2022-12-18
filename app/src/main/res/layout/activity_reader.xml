@@ -16,23 +16,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/progress"
+        android:scrollbars="vertical"
+        android:scrollbarThumbVertical="?colorSecondaryContainer"
+        android:scrollbarSize="5dp"
         android:id="@+id/page_list"/>
-<!--    <ScrollView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:fillViewport="true">-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/content"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:padding="10dp"-->
-<!--            android:lineSpacingExtra="5dp"-->
-<!--            android:textColor="?colorOnSurfaceVariant"-->
-<!--            android:textIsSelectable="true"-->
-<!--            android:textSize="18sp" />-->
-<!--    </ScrollView>-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/customize"

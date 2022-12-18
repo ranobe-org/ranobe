@@ -1,10 +1,7 @@
 package org.ranobe.ranobe.sources.en;
 
-import android.util.Log;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
-import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.DataSource;
@@ -67,7 +64,6 @@ public class LightNovelBtt implements Source {
             }
         }
 
-        Log.d(Ranobe.DEBUG, "items :: " + items.size());
         return items;
     }
 
@@ -134,7 +130,6 @@ public class LightNovelBtt implements Source {
         if (filters.hashKeyword()) {
             String keyword = filters.getKeyword();
             String web = SourceUtils.buildUrl(baseUrl, "/find-story?keyword=", keyword, "&page=", String .valueOf(page));
-            Log.d(Ranobe.DEBUG, web);
             return parse(HttpClient.GET(web, new HashMap<>()));
         }
         return new ArrayList<>();

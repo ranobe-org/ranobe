@@ -63,7 +63,7 @@ public class Ranobe {
     }
 
     public static Float getReaderFont(Context context) {
-        return getSharedPref(context).getFloat(Ranobe.SETTINGS_READER_FONT, 0);
+        return getSharedPref(context).getFloat(Ranobe.SETTINGS_READER_FONT, 15);
     }
 
     public static void saveCurrentSource(int sourceId) {
