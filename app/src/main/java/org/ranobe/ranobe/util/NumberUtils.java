@@ -1,10 +1,18 @@
 package org.ranobe.ranobe.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class NumberUtils {
+    private static final Pattern floatingPoint = Pattern.compile("[+-]?\\d+(\\.\\d+)?");
+
     public static float toFloat(String value) {
-        String number = value.replaceAll("[^\\d.]+|\\.(?!\\d)", "");
-        if (number.length() > 0) {
-            return Float.parseFloat(number);
+        Matcher matcher = NumberUtils.floatingPoint.matcher(value);
+        if(matcher.find()) {
+            String number = matcher.group();
+            if (number.length() > 0) {
+                return Float.parseFloat(number);
+            }
         }
         return 0F;
     }
