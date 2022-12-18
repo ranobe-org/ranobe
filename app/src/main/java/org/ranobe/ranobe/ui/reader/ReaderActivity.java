@@ -1,24 +1,39 @@
 package org.ranobe.ranobe.ui.reader;
 
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.ActivityReaderBinding;
 import org.ranobe.ranobe.models.Chapter;
+import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.ReaderTheme;
+import org.ranobe.ranobe.ui.reader.adapter.PageAdapter;
 import org.ranobe.ranobe.ui.reader.sheet.CustomizeReader;
 import org.ranobe.ranobe.ui.reader.viewmodel.ReaderViewModel;
+import org.ranobe.ranobe.util.ListUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReaderActivity extends AppCompatActivity implements CustomizeReader.OnOptionSelection {
     private ActivityReaderBinding binding;
+    private List<ChapterItem> chapterItems = new ArrayList<>();
+    private final List<Chapter> chapters = new ArrayList<>();
+    private int currentChapterIndex;
+    private String currentChapterUrl;
+    private PageAdapter adapter;
+    private boolean isLoading = false;
+    private ReaderViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,25 +42,45 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         AppCompatDelegate.setDefaultNightMode(Ranobe.getThemeMode(getApplicationContext()));
         setContentView(binding.getRoot());
         binding.customize.setOnClickListener(v-> setUpCustomizeReader());
-        setUpReaderTheme();
 
-        String chapterUrl = getIntent().getStringExtra("chapter");
-        ReaderViewModel viewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
+        String novelUrl = getIntent().getStringExtra("novel");
+        currentChapterUrl = getIntent().getStringExtra("currentChapter");
+        viewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
 
+        adapter = new PageAdapter(chapters);
+        binding.pageList.setLayoutManager(new LinearLayoutManager(this));
+        binding.pageList.setAdapter(adapter);
+        binding.pageList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1) && !isLoading) {
+                    isLoading = true;
+                    currentChapterIndex += 1;
+
+                    if (currentChapterIndex < chapterItems.size()) {
+                        binding.progress.setVisibility(View.VISIBLE);
+                        viewModel.chapter(chapterItems.get(currentChapterIndex).url);
+                    }
+                }
+            }
+        });
+
+        viewModel.getChapters().observe(this, this::setChapters);
         viewModel.getChapter().observe(this, this::setChapter);
         viewModel.getError().observe(this, this::setError);
-        viewModel.chapter(chapterUrl);
+        viewModel.chapters(novelUrl);
     }
 
-    private void setUpReaderTheme() {
-        String currentReaderTheme = Ranobe.getReaderTheme(this);
-        float currentFontSize = Ranobe.getReaderFont(this);
-        if(currentReaderTheme != null) {
-            setReaderTheme(currentReaderTheme);
+    private void setChapters(List<ChapterItem> items) {
+        chapterItems = ListUtils.sortById(items);
+        for(int i = 0; i < chapterItems.size(); i++) {
+            if(chapterItems.get(i).url.equals(currentChapterUrl)) {
+                currentChapterIndex = i;
+                break;
+            }
         }
-        if (currentFontSize != 0) {
-            setFontSize(currentFontSize);
-        }
+        viewModel.chapter(currentChapterUrl);
     }
 
     private void setUpCustomizeReader() {
@@ -54,8 +89,11 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     }
 
     private void setChapter(Chapter chapter) {
-        binding.content.setText(chapter.content);
+        isLoading = false;
         binding.progress.setVisibility(View.GONE);
+        chapter.id = chapterItems.get(currentChapterIndex).id;
+        chapters.add(chapter);
+        adapter.notifyItemInserted(chapters.size() - 1);
     }
 
     private void setError(String msg) {
@@ -65,23 +103,18 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
 
     @Override
     public void setFontSize(float size) {
-        binding.content.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
         Ranobe.storeReaderFont(this, size);
+        adapter.setFontSize(size);
+        adapter.notifyItemRangeChanged(0, chapters.size());
     }
 
     @Override
     public void setReaderTheme(String themeName) {
         ReaderTheme theme = Ranobe.themes.get(themeName);
         if(theme != null) {
-            binding.readerView.setBackgroundColor(theme.getBackground());
-            binding.content.setTextColor(theme.getText());
+            adapter.setTheme(theme);
+            adapter.notifyItemRangeChanged(0, chapters.size());
             Ranobe.storeReaderTheme(this, themeName);
         }
-    }
-
-    @Override
-    public float getFontSize() {
-        float px = binding.content.getTextSize();
-        return px / getResources().getDisplayMetrics().scaledDensity;
     }
 }

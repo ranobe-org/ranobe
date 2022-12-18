@@ -7,38 +7,31 @@
     android:layout_height="match_parent"
     tools:context=".ui.reader.ReaderActivity">
 
-    <ProgressBar
+    <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_alignParentTop="true"
+        android:indeterminate="true"/>
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
-
-        <TextView
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:lineSpacingExtra="5dp"
-            android:textColor="?colorOnSurfaceVariant"
-            android:textIsSelectable="true"
-            android:textSize="18sp" />
-    </ScrollView>
+        android:layout_below="@id/progress"
+        android:scrollbars="vertical"
+        android:scrollbarThumbVertical="?colorSecondaryContainer"
+        android:scrollbarSize="5dp"
+        android:id="@+id/page_list"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/customize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
+        app:backgroundTint="?colorTertiaryContainer"
         app:fabCustomSize="30dp"
         android:layout_marginBottom="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:contentDescription="@string/image"
-        android:src="@drawable/ic_color"
-        app:backgroundTint="?colorTertiaryContainer"
-        app:fabSize="mini" />
+        android:src="@drawable/ic_color"/>
 </RelativeLayout>
