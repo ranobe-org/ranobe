@@ -37,9 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             navController.navigate(R.id.browse_fragment);
         } else if(id == R.id.search) {
             navController.navigate(R.id.search_fragment);
-        } else if (id == R.id.library) {
-            navController.navigate(R.id.library_fragment);
-        } else if (id == R.id.explore) {
+        }  else if (id == R.id.explore) {
             navController.navigate(R.id.explore_fragment);
         } else if (id == R.id.settings) {
             navController.navigate(R.id.settings_fragment);
