@@ -51,8 +51,10 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Chapter chapter = chapters.get(position);
 
-        holder.binding.pageLayout.setBackgroundColor(theme.getBackground());
-        holder.binding.content.setTextColor(theme.getText());
+        if(theme != null) {
+            holder.binding.pageLayout.setBackgroundColor(theme.getBackground());
+            holder.binding.content.setTextColor(theme.getText());
+        }
         holder.binding.content.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize);
 
         holder.binding.pageStart.setText(String.format(Locale.getDefault(), "Start of Chapter %.1f", chapter.id));

@@ -11,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentExploreBinding;
 import org.ranobe.ranobe.models.DataSource;
@@ -60,11 +58,11 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected 
 
     @Override
     public void select(DataSource source) {
-        Toast.makeText(requireActivity(), "Updating source to " + source.name, Toast.LENGTH_SHORT).show();
         int oldSource = Ranobe.getCurrentSource();
         int newSource = source.sourceId;
 
         if(oldSource != newSource) {
+            Toast.makeText(requireActivity(), "Updating source to " + source.name, Toast.LENGTH_SHORT).show();
             Ranobe.saveCurrentSource(source.sourceId);
             restartApp();
         }
