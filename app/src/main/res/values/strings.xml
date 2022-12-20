@@ -22,5 +22,6 @@
     <string name="sources">Sources</string>
     <string name="no_results_err">we didn\'t find anything for you!</string>
     <string name="retry">Retry</string>
+    <string name="currently_active">Currently active</string>
 
 </resources>

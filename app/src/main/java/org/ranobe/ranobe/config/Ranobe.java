@@ -79,6 +79,6 @@ public class Ranobe {
     }
 
     public static  int getCurrentSource() {
-        return getSharedPref(App.getContext()).getInt(Ranobe.SETTING_SELECTED_SOURCE, 1);
+        return getSharedPref(App.getContext()).getInt(Ranobe.SETTING_SELECTED_SOURCE, 3);
     }
 }

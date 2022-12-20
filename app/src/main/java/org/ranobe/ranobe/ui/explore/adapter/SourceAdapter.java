@@ -1,6 +1,7 @@
 package org.ranobe.ranobe.ui.explore.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.ItemSourceBinding;
 import org.ranobe.ranobe.models.DataSource;
 
@@ -17,10 +19,12 @@ import java.util.Locale;
 public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHolder> {
     private final List<DataSource> sources;
     private final OnSourceSelected listener;
+    private final int currentSource;
 
     public SourceAdapter(List<DataSource> sources, OnSourceSelected listener) {
         this.sources = sources;
         this.listener = listener;
+        this.currentSource = Ranobe.getCurrentSource();
     }
 
     @NonNull
@@ -33,6 +37,10 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         DataSource source = sources.get(position);
+
+        if (source.sourceId == currentSource) {
+            holder.binding.active.setVisibility(View.VISIBLE);
+        }
 
         holder.binding.sourceId.setText(String.valueOf(source.sourceId));
         holder.binding.sourceName.setText(source.name);
