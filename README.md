@@ -19,6 +19,23 @@
     </a>
 </div>
 
+---------------
+
+### Features
+- Read Novels
+- No Ads, No Paywall
+- Unlimited novel browsing
+- Multiple Sources: LightNovelBtt, ReadLightNove, VipNovels
+- Searching with keywords
+- Chapter Search and Sort
+- Continuous Vertical Reading
+- Light and Dark modes
+- Customize reading experience
+- Change font size
+- Change background and font color
+
+----------------
+
 ### TODO
 
 #### must have
@@ -50,6 +67,8 @@
 - [ ] metrics if possible
 - [ ] backup data, migrations
 - [ ] novel updates
+
+---------------
 
 ### Guidelines
 
