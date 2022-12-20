@@ -1,5 +1,6 @@
 package org.ranobe.ranobe.ui.chapters;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,7 +14,6 @@ import android.widget.Toolbar;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.ranobe.ranobe.R;
@@ -21,6 +21,7 @@ import org.ranobe.ranobe.databinding.FragmentChaptersBinding;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.ui.chapters.adapter.ChapterAdapter;
 import org.ranobe.ranobe.ui.chapters.viewmodel.ChaptersViewModel;
+import org.ranobe.ranobe.ui.error.Error;
 import org.ranobe.ranobe.ui.reader.ReaderActivity;
 import org.ranobe.ranobe.util.ListUtils;
 
@@ -75,10 +76,18 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
         binding.chapterList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.chapterList.setAdapter(adapter);
 
-        viewModel.getChapters(novelUrl).observe(getViewLifecycleOwner(), this::setChapter);
+        viewModel.getError().observe(requireActivity(), this::setUpError);
+        viewModel.getChapters(novelUrl).observe(requireActivity(), this::setChapter);
         viewModel.chapters(novelUrl);
 
         return binding.getRoot();
+    }
+
+    private void setUpError(String error) {
+        binding.progress.hide();
+        if (originalItems.size() == 0) {
+            Error.navigateToErrorFragment(requireActivity(), error);
+        }
     }
 
     private void searchResults(String keyword) {
@@ -96,12 +105,13 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
         binding.searchView.setVisibility(mode);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void setChapter(List<ChapterItem> chapters) {
         originalItems.clear();
         originalItems.addAll(chapters);
-        adapter.notifyItemRangeInserted(0, chapters.size());
+        adapter.notifyDataSetChanged();
         binding.toolbar.setTitle(String.format(Locale.getDefault(), "%d Chapters", chapters.size()));
-        binding.progress.setVisibility(View.GONE);
+        binding.progress.hide();
     }
 
     private void sort() {

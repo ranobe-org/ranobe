@@ -7,9 +7,13 @@ import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.repository.Repository;
 
 public class DetailsViewModel extends ViewModel {
-    private final MutableLiveData<String> error = new MutableLiveData<>();
+    private MutableLiveData<String> error = new MutableLiveData<>();
     private MutableLiveData<Novel> details;
     private String oldUrl = "";
+
+    public MutableLiveData<String> getError() {
+        return error = new MutableLiveData<>();
+    }
 
     public MutableLiveData<Novel> getDetails(String novelUrl) {
         if (details == null || !oldUrl.equals(novelUrl)) {

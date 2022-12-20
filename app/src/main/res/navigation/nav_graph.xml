@@ -18,12 +18,6 @@
         tools:layout="@layout/fragment_search" />
 
     <fragment
-        android:id="@+id/library_fragment"
-        android:name="org.ranobe.ranobe.ui.library.Library"
-        android:label="fragment_library"
-        tools:layout="@layout/fragment_library" />
-
-    <fragment
         android:id="@+id/explore_fragment"
         android:name="org.ranobe.ranobe.ui.explore.Explore"
         android:label="fragment_explore"
@@ -46,6 +40,12 @@
         android:name="org.ranobe.ranobe.ui.chapters.Chapters"
         android:label="fragment_chapters"
         tools:layout="@layout/fragment_chapters" />
+
+    <fragment
+        android:id="@+id/error_fragment"
+        android:name="org.ranobe.ranobe.ui.error.Error"
+        android:label="fragment_error"
+        tools:layout="@layout/fragment_error" />
 
 
 </navigation>

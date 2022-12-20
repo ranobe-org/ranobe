@@ -5,15 +5,12 @@ import androidx.lifecycle.ViewModel;
 
 import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.repository.Repository;
-import org.ranobe.ranobe.sources.Source;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class BrowseViewModel extends ViewModel {
-    private final MutableLiveData<String> error = new MutableLiveData<>();
+    private MutableLiveData<String> error = new MutableLiveData<>();
     private MutableLiveData<List<NovelItem>> items;
     private int page = 0;
 
@@ -22,6 +19,10 @@ public class BrowseViewModel extends ViewModel {
             items = new MutableLiveData<>();
         }
         return items;
+    }
+
+    public MutableLiveData<String> getError() {
+        return error = new MutableLiveData<>();
     }
 
     public void novels() {

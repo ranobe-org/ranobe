@@ -21,6 +21,7 @@
         <entry key="app/src/main/res/layout/fragment_browse.xml" value="0.5911840968020743" />
         <entry key="app/src/main/res/layout/fragment_chapters.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_details.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_error.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_explore.xml" value="0.18177083333333333" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.21603260869565216" />
         <entry key="app/src/main/res/layout/fragment_library.xml" value="0.18177083333333333" />
@@ -34,6 +35,7 @@
         <entry key="app/src/main/res/layout/item_page.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/item_reader_theme.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/item_source.xml" value="0.35520833333333335" />
+        <entry key="app/src/main/res/layout/layout_error.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/sheet_customize_reader.xml" value="0.33" />
         <entry key="app/src/main/res/menu/menu_chapter_toolbar.xml" value="0.35625" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.234375" />

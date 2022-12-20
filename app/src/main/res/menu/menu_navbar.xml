@@ -16,11 +16,6 @@
         android:icon="@drawable/ic_explore"
         android:title="@string/nav_explore" />
 
-<!--    <item-->
-<!--        android:id="@+id/library"-->
-<!--        android:icon="@drawable/ic_library"-->
-<!--        android:title="@string/nav_library" />-->
-
     <item
         android:id="@+id/settings"
         android:icon="@drawable/ic_settings"

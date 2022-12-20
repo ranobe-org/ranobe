@@ -18,6 +18,7 @@ import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.databinding.FragmentDetailsBinding;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.ui.details.viewmodel.DetailsViewModel;
+import org.ranobe.ranobe.ui.error.Error;
 
 import java.util.List;
 
@@ -45,10 +46,16 @@ public class Details extends Fragment {
         binding.chapterInfo.setOnClickListener(v -> navigateToChapterList());
         binding.progress.show();
 
+        viewModel.getError().observe(requireActivity(), this::setUpError);
         viewModel.getDetails(novelUrl).observe(getViewLifecycleOwner(), this::setupUi);
         viewModel.details(novelUrl);
 
         return binding.getRoot();
+    }
+
+    private void setUpError(String error) {
+        binding.progress.hide();
+        Error.navigateToErrorFragment(requireActivity(), error);
     }
 
     private void navigateToChapterList() {

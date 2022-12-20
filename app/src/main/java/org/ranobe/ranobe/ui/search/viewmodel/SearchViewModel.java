@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchViewModel extends ViewModel {
-    private final MutableLiveData<String> error = new MutableLiveData<>();
+    private MutableLiveData<String> error = new MutableLiveData<>();
     private MutableLiveData<List<NovelItem>> items;
     private Filter oldFilter = new Filter();
 
@@ -20,6 +20,10 @@ public class SearchViewModel extends ViewModel {
             items = new MutableLiveData<>();
         }
         return items;
+    }
+
+    public MutableLiveData<String> getError() {
+        return error = new MutableLiveData<>();
     }
 
     public void search(Filter filter, int page) {

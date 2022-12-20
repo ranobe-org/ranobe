@@ -19,6 +19,7 @@ import org.ranobe.ranobe.databinding.FragmentSearchBinding;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
+import org.ranobe.ranobe.ui.error.Error;
 import org.ranobe.ranobe.ui.search.viewmodel.SearchViewModel;
 import org.ranobe.ranobe.ui.views.SpacingDecorator;
 import org.ranobe.ranobe.util.DisplayUtils;
@@ -62,21 +63,29 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (!recyclerView.canScrollVertically(1) && !isLoading) {
-                    binding.progress.setVisibility(View.VISIBLE);
+                    binding.progress.show();
                     isLoading = true;
                     page += 1;
                     searchNovels(page);
                 }
             }
         });
+
+        viewModel.getError().observe(requireActivity(), this::setUpError);
         viewModel.getNovels().observe(requireActivity(), this::setUpAdapter);
 
         return binding.getRoot();
     }
 
+    private void setUpError(String error) {
+        if (list.size() == 0) {
+            Error.navigateToErrorFragment(requireActivity(), error);
+        }
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private void setUpAdapter(List<NovelItem> novels){
-        binding.progress.setVisibility(View.GONE);
+        binding.progress.hide();
         isLoading = false;
         // expand the current list without changing list reference
         list.clear();
@@ -87,7 +96,7 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
     private void fetchNovels(String keyword) {
         Filter filter = new Filter();
         filter.addFilter(Filter.FILTER_KEYWORD, keyword);
-        binding.progress.setVisibility(View.VISIBLE);
+        binding.progress.show();
         viewModel.search(filter, page);
     }
 

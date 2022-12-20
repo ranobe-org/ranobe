@@ -9,9 +9,13 @@ import org.ranobe.ranobe.repository.Repository;
 import java.util.List;
 
 public class ChaptersViewModel extends ViewModel {
-    private final MutableLiveData<String> error = new MutableLiveData<>();
+    private MutableLiveData<String> error = new MutableLiveData<>();
     private MutableLiveData<List<ChapterItem>> chapters;
     private String oldUrl = "";
+
+    public MutableLiveData<String> getError() {
+        return error = new MutableLiveData<>();
+    }
 
     public MutableLiveData<List<ChapterItem>> getChapters(String novelUrl) {
         if (chapters == null || !oldUrl.equals(novelUrl)) {

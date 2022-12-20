@@ -16,10 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.databinding.FragmentBrowseBinding;
 import org.ranobe.ranobe.models.NovelItem;
-import org.ranobe.ranobe.sources.Source;
-import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
 import org.ranobe.ranobe.ui.browse.viewmodel.BrowseViewModel;
+import org.ranobe.ranobe.ui.error.Error;
 import org.ranobe.ranobe.ui.views.SpacingDecorator;
 import org.ranobe.ranobe.util.DisplayUtils;
 
@@ -60,15 +59,16 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (!recyclerView.canScrollVertically(1) && !isLoading) {
-                    binding.progress.setVisibility(View.VISIBLE);
+                    binding.progress.show();
                     isLoading = true;
                     fetchNovels();
                 }
             }
         });
 
+        viewModel.getError().observe(requireActivity(), this::setUpError);
         viewModel.getNovels().observe(requireActivity(), (novels) -> {
-            binding.progress.setVisibility(View.GONE);
+            binding.progress.hide();
             isLoading = false;
             int old = list.size();
             list.clear();
@@ -78,6 +78,14 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
 
         fetchNovels();
         return binding.getRoot();
+    }
+
+    private void setUpError(String error) {
+        binding.progress.hide();
+        // error on the first call
+        if (list.size() == 0) {
+            Error.navigateToErrorFragment(requireActivity(), error);
+        }
     }
 
     private void fetchNovels() {

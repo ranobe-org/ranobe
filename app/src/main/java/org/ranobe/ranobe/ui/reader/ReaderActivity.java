@@ -1,7 +1,6 @@
 package org.ranobe.ranobe.ui.reader;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,7 +58,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
                     currentChapterIndex += 1;
 
                     if (currentChapterIndex < chapterItems.size()) {
-                        binding.progress.setVisibility(View.VISIBLE);
+                        binding.progress.show();
                         viewModel.chapter(chapterItems.get(currentChapterIndex).url);
                     }
                 }
@@ -90,7 +89,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
 
     private void setChapter(Chapter chapter) {
         isLoading = false;
-        binding.progress.setVisibility(View.GONE);
+        binding.progress.hide();
         chapter.id = chapterItems.get(currentChapterIndex).id;
         chapters.add(chapter);
         adapter.notifyItemInserted(chapters.size() - 1);

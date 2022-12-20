@@ -18,6 +18,14 @@ public class Ranobe {
     public static final String SETTINGS_READER_FONT = "shared_pref_reader_font";
     public static final String SETTING_SELECTED_SOURCE = "shared_pref_selected_source";
 
+    public static final String[] SILLY_EMOJI = new String[]{
+            "( ╥﹏╥) ノシ",
+            "༼ つ ◕_◕ ༽つ",
+            "(❍ᴥ❍ʋ)",
+            "(⊙＿⊙')",
+            "(=____=)"
+    };
+
     public static final HashMap<String, ReaderTheme> themes = new HashMap<String, ReaderTheme>() {{
         put("basic", new ReaderTheme("#fffbe0", "#222831"));
         put("basic_inverse", new ReaderTheme("#222831", "#fffbe0"));

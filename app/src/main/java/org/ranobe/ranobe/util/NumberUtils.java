@@ -1,5 +1,6 @@
 package org.ranobe.ranobe.util;
 
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,5 +24,9 @@ public class NumberUtils {
             return Integer.parseInt(value);
         }
         return 0;
+    }
+
+    public static int getRandom(int size)  {
+        return new Random().nextInt(size);
     }
 }
