@@ -67,6 +67,7 @@
 - [ ] metrics if possible
 - [ ] backup data, migrations
 - [ ] novel updates
+- [ ] animations
 
 ---------------
 
