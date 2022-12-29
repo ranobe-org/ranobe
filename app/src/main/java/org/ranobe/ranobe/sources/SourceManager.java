@@ -1,6 +1,7 @@
 package org.ranobe.ranobe.sources;
 
 import org.ranobe.ranobe.sources.en.*;
+import org.ranobe.ranobe.sources.ru.RanobeHub;
 
 import java.util.HashMap;
 
@@ -24,6 +25,7 @@ public class SourceManager {
         sources.put(2, VipNovel.class);
         sources.put(3, LightNovelBtt.class);
         sources.put(4, LightNovelPub.class);
+        sources.put(5, RanobeHub.class);
 
         return sources;
     }
