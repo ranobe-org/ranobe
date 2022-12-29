@@ -23,6 +23,7 @@ public class SourceManager {
         sources.put(1, ReadLightNovel.class);
         sources.put(2, VipNovel.class);
         sources.put(3, LightNovelBtt.class);
+        sources.put(4, LightNovelPub.class);
 
         return sources;
     }
