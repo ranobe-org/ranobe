@@ -147,7 +147,7 @@ public class RanobeHub implements Source {
 
     @Override
     public List<NovelItem> search(Filter filters, int page) throws Exception {
-        if(page > 0) return new ArrayList<>();
+        if(page > 1) return new ArrayList<>();
 
         List<NovelItem> items = new ArrayList<>();
         if (filters.hashKeyword()) {
