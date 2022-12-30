@@ -21,6 +21,9 @@
 
 ---------------
 
+<h3 align="center"><samp>Support with a Star :star:!</samp></h3>
+
+---------------
 ### Features
 - Read Novels
 - No Ads, No Paywall
