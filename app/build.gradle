@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "org.ranobe.ranobe"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "v0.0.1-initial"
     }
@@ -32,8 +32,8 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
-    implementation 'androidx.navigation:navigation-fragment:2.3.5'
-    implementation 'androidx.navigation:navigation-ui:2.3.5'
+    implementation 'androidx.navigation:navigation-fragment:2.5.3'
+    implementation 'androidx.navigation:navigation-ui:2.5.3'
     implementation 'org.jsoup:jsoup:1.15.3'
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

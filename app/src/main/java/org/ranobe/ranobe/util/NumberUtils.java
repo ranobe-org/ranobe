@@ -21,7 +21,7 @@ public class NumberUtils {
     public static int toInt(String value) {
         String number = value.replaceAll("\\D", "");
         if (number.length() > 0) {
-            return Integer.parseInt(value);
+            return Integer.parseInt(number);
         }
         return 0;
     }

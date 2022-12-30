@@ -28,7 +28,9 @@
 - Read Novels
 - No Ads, No Paywall
 - Unlimited novel browsing
-- Multiple Sources: LightNovelBtt, ReadLightNove, VipNovels
+- Multi-lingual sources
+  - English
+  - Russian
 - Searching with keywords
 - Chapter Search and Sort
 - Continuous Vertical Reading
@@ -60,7 +62,7 @@
     - [ ] add to library, only store novel in db
     - [ ] download chapters for offline view, save everything to db
     - [ ] saving read state for each item
-- [ ] more sources (currently has 3)
+- [ ] more sources (currently has 5)
 
 #### could have
 
