@@ -27,6 +27,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'org.ranobe.ranobe'
 }
 
 dependencies {
