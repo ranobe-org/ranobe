@@ -9,8 +9,8 @@ android {
         applicationId "org.ranobe.ranobe"
         minSdk 21
         targetSdk 33
-        versionCode 1
-        versionName "v0.0.1-initial"
+        versionCode 2
+        versionName "v0.0.2"
     }
 
     buildTypes {
