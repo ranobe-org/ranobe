@@ -23,5 +23,7 @@
     <string name="no_results_err">we didn\'t find anything for you!</string>
     <string name="retry">Retry</string>
     <string name="currently_active">Currently active</string>
+    <string name="info">INFO</string>
+    <string name="mp_lite_subtitle">an open source music player from same dev</string>
 
 </resources>

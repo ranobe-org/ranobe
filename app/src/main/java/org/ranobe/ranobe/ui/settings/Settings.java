@@ -1,5 +1,7 @@
 package org.ranobe.ranobe.ui.settings;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,10 @@ public class Settings extends Fragment {
         binding.nightChip.setOnClickListener(v -> selectTheme(AppCompatDelegate.MODE_NIGHT_YES));
         binding.autoChip.setOnClickListener(v -> selectTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM));
 
+        binding.projectLink.setOnClickListener(v -> openLink(Ranobe.RANOBE_GITHUB_LINK));
+        binding.musicPlayerLink.setOnClickListener(v -> openLink(Ranobe.MP_LITE_GITHUB_LINK));
+        binding.discordLink.setOnClickListener(v -> openLink(Ranobe.DISCORD_INVITE_LINK));
+
         setCurrentThemeMode();
         return binding.getRoot();
     }
@@ -42,11 +48,11 @@ public class Settings extends Fragment {
     private void setCurrentThemeMode() {
         int mode = Ranobe.getThemeMode(requireActivity().getApplicationContext());
         if (mode == AppCompatDelegate.MODE_NIGHT_NO)
-            binding.currentThemeMode.setImageResource(R.drawable.ic_theme_mode_light);
+            binding.themeModeOption.setIcon(R.drawable.ic_theme_mode_light);
         else if (mode == AppCompatDelegate.MODE_NIGHT_YES)
-            binding.currentThemeMode.setImageResource(R.drawable.ic_theme_mode_night);
+            binding.themeModeOption.setIcon(R.drawable.ic_theme_mode_night);
         else
-            binding.currentThemeMode.setImageResource(R.drawable.ic_theme_mode_auto);
+            binding.themeModeOption.setIcon(R.drawable.ic_theme_mode_auto);
     }
 
     private int getPolarVisibility(View view) {
@@ -57,5 +63,12 @@ public class Settings extends Fragment {
     private void selectTheme(int theme) {
         AppCompatDelegate.setDefaultNightMode(theme);
         Ranobe.storeThemeMode(requireActivity().getApplicationContext(), theme);
+    }
+
+    private void openLink(String url) {
+        requireActivity().startActivity(new Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(url)
+        ));
     }
 }

@@ -18,6 +18,10 @@ public class Ranobe {
     public static final String SETTINGS_READER_FONT = "shared_pref_reader_font";
     public static final String SETTING_SELECTED_SOURCE = "shared_pref_selected_source";
 
+    public static final String RANOBE_GITHUB_LINK = "https://github.com/ranobe-org/ranobe";
+    public static final String MP_LITE_GITHUB_LINK = "https://github.com/AP-Atul/music_player_lite";
+    public static final String DISCORD_INVITE_LINK = "https://discord.gg/6CQ6u64dca";
+
     public static final String[] SILLY_EMOJI = new String[]{
             "( ╥﹏╥) ノシ",
             "༼ つ ◕_◕ ༽つ",
