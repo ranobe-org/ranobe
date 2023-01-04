@@ -8,8 +8,8 @@
     <a href="https://github.com/ranobe-org/ranobe/releases/download/v0.0.2/ranobe.apk" title="Download">
         <img height='30' src="https://img.shields.io/badge/download-2da44e?style=flat&logo=android&logoColor=white" alt="Download" title="Download">
     </a>
-    <a href="https://apt.izzysoft.de/fdroid/index/apk/org.ranobe.ranobe" title="Sizzydroid">
-        <img height='30' src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/org.ranobe.ranobe" alt="Download from sizzydroid">
+    <a href="https://apt.izzysoft.de/fdroid/index/apk/org.ranobe.ranobe" title="Download from Izzydroid">
+        <img height='30' src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/org.ranobe.ranobe" alt="Download from Izzydroid">
     </a>
     <a href="https://ranobe-org.github.io/.github/" title="Website">
         <img height='30' src="https://img.shields.io/badge/website-F4F51E?style=flat&logo=internet-archive&logoColor=black" alt="Website" title="Website">
