@@ -137,7 +137,7 @@ public class RanobeHub implements Source {
             if (element.hasAttr("data-container")) {
                 element.select("p").append("::");
                 chapter.content = SourceUtils.cleanContent(
-                        element.text().replaceAll("::", "\n").trim()
+                        element.text().replaceAll("::", "\n\n").trim()
                 );
             }
         }

@@ -128,7 +128,7 @@ public class VipNovel implements Source {
         chapter.url = url;
         chapter.content = "";
         main.select("p").append("::");
-        chapter.content = SourceUtils.cleanContent(main.text().replaceAll("::", "\n").trim());
+        chapter.content = SourceUtils.cleanContent(main.text().replaceAll("::", "\n\n").trim());
 
         return chapter;
     }
