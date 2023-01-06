@@ -1,6 +1,7 @@
 package org.ranobe.ranobe.ui.reader;
 
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,6 +40,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         super.onCreate(savedInstanceState);
         binding = ActivityReaderBinding.inflate(getLayoutInflater());
         AppCompatDelegate.setDefaultNightMode(Ranobe.getThemeMode(getApplicationContext()));
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(binding.getRoot());
         binding.customize.setOnClickListener(v-> setUpCustomizeReader());
 
