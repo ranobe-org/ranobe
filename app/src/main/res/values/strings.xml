@@ -25,5 +25,7 @@
     <string name="currently_active">Currently active</string>
     <string name="info">INFO</string>
     <string name="mp_lite_subtitle">an open source music player from same dev</string>
+    <string name="new_version_available">A new version of the app is available</string>
+    <string name="update">Update</string>
 
 </resources>

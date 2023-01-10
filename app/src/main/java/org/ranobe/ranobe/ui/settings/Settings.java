@@ -10,14 +10,18 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentSettingsBinding;
+import org.ranobe.ranobe.repository.GithubRepo;
+import org.ranobe.ranobe.ui.settings.viewmodel.SettingsViewModel;
 
 public class Settings extends Fragment {
 
     private FragmentSettingsBinding binding;
+    private SettingsViewModel viewModel;
 
     public Settings() {
     }
@@ -25,6 +29,7 @@ public class Settings extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
     }
 
     @Override
@@ -42,7 +47,19 @@ public class Settings extends Fragment {
         binding.discordLink.setOnClickListener(v -> openLink(Ranobe.DISCORD_INVITE_LINK));
 
         setCurrentThemeMode();
+
+        viewModel.getUpdate().observe(requireActivity(), this::release);
+        viewModel.checkForUpdate();
+
         return binding.getRoot();
+    }
+
+    private void release(GithubRepo.GithubRelease release) {
+        if (release.updateAvailable) {
+            binding.updateCard.setVisibility(View.VISIBLE);
+            binding.versionString.setText(release.newReleaseVersion);
+            binding.getUpdate.setOnClickListener(v -> openLink(release.newReleaseUrl));
+        }
     }
 
     private void setCurrentThemeMode() {
