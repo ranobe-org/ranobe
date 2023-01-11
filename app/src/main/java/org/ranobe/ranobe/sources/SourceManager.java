@@ -26,6 +26,7 @@ public class SourceManager {
         sources.put(3, LightNovelBtt.class);
         sources.put(4, LightNovelPub.class);
         sources.put(5, RanobeHub.class);
+        sources.put(6, Ranobe.class);
 
         return sources;
     }
