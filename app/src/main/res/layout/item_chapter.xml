@@ -3,7 +3,7 @@
     android:id="@+id/chapter_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?colorSurface"
+    android:background="?selectableItemBackground"
     android:layout_marginTop="10dp"
     android:orientation="vertical"
     android:padding="10dp">
@@ -15,7 +15,7 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:textColor="?colorOnSurface"
-        android:textSize="12sp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/updated"

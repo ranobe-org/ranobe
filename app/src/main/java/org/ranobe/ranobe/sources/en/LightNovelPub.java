@@ -129,7 +129,7 @@ public class LightNovelPub implements Source {
 
         doc.select("div.chr-c").select("p").append("::");
         chapter.content = SourceUtils.cleanContent(
-                doc.select("div.chr-c").text().replaceAll("::", "\n").trim()
+                doc.select("div.chr-c").text().replaceAll("::", "\n\n").trim()
         );
 
         return chapter;

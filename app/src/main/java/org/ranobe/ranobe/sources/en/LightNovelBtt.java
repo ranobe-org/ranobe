@@ -119,7 +119,7 @@ public class LightNovelBtt implements Source {
 
         doc.select("div.reading-detail").select("p").append("::");
         chapter.content = SourceUtils.cleanContent(
-                doc.select("div.reading-detail").text().replaceAll("::", "\n").trim()
+                doc.select("div.reading-detail").text().replaceAll("::", "\n\n").trim()
         );
 
         return chapter;
