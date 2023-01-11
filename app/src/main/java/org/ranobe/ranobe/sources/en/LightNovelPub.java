@@ -46,9 +46,9 @@ public class LightNovelPub implements Source {
         List<NovelItem> items = new ArrayList<>();
         Element doc = Jsoup.parse(body).select("div.list-novel").first();
 
-        if(doc == null) return items;
+        if (doc == null) return items;
 
-        for(Element element: doc.select("div.row")) {
+        for (Element element : doc.select("div.row")) {
             String url = element.select("h3.novel-title > a").attr("href").trim();
 
             if (url.length() > 0) {
@@ -74,21 +74,18 @@ public class LightNovelPub implements Source {
         novel.summary = doc.select("div.desc-text").text().trim();
         novel.rating = NumberUtils.toFloat(doc.select("span[itemprop=ratingValue]").text()) / 2;
 
-        for (Element element: doc.select("ul.info-meta > li")) {
+        for (Element element : doc.select("ul.info-meta > li")) {
             String header = element.select("h3").text();
 
             if (header.equalsIgnoreCase("Author:")) {
                 novel.authors = Arrays.asList(element.select("a").text().split(","));
-            }
-            else if (header.equalsIgnoreCase("Genre:")) {
+            } else if (header.equalsIgnoreCase("Genre:")) {
                 List<String> genres = new ArrayList<>();
-                for(Element a: element.select("a")) genres.add(a.text());
+                for (Element a : element.select("a")) genres.add(a.text());
                 novel.genres = genres;
-            }
-            else if (header.equalsIgnoreCase("Alternative names:")){
+            } else if (header.equalsIgnoreCase("Alternative names:")) {
                 novel.alternateNames = Arrays.asList(element.select("a").text().split(","));
-            }
-            else if (header.equalsIgnoreCase("Status:")){
+            } else if (header.equalsIgnoreCase("Status:")) {
                 novel.status = element.select("a").text().trim();
             }
         }
@@ -107,7 +104,7 @@ public class LightNovelPub implements Source {
         String base = baseUrl.concat("/ajax/chapter-archive?novelId=").concat(getNovelId(url));
         Element doc = Jsoup.parse(HttpClient.GET(base, new HashMap<>()));
 
-        for(Element element: doc.select("a")) {
+        for (Element element : doc.select("a")) {
             ChapterItem item = new ChapterItem(url);
 
             item.url = element.attr("href").trim();
@@ -139,7 +136,7 @@ public class LightNovelPub implements Source {
     public List<NovelItem> search(Filter filters, int page) throws IOException {
         if (filters.hashKeyword()) {
             String keyword = filters.getKeyword();
-            String web = SourceUtils.buildUrl(baseUrl, "/search?keyword=", keyword, "&page=", String .valueOf(page));
+            String web = SourceUtils.buildUrl(baseUrl, "/search?keyword=", keyword, "&page=", String.valueOf(page));
             return parse(HttpClient.GET(web, new HashMap<>()));
         }
         return new ArrayList<>();

@@ -132,10 +132,9 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         int id = menuItem.getItemId();
-        if(id == R.id.sort) {
+        if (id == R.id.sort) {
             sort();
-        }
-        else if (id == R.id.search) {
+        } else if (id == R.id.search) {
             setSearchView();
         }
         return true;

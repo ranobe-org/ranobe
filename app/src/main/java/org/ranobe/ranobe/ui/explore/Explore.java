@@ -49,7 +49,7 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected 
     private void setSourcesListToUi() {
         HashMap<Integer, Class<?>> sources = SourceManager.getSources();
         List<DataSource> dataSources = new ArrayList<>();
-        for(Integer id: sources.keySet()) {
+        for (Integer id : sources.keySet()) {
             Source src = SourceManager.getSource(id);
             dataSources.add(src.metadata());
         }
@@ -61,7 +61,7 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected 
         int oldSource = Ranobe.getCurrentSource();
         int newSource = source.sourceId;
 
-        if(oldSource != newSource) {
+        if (oldSource != newSource) {
             Toast.makeText(requireActivity(), "Updating source to " + source.name, Toast.LENGTH_SHORT).show();
             Ranobe.saveCurrentSource(source.sourceId);
             restartApp();

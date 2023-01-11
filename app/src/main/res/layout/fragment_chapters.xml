@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?colorSecondaryContainer"
-            app:menu="@menu/menu_chapter_toolbar"/>
+            app:menu="@menu/menu_chapter_toolbar" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_view"
@@ -39,8 +39,8 @@
         android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true"
+        android:indeterminate="true" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chapter_list"

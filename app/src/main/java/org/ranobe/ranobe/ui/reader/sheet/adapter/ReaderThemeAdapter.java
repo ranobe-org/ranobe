@@ -48,6 +48,7 @@ public class ReaderThemeAdapter extends RecyclerView.Adapter<ReaderThemeAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private final ItemReaderThemeBinding binding;
+
         public MyViewHolder(@NonNull ItemReaderThemeBinding binding) {
             super(binding.getRoot());
             this.binding = binding;

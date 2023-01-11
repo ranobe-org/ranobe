@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.databinding.ViewSettingOptionBinding;
 
-public class SettingOptionView  extends LinearLayout {
+public class SettingOptionView extends LinearLayout {
     private final ViewSettingOptionBinding binding;
 
     public SettingOptionView(Context context, @Nullable AttributeSet attrs) {

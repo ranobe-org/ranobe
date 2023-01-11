@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/customize_settings"
-        android:title="@string/nav_settings"
         android:icon="@drawable/ic_settings"
+        android:title="@string/nav_settings"
         app:showAsAction="ifRoom" />
 </menu>

@@ -29,9 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReaderActivity extends AppCompatActivity implements CustomizeReader.OnOptionSelection, Toolbar.OnMenuItemClickListener {
+    private final List<Chapter> chapters = new ArrayList<>();
     private ActivityReaderBinding binding;
     private List<ChapterItem> chapterItems = new ArrayList<>();
-    private final List<Chapter> chapters = new ArrayList<>();
     private int currentChapterIndex;
     private String currentChapterUrl;
     private PageAdapter adapter;
@@ -78,8 +78,8 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
 
     private void setChapters(List<ChapterItem> items) {
         chapterItems = ListUtils.sortById(items);
-        for(int i = 0; i < chapterItems.size(); i++) {
-            if(chapterItems.get(i).url.equals(currentChapterUrl)) {
+        for (int i = 0; i < chapterItems.size(); i++) {
+            if (chapterItems.get(i).url.equals(currentChapterUrl)) {
                 currentChapterIndex = i;
                 break;
             }
@@ -115,7 +115,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     @Override
     public void setReaderTheme(String themeName) {
         ReaderTheme theme = Ranobe.themes.get(themeName);
-        if(theme != null) {
+        if (theme != null) {
             adapter.setTheme(theme);
             adapter.notifyItemRangeChanged(0, chapters.size());
             Ranobe.storeReaderTheme(this, themeName);
@@ -126,7 +126,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     public boolean onMenuItemClick(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.customize_settings) {
+        if (id == R.id.customize_settings) {
             setUpCustomizeReader();
             return true;
         }

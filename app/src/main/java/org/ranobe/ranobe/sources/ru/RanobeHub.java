@@ -45,7 +45,7 @@ public class RanobeHub implements Source {
         String json = HttpClient.GET(web, new HashMap<>());
 
         JSONArray novels = new JSONObject(json).getJSONArray("resource");
-        for(int i = 0; i < novels.length(); i++) {
+        for (int i = 0; i < novels.length(); i++) {
             JSONObject novel = novels.getJSONObject(i);
 
             String url = novel.getString("url");
@@ -73,21 +73,21 @@ public class RanobeHub implements Source {
         novel.summary = doc.select("div.book-description").text().replaceAll("::", "\n\n").trim();
 
         List<String> authors = new ArrayList<>();
-        for (Element element: doc.select("book-author")) {
+        for (Element element : doc.select("book-author")) {
             authors.add(element.select("a").text().trim());
         }
         novel.authors = authors;
         novel.year = NumberUtils.toInt(doc.select("div.book-meta-value").select("a").text().trim());
 
         List<String> genres = new ArrayList<>();
-        for(Element element: doc.select("div.book-meta-value.book-tags > a")) {
+        for (Element element : doc.select("div.book-meta-value.book-tags > a")) {
             genres.add(element.text().trim());
         }
         novel.genres = genres;
 
-        for(Element element: doc.select("div.book-meta-row")){
+        for (Element element : doc.select("div.book-meta-row")) {
             String header = element.select("div.book-meta-key").text().trim();
-            if(header.contains("перевода")) {
+            if (header.contains("перевода")) {
                 novel.status = element.select("div.book-meta-value").select("a").text().trim();
             }
         }
@@ -108,10 +108,10 @@ public class RanobeHub implements Source {
 
         JSONArray vols = new JSONObject(json).getJSONArray("volumes");
 
-        for(int i = 0; i < vols.length(); i++) {
+        for (int i = 0; i < vols.length(); i++) {
             JSONArray chaps = vols.getJSONObject(i).getJSONArray("chapters");
 
-            for(int j = 0; j < chaps.length(); j++) {
+            for (int j = 0; j < chaps.length(); j++) {
                 JSONObject chapter = chaps.getJSONObject(j);
 
                 ChapterItem item = new ChapterItem(url);
@@ -133,7 +133,7 @@ public class RanobeHub implements Source {
         chapter.url = url;
         chapter.content = "";
 
-        for(Element element: doc.select("div.ui.text.container")) {
+        for (Element element : doc.select("div.ui.text.container")) {
             if (element.hasAttr("data-container")) {
                 element.select("p").append("::");
                 chapter.content = SourceUtils.cleanContent(
@@ -147,7 +147,7 @@ public class RanobeHub implements Source {
 
     @Override
     public List<NovelItem> search(Filter filters, int page) throws Exception {
-        if(page > 1) return new ArrayList<>();
+        if (page > 1) return new ArrayList<>();
 
         List<NovelItem> items = new ArrayList<>();
         if (filters.hashKeyword()) {

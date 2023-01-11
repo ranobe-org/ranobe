@@ -64,6 +64,7 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private final ItemSourceBinding binding;
+
         public MyViewHolder(@NonNull ItemSourceBinding binding) {
             super(binding.getRoot());
             this.binding = binding;

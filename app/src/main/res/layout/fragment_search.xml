@@ -27,26 +27,26 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:placeholderText="@string/start_typing"
-            app:helperText="what are you looking for?">
+            app:helperText="what are you looking for?"
+            app:placeholderText="@string/start_typing">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/search_field"
+                style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox.Dense"
                 android:inputType="text"
                 android:lines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/submit"
+            style="@style/Widget.Material3.Button.IconButton.Outlined"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            app:iconGravity="textStart"
             app:cornerRadius="5dp"
-            style="@style/Widget.Material3.Button.IconButton.Outlined"
-            app:icon="@drawable/ic_search" />
+            app:icon="@drawable/ic_search"
+            app:iconGravity="textStart" />
 
     </LinearLayout>
 
@@ -54,6 +54,6 @@
         android:id="@+id/novel_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp" />
 
 </LinearLayout>

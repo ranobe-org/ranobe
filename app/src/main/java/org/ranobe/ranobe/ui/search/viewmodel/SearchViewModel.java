@@ -32,12 +32,12 @@ public class SearchViewModel extends ViewModel {
             public void onComplete(List<NovelItem> result) {
                 List<NovelItem> old = items.getValue();
                 // add more items without losing old ones
-                if(old == null) {
+                if (old == null) {
                     old = new ArrayList<>();
                 }
 
                 // if filter changes in this iteration, clear old results
-                if(!oldFilter.equals(filter)) {
+                if (!oldFilter.equals(filter)) {
                     old.clear();
                     oldFilter = filter;
                 }
