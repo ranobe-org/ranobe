@@ -16,6 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?colorSecondaryContainer"
             app:menu="@menu/menu_chapter_toolbar"/>
 
         <com.google.android.material.textfield.TextInputLayout
