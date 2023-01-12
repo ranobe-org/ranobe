@@ -16,14 +16,8 @@ public class GithubRepo {
     }};
     private final Executor executor;
 
-    public GithubRepo(){
+    public GithubRepo() {
         this.executor = Executors.newCachedThreadPool();
-    }
-
-    public interface Callback<T> {
-        void onComplete(T result);
-
-        void onError(Exception e);
     }
 
     public void getLatestRelease(Callback<GithubRelease> callback) {
@@ -45,16 +39,22 @@ public class GithubRepo {
         Version latestVersion = new Version(Version.extractVersionNumber(tag));
         Version currentVersion = new Version(Version.extractVersionNumber(BuildConfig.VERSION_NAME));
 
-        if(latestVersion.get().equals(currentVersion.get())) {
+        if (latestVersion.get().equals(currentVersion.get())) {
             return new GithubRelease(false, currentVersion.get(), null);
         }
 
-        if(latestVersion.compareTo(currentVersion) > 0) {
+        if (latestVersion.compareTo(currentVersion) > 0) {
             String url = response.getString("html_url");
             return new GithubRelease(true, tag, url);
         }
 
         return new GithubRelease(false, currentVersion.get(), null);
+    }
+
+    public interface Callback<T> {
+        void onComplete(T result);
+
+        void onError(Exception e);
     }
 
     public static class GithubRelease {

@@ -46,7 +46,7 @@ public class VipNovel implements Source {
         String web = baseUrl.concat("/page/").concat(String.valueOf(page));
         Element doc = Jsoup.parse(HttpClient.GET(web, new HashMap<>()));
 
-        for (Element element: doc.select(".page-item-detail")) {
+        for (Element element : doc.select(".page-item-detail")) {
             String url = element.select(".h5 > a").attr("href").trim();
 
             if (url.length() > 0) {
@@ -75,12 +75,12 @@ public class VipNovel implements Source {
         novel.authors = Arrays.asList(doc.select(".author-content > a").text().split(","));
 
         List<String> genres = new ArrayList<>();
-        for(Element element: doc.select(".genres-content > a")) {
+        for (Element element : doc.select(".genres-content > a")) {
             genres.add(element.text().trim());
         }
         novel.genres = genres;
 
-        for(Element element: doc.select(".post-content_item")) {
+        for (Element element : doc.select(".post-content_item")) {
             String header = element.select(".summary-heading > h5").text().trim();
             String content = element.select(".summary-content").text().trim();
 
@@ -102,7 +102,7 @@ public class VipNovel implements Source {
         String web = url.concat("ajax/chapters");
         Element doc = Jsoup.parse(HttpClient.POST(web, new HashMap<>(), new HashMap<>()));
 
-        for (Element element: doc.select(".wp-manga-chapter")) {
+        for (Element element : doc.select(".wp-manga-chapter")) {
             ChapterItem item = new ChapterItem(url);
 
             item.url = element.select("a").attr("href").trim();
@@ -121,7 +121,7 @@ public class VipNovel implements Source {
         Element doc = Jsoup.parse(HttpClient.GET(url, new HashMap<>()));
         Element main = doc.select(".reading-content").first();
 
-        if(main == null) {
+        if (main == null) {
             return null;
         }
 
@@ -140,10 +140,10 @@ public class VipNovel implements Source {
         if (filters.hashKeyword()) {
             String web = SourceUtils.buildUrl(baseUrl, "/page/", String.valueOf(page), "/?s=", filters.getKeyword(), "&post_type=wp-manga");
             Element doc = Jsoup.parse(HttpClient.GET(web, new HashMap<>()));
-            for (Element element: doc.select(".c-tabs-item__content")) {
+            for (Element element : doc.select(".c-tabs-item__content")) {
                 String url = element.select(".tab-thumb  > a").attr("href").trim();
 
-                if(url.length() > 0) {
+                if (url.length() > 0) {
                     NovelItem item = new NovelItem(url);
                     item.sourceId = sourceId;
                     item.url = url;

@@ -28,12 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Search extends Fragment implements NovelAdapter.OnNovelItemClickListener{
+public class Search extends Fragment implements NovelAdapter.OnNovelItemClickListener {
+    private final List<NovelItem> list = new ArrayList<>();
     private FragmentSearchBinding binding;
     private SearchViewModel viewModel;
     private NovelAdapter adapter;
-    private final List<NovelItem> list = new ArrayList<>();
-
     private int page = 1;
     private boolean isLoading = false;
 
@@ -84,7 +83,7 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void setUpAdapter(List<NovelItem> novels){
+    private void setUpAdapter(List<NovelItem> novels) {
         binding.progress.hide();
         isLoading = false;
         // expand the current list without changing list reference

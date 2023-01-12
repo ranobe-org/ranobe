@@ -50,9 +50,9 @@ public class LightNovelBtt implements Source {
         List<NovelItem> items = new ArrayList<>();
         Element doc = Jsoup.parse(body).select("div.items").first();
 
-        if(doc == null) return items;
+        if (doc == null) return items;
 
-        for(Element element: doc.select("div.item")) {
+        for (Element element : doc.select("div.item")) {
             String url = element.select("div.box_img > a").attr("href").trim();
 
             if (url.length() > 0) {
@@ -92,7 +92,7 @@ public class LightNovelBtt implements Source {
         List<ChapterItem> items = new ArrayList<>();
         Element doc = Jsoup.parse(HttpClient.GET(url, new HashMap<>()));
 
-        for(Element element: doc.select("div.list-chapter").select("li.row")) {
+        for (Element element : doc.select("div.list-chapter").select("li.row")) {
             ChapterItem item = new ChapterItem(url);
 
             if (element.hasClass("heading")) {
@@ -129,7 +129,7 @@ public class LightNovelBtt implements Source {
     public List<NovelItem> search(Filter filters, int page) throws IOException {
         if (filters.hashKeyword()) {
             String keyword = filters.getKeyword();
-            String web = SourceUtils.buildUrl(baseUrl, "/find-story?keyword=", keyword, "&page=", String .valueOf(page));
+            String web = SourceUtils.buildUrl(baseUrl, "/find-story?keyword=", keyword, "&page=", String.valueOf(page));
             return parse(HttpClient.GET(web, new HashMap<>()));
         }
         return new ArrayList<>();

@@ -18,13 +18,13 @@ import java.util.List;
 import java.util.Locale;
 
 public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> {
-    private ReaderTheme theme;
-    private float fontSize;
     private final List<Chapter> chapters;
     private final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
     );
+    private ReaderTheme theme;
+    private float fontSize;
 
     public PageAdapter(List<Chapter> chapters) {
         this.chapters = chapters;
@@ -51,7 +51,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Chapter chapter = chapters.get(position);
 
-        if(theme != null) {
+        if (theme != null) {
             holder.binding.pageLayout.setBackgroundColor(theme.getBackground());
             holder.binding.content.setTextColor(theme.getText());
         }
@@ -71,6 +71,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final ItemPageBinding binding;
+
         public MyViewHolder(@NonNull ItemPageBinding binding) {
             super(binding.getRoot());
             this.binding = binding;

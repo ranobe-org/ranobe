@@ -28,14 +28,14 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/novel_cover_layout"
+                style="@style/Widget.Material3.CardView.Elevated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:clickable="true"
                 android:focusable="true"
                 app:cardCornerRadius="10dp"
-                app:cardElevation="10dp"
-                style="@style/Widget.Material3.CardView.Elevated">
+                app:cardElevation="10dp">
 
                 <ImageView
                     android:id="@+id/novel_cover"
@@ -102,8 +102,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/header_layout"
             android:layout_marginHorizontal="10dp"
-            app:chipSpacingVertical="-10dp"
-            app:chipSpacingHorizontal="5dp" />
+            app:chipSpacingHorizontal="5dp"
+            app:chipSpacingVertical="-10dp" />
 
         <TextView
             android:id="@+id/summary"
@@ -120,10 +120,10 @@
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="50dp"
             android:layout_below="@id/summary"
             android:layout_alignParentEnd="true"
             android:layout_margin="10dp"
+            android:layout_marginBottom="50dp"
             android:text="@string/read_info" />
 
     </RelativeLayout>

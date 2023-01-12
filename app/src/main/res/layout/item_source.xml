@@ -15,9 +15,9 @@
         android:id="@+id/source_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="10dp"
         android:layout_gravity="center_vertical"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
         android:textColor="?colorOnSurface"
         android:textSize="@dimen/text_med" />
 
@@ -30,10 +30,10 @@
             android:id="@+id/source_logo"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:padding="10dp"
             android:layout_gravity="center_vertical"
             android:background="?colorSurfaceVariant"
-            android:contentDescription="@string/image" />
+            android:contentDescription="@string/image"
+            android:padding="10dp" />
     </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout
@@ -63,10 +63,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/currently_active"
-            android:textStyle="bold"
-            android:visibility="gone"
             android:textColor="?colorTertiary"
-            android:textSize="@dimen/text_small" />
+            android:textSize="@dimen/text_small"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
     </LinearLayout>
 

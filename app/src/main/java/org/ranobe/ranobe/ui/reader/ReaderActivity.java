@@ -1,17 +1,20 @@
 package org.ranobe.ranobe.ui.reader;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.ActivityReaderBinding;
 import org.ranobe.ranobe.models.Chapter;
@@ -25,10 +28,10 @@ import org.ranobe.ranobe.util.ListUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReaderActivity extends AppCompatActivity implements CustomizeReader.OnOptionSelection {
+public class ReaderActivity extends AppCompatActivity implements CustomizeReader.OnOptionSelection, Toolbar.OnMenuItemClickListener {
+    private final List<Chapter> chapters = new ArrayList<>();
     private ActivityReaderBinding binding;
     private List<ChapterItem> chapterItems = new ArrayList<>();
-    private final List<Chapter> chapters = new ArrayList<>();
     private int currentChapterIndex;
     private String currentChapterUrl;
     private PageAdapter adapter;
@@ -42,7 +45,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         AppCompatDelegate.setDefaultNightMode(Ranobe.getThemeMode(getApplicationContext()));
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(binding.getRoot());
-        binding.customize.setOnClickListener(v-> setUpCustomizeReader());
+        binding.customize.setOnMenuItemClickListener(this);
 
         String novelUrl = getIntent().getStringExtra("novel");
         currentChapterUrl = getIntent().getStringExtra("currentChapter");
@@ -75,8 +78,8 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
 
     private void setChapters(List<ChapterItem> items) {
         chapterItems = ListUtils.sortById(items);
-        for(int i = 0; i < chapterItems.size(); i++) {
-            if(chapterItems.get(i).url.equals(currentChapterUrl)) {
+        for (int i = 0; i < chapterItems.size(); i++) {
+            if (chapterItems.get(i).url.equals(currentChapterUrl)) {
                 currentChapterIndex = i;
                 break;
             }
@@ -112,10 +115,22 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     @Override
     public void setReaderTheme(String themeName) {
         ReaderTheme theme = Ranobe.themes.get(themeName);
-        if(theme != null) {
+        if (theme != null) {
             adapter.setTheme(theme);
             adapter.notifyItemRangeChanged(0, chapters.size());
             Ranobe.storeReaderTheme(this, themeName);
         }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.customize_settings) {
+            setUpCustomizeReader();
+            return true;
+        }
+
+        return false;
     }
 }

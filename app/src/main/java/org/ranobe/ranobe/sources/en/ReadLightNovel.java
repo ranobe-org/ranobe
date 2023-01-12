@@ -53,7 +53,7 @@ public class ReadLightNovel implements Source {
 
         for (Element element : doc.select("div.top-novel-block")) {
             String url = element.select("div.top-novel-header > h2 > a").attr("href").trim();
-            if(url.length() > 0) {
+            if (url.length() > 0) {
                 NovelItem item = new NovelItem(url);
                 item.sourceId = 1;
                 item.name = element.select("div.top-novel-header > h2 > a").text().trim();

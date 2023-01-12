@@ -7,7 +7,7 @@ public class Filter {
     public static final String FILTER_KEYWORD = "keyword";
     private final HashMap<String, String> params;
 
-    public Filter(){
+    public Filter() {
         params = new HashMap<>();
     }
 

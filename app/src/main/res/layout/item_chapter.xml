@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
-    android:layout_marginTop="10dp"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -12,8 +11,8 @@
         android:id="@+id/chapter_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="1"
         android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="?colorOnSurface"
         android:textSize="15sp" />
 

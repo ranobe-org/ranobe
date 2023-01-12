@@ -9,7 +9,7 @@ public class NumberUtils {
 
     public static float toFloat(String value) {
         Matcher matcher = NumberUtils.floatingPoint.matcher(value);
-        if(matcher.find()) {
+        if (matcher.find()) {
             String number = matcher.group();
             if (number.length() > 0) {
                 return Float.parseFloat(number);
@@ -26,7 +26,7 @@ public class NumberUtils {
         return 0;
     }
 
-    public static int getRandom(int size)  {
+    public static int getRandom(int size) {
         return new Random().nextInt(size);
     }
 }

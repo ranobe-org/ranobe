@@ -82,7 +82,7 @@ public class Ranobe {
         getEditor(App.getContext()).putInt(Ranobe.SETTING_SELECTED_SOURCE, sourceId).apply();
     }
 
-    public static  int getCurrentSource() {
+    public static int getCurrentSource() {
         return getSharedPref(App.getContext()).getInt(Ranobe.SETTING_SELECTED_SOURCE, 3);
     }
 }

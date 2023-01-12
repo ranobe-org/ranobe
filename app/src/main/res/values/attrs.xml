@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="SettingOptionView">
-        <attr name="settingIcon" format="reference"/>
+        <attr name="settingIcon" format="reference" />
         <attr name="settingTitle" format="string" />
         <attr name="settingSubtitle" format="string" />
     </declare-styleable>

@@ -21,7 +21,7 @@ public class ReaderViewModel extends ViewModel {
         return chapter;
     }
 
-    public MutableLiveData<List<ChapterItem>> getChapters () {
+    public MutableLiveData<List<ChapterItem>> getChapters() {
         if (chapters == null) {
             chapters = new MutableLiveData<>();
         }

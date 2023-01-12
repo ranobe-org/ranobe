@@ -16,7 +16,7 @@ import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.SheetCustomizeReaderBinding;
 import org.ranobe.ranobe.ui.reader.sheet.adapter.ReaderThemeAdapter;
 
-public class CustomizeReader extends BottomSheetDialogFragment implements ReaderThemeAdapter.OnReaderThemeSelected{
+public class CustomizeReader extends BottomSheetDialogFragment implements ReaderThemeAdapter.OnReaderThemeSelected {
     private final OnOptionSelection listener;
 
     public CustomizeReader(OnOptionSelection listener) {
@@ -43,6 +43,7 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
 
     public interface OnOptionSelection {
         void setFontSize(float size);
+
         void setReaderTheme(String themeName);
     }
 }

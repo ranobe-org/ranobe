@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
@@ -10,24 +9,24 @@
         android:id="@+id/emoji"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="35sp"
         android:textAlignment="center"
-        android:textColor="?colorOnSurface"/>
+        android:textColor="?colorOnSurface"
+        android:textSize="35sp" />
 
     <TextView
         android:id="@+id/error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
         android:layout_marginTop="10dp"
-        android:textSize="@dimen/text_big"
-        android:textColor="?colorOnSurfaceVariant"/>
+        android:textAlignment="center"
+        android:textColor="?colorOnSurfaceVariant"
+        android:textSize="@dimen/text_big" />
 
     <Button
         android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/retry"/>
+        android:text="@string/retry" />
 
 </LinearLayout>

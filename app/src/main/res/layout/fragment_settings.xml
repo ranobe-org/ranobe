@@ -16,32 +16,33 @@
             android:id="@+id/update_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:visibility="gone">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="15dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/new_version_available"
-                android:textColor="?colorOnSurface"
-                android:textSize="@dimen/text_med"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_version_available"
+                    android:textColor="?colorOnSurface"
+                    android:textSize="@dimen/text_med" />
 
-            <TextView
-                android:id="@+id/version_string"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/version_string"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/get_update"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/update"
-                android:layout_gravity="end"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/get_update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/update" />
 
             </LinearLayout>
 
@@ -115,24 +116,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:settingIcon="@drawable/ic_github"
-            app:settingTitle="Github"
-            app:settingSubtitle="https://github.com/ranobe-org/ranobe" />
+            app:settingSubtitle="https://github.com/ranobe-org/ranobe"
+            app:settingTitle="Github" />
 
         <org.ranobe.ranobe.views.SettingOptionView
             android:id="@+id/discord_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:settingIcon="@drawable/ic_discord"
-            app:settingTitle="Discord"
-            app:settingSubtitle="https://discord.gg/6CQ6u64dca" />
+            app:settingSubtitle="https://discord.gg/6CQ6u64dca"
+            app:settingTitle="Discord" />
 
         <org.ranobe.ranobe.views.SettingOptionView
             android:id="@+id/music_player_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:settingIcon="@drawable/ic_android"
-            app:settingTitle="Music Player Lite"
-            app:settingSubtitle="@string/mp_lite_subtitle" />
+            app:settingSubtitle="@string/mp_lite_subtitle"
+            app:settingTitle="Music Player Lite" />
 
     </LinearLayout>
 
