@@ -8,8 +8,12 @@ import androidx.appcompat.app.AppCompatDelegate;
 import org.ranobe.ranobe.App;
 import org.ranobe.ranobe.models.ReaderTheme;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+@SuppressWarnings({
+    "squid:S3599", "squid:S2386", "squid:S1171", "squid:S1118"
+})
 public class Ranobe {
     public static final String DEBUG = "ranobe.debug";
     public static final String PACKAGE_NAME = "org.ranobe.ranobe";
@@ -30,15 +34,11 @@ public class Ranobe {
             "(=____=)"
     };
 
-    public static final HashMap<String, ReaderTheme> themes = new HashMap<String, ReaderTheme>() {{
-        put("basic", new ReaderTheme("#fffbe0", "#222831"));
-        put("basic_inverse", new ReaderTheme("#222831", "#fffbe0"));
-        put("basic_dim", new ReaderTheme("#fef8e6", "#222831"));
-        put("basic_dim_inverse", new ReaderTheme("#222831", "#fef8e6"));
-        put("grey", new ReaderTheme("#eae7e7", "#161c2e"));
-        put("grey_inverse", new ReaderTheme("#161c2e", "#eae7e7"));
-        put("terminal", new ReaderTheme("#161c2e", "#feff89"));
-        put("green", new ReaderTheme("#74f6a7", "#161c2e"));
+    public static final Map<String, ReaderTheme> themes = new LinkedHashMap<String, ReaderTheme>() {{
+        put("default", null);
+        put("light", new ReaderTheme("#202124", "#FFFFFF"));
+        put("dark", new ReaderTheme("#E8EAED", "#202124"));
+        put("warm", new ReaderTheme("#6E4D2E", "#F7DFC6"));
     }};
 
     private static SharedPreferences.Editor getEditor(Context context) {
@@ -67,7 +67,7 @@ public class Ranobe {
     }
 
     public static String getReaderTheme(Context context) {
-        return getSharedPref(context).getString(Ranobe.SETTINGS_READER_THEME, null);
+        return getSharedPref(context).getString(Ranobe.SETTINGS_READER_THEME, "default");
     }
 
     public static void storeReaderFont(Context context, Float size) {

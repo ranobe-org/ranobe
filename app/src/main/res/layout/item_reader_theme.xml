@@ -7,7 +7,6 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="5dp"
     android:layout_marginVertical="10dp"
-    app:cardBackgroundColor="#e7edde"
     app:cardElevation="5dp">
 
     <TextView
@@ -18,7 +17,6 @@
         android:paddingHorizontal="12dp"
         android:paddingVertical="15dp"
         android:text="@string/aa"
-        android:textColor="#5d5f5a"
         android:textSize="40sp"
         android:textStyle="bold" />
 
