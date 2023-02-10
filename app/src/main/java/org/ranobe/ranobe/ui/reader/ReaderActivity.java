@@ -115,11 +115,9 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     @Override
     public void setReaderTheme(String themeName) {
         ReaderTheme theme = Ranobe.themes.get(themeName);
-        if (theme != null) {
-            adapter.setTheme(theme);
-            adapter.notifyItemRangeChanged(0, chapters.size());
-            Ranobe.storeReaderTheme(this, themeName);
-        }
+        adapter.setTheme(theme);
+        adapter.notifyItemRangeChanged(0, chapters.size());
+        Ranobe.storeReaderTheme(this, themeName);
     }
 
     @Override

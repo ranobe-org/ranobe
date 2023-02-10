@@ -2,11 +2,14 @@ package org.ranobe.ranobe.ui.reader.adapter;
 
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.color.MaterialColors;
 
 import org.ranobe.ranobe.App;
 import org.ranobe.ranobe.config.Ranobe;
@@ -54,7 +57,15 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
         if (theme != null) {
             holder.binding.pageLayout.setBackgroundColor(theme.getBackground());
             holder.binding.content.setTextColor(theme.getText());
+        } else {
+            holder.binding.pageLayout.setBackgroundColor(
+                    getThemeColor(holder.binding.pageLayout, com.google.android.material.R.attr.colorSurface)
+            );
+            holder.binding.content.setTextColor(
+                    getThemeColor(holder.binding.content, com.google.android.material.R.attr.colorOnSurface)
+            );
         }
+
         holder.binding.content.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize);
 
         holder.binding.pageStart.setText(String.format(Locale.getDefault(), "Start of Chapter %.1f", chapter.id));
@@ -62,6 +73,10 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
         holder.binding.content.setText(chapter.content);
         holder.binding.pageLayout.setLayoutParams(params);
         holder.binding.content.setLayoutParams(params);
+    }
+
+    private int getThemeColor(View view, int attr) {
+        return MaterialColors.getColor(view, attr);
     }
 
     @Override
