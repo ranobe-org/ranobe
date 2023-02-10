@@ -1,5 +1,7 @@
 package org.ranobe.ranobe.sources;
 
+import org.ranobe.ranobe.sources.en.AllNovel;
+import org.ranobe.ranobe.sources.en.AzyNovel;
 import org.ranobe.ranobe.sources.en.LightNovelBtt;
 import org.ranobe.ranobe.sources.en.LightNovelPub;
 import org.ranobe.ranobe.sources.en.Ranobe;
@@ -31,6 +33,8 @@ public class SourceManager {
         sources.put(4, LightNovelPub.class);
         sources.put(5, RanobeHub.class);
         sources.put(6, Ranobe.class);
+        sources.put(7, AllNovel.class);
+        sources.put(8, AzyNovel.class);
 
         return sources;
     }
