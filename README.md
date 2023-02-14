@@ -5,7 +5,7 @@
     <h2><samp>R.A.N.O.B.E</samp></h2>
     <samp>A simple extensible light novel reader</samp>
     <br/><br/>
-    <a href="https://github.com/ranobe-org/ranobe/releases/download/v0.0.3/ranobe.apk" title="Download">
+    <a href="https://github.com/ranobe-org/ranobe/releases/download/v0.0.4/ranobe.apk" title="Download">
         <img height='30' src="https://img.shields.io/badge/download-2da44e?style=flat&logo=android&logoColor=white" alt="Download" title="Download">
     </a>
     <a href="https://apt.izzysoft.de/fdroid/index/apk/org.ranobe.ranobe" title="Download from Izzydroid">
@@ -66,7 +66,7 @@
     - [ ] add to library, only store novel in db
     - [ ] download chapters for offline view, save everything to db
     - [ ] saving read state for each item
-- [ ] more sources (currently has 5)
+- [ ] more sources (currently has 8)
 
 #### could have
 
@@ -77,11 +77,3 @@
 - [ ] backup data, migrations
 - [ ] novel updates
 - [ ] animations
-
----------------
-
-### Guidelines
-
-1. Sources should not define `Novel` and `NovelItem`'s `id` field since it is calculated in constructor.
-2. Sources should not define `Chapter` and `ChapterItem`'s `novelId` field since it is calculated in constructor,
-whereas the `id` field should be the chapter no for the novel
