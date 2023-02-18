@@ -9,13 +9,21 @@
         android:id="@+id/browse_fragment"
         android:name="org.ranobe.ranobe.ui.browse.Browse"
         android:label="fragment_browse"
-        tools:layout="@layout/fragment_browse" />
+        tools:layout="@layout/fragment_browse">
+        <action
+            android:id="@+id/browse_fragment_to_details"
+            app:destination="@id/details_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/search_fragment"
         android:name="org.ranobe.ranobe.ui.search.Search"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/search_fragment_to_details"
+            app:destination="@id/details_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/explore_fragment"
@@ -33,7 +41,11 @@
         android:id="@+id/details_fragment"
         android:name="org.ranobe.ranobe.ui.details.Details"
         android:label="fragment_details"
-        tools:layout="@layout/fragment_details" />
+        tools:layout="@layout/fragment_details">
+        <action
+            android:id="@+id/details_fragment_to_chapters"
+            app:destination="@id/chapters_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/chapters_fragment"
@@ -46,6 +58,5 @@
         android:name="org.ranobe.ranobe.ui.error.Error"
         android:label="fragment_error"
         tools:layout="@layout/fragment_error" />
-
 
 </navigation>
