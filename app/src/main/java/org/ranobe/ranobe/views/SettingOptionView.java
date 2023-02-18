@@ -17,7 +17,7 @@ public class SettingOptionView extends LinearLayout {
     public SettingOptionView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         binding = ViewSettingOptionBinding.inflate(LayoutInflater.from(context), this, true);
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SettingOptionView, 0, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SettingOptionView, 0, 0);
 
         try {
             int icon = a.getResourceId(R.styleable.SettingOptionView_settingIcon, R.drawable.ic_settings);

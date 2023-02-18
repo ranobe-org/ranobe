@@ -63,7 +63,7 @@ public class Details extends Fragment {
         NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
         Bundle bundle = new Bundle();
         bundle.putString("novel", novelUrl);
-        controller.navigate(R.id.chapters_fragment, bundle);
+        controller.navigate(R.id.details_fragment_to_chapters, bundle);
     }
 
     private void setupUi(Novel novel) {

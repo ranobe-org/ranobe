@@ -8,11 +8,9 @@ Features
 - Multi-lingual sources
   - English
   - Russian
+  - More to come ;)
 - Searching with keywords
 - Chapter Search and Sort
 - Continuous Vertical Reading
 - Light and Dark modes
 - Customize reading experience
-- Change font size
-- Change background and font color
-
