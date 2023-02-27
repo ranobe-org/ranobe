@@ -32,8 +32,8 @@ public class ReaderViewModel extends ViewModel {
         return error = new MutableLiveData<>();
     }
 
-    public void chapter(String chapterUrl) {
-        new Repository().chapter(chapterUrl, new Repository.Callback<Chapter>() {
+    public void chapter(String novelUrl, String chapterUrl) {
+        new Repository().chapter(novelUrl, chapterUrl, new Repository.Callback<Chapter>() {
             @Override
             public void onComplete(Chapter result) {
                 chapter.postValue(result);

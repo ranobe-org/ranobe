@@ -29,14 +29,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReaderActivity extends AppCompatActivity implements CustomizeReader.OnOptionSelection, Toolbar.OnMenuItemClickListener {
-    private final List<Chapter> chapters = new ArrayList<>();
     private ActivityReaderBinding binding;
-    private List<ChapterItem> chapterItems = new ArrayList<>();
-    private int currentChapterIndex;
-    private String currentChapterUrl;
     private PageAdapter adapter;
-    private boolean isLoading = false;
     private ReaderViewModel viewModel;
+
+    private final List<Chapter> chapters = new ArrayList<>();
+    private List<ChapterItem> chapterItems = new ArrayList<>();
+    private String currentChapterUrl;
+    private String currentNovelUrl;
+    private boolean isLoading = false;
+    private int currentChapterIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         setContentView(binding.getRoot());
         binding.customize.setOnMenuItemClickListener(this);
 
-        String novelUrl = getIntent().getStringExtra("novel");
+        currentNovelUrl = getIntent().getStringExtra("novel");
         currentChapterUrl = getIntent().getStringExtra("currentChapter");
         viewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
 
@@ -64,7 +66,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
 
                     if (currentChapterIndex < chapterItems.size()) {
                         binding.progress.show();
-                        viewModel.chapter(chapterItems.get(currentChapterIndex).url);
+                        viewModel.chapter(currentNovelUrl, chapterItems.get(currentChapterIndex).url);
                     }
                 }
             }
@@ -73,7 +75,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         viewModel.getChapters().observe(this, this::setChapters);
         viewModel.getChapter().observe(this, this::setChapter);
         viewModel.getError().observe(this, this::setError);
-        viewModel.chapters(novelUrl);
+        viewModel.chapters(currentNovelUrl);
     }
 
     private void setChapters(List<ChapterItem> items) {
@@ -84,7 +86,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
                 break;
             }
         }
-        viewModel.chapter(currentChapterUrl);
+        viewModel.chapter(currentNovelUrl, currentChapterUrl);
     }
 
     private void setUpCustomizeReader() {

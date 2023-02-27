@@ -110,11 +110,11 @@ public class LightNovelBtt implements Source {
     }
 
     @Override
-    public Chapter chapter(String url) throws IOException {
-        Chapter chapter = new Chapter(url);
-        Element doc = Jsoup.parse(HttpClient.GET(url, new HashMap<>()));
+    public Chapter chapter(String novelUrl, String chapterUrl) throws IOException {
+        Chapter chapter = new Chapter(novelUrl);
+        Element doc = Jsoup.parse(HttpClient.GET(chapterUrl, new HashMap<>()));
 
-        chapter.url = url;
+        chapter.url = chapterUrl;
         chapter.content = "";
 
         doc.select("div.reading-detail").select("p").append("::");

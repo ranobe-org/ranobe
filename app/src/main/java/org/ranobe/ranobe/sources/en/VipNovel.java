@@ -116,16 +116,16 @@ public class VipNovel implements Source {
     }
 
     @Override
-    public Chapter chapter(String url) throws IOException {
-        Chapter chapter = new Chapter(url);
-        Element doc = Jsoup.parse(HttpClient.GET(url, new HashMap<>()));
+    public Chapter chapter(String novelUrl, String chapterUrl) throws IOException {
+        Chapter chapter = new Chapter(novelUrl);
+        Element doc = Jsoup.parse(HttpClient.GET(chapterUrl, new HashMap<>()));
         Element main = doc.select(".reading-content").first();
 
         if (main == null) {
             return null;
         }
 
-        chapter.url = url;
+        chapter.url = chapterUrl;
         chapter.content = "";
         main.select("p").append("::");
         chapter.content = SourceUtils.cleanContent(main.text().replaceAll("::", "\n\n").trim());

@@ -14,7 +14,6 @@ import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
 import org.ranobe.ranobe.util.SourceUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -43,7 +42,7 @@ public class AzyNovel implements Source {
         return parse(HttpClient.GET(web, new HashMap<>()));
     }
 
-    private List<NovelItem> parse(String body) throws IOException {
+    private List<NovelItem> parse(String body) {
         List<NovelItem> items = new ArrayList<>();
         Element doc = Jsoup.parse(body).select("div.columns.is-multiline").first();
         if (doc == null) return items;
@@ -105,11 +104,11 @@ public class AzyNovel implements Source {
     }
 
     @Override
-    public Chapter chapter(String url) throws Exception {
-        Chapter chapter = new Chapter(url);
-        Element doc = Jsoup.parse(HttpClient.GET(baseUrl+url, new HashMap<>()));
+    public Chapter chapter(String novelUrl, String chapterUrl) throws Exception {
+        Chapter chapter = new Chapter(novelUrl);
+        Element doc = Jsoup.parse(HttpClient.GET(baseUrl + chapterUrl, new HashMap<>()));
 
-        chapter.url = baseUrl+url;
+        chapter.url = baseUrl + chapterUrl;
         chapter.content = "";
 
         doc.select("div.columns div div:eq(4)").select("p").append("::");
