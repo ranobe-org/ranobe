@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ChapterItem;
-import org.ranobe.ranobe.repository.Repository;
+import org.ranobe.ranobe.network.repository.Repository;
 
 import java.util.List;
 

@@ -20,7 +20,7 @@
             android:textStyle="bold"
             tools:ignore="TextContrastCheck" />
 
-        <org.ranobe.ranobe.views.SettingOptionView
+        <org.ranobe.ranobe.ui.views.SettingOptionView
             android:id="@+id/theme_mode_option"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
             android:textStyle="bold"
             tools:ignore="TextContrastCheck" />
 
-        <org.ranobe.ranobe.views.SettingOptionView
+        <org.ranobe.ranobe.ui.views.SettingOptionView
             android:id="@+id/project_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
             app:settingSubtitle="https://github.com/ranobe-org/ranobe"
             app:settingTitle="Github" />
 
-        <org.ranobe.ranobe.views.SettingOptionView
+        <org.ranobe.ranobe.ui.views.SettingOptionView
             android:id="@+id/discord_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             app:settingSubtitle="https://discord.gg/6CQ6u64dca"
             app:settingTitle="Discord" />
 
-        <org.ranobe.ranobe.views.SettingOptionView
+        <org.ranobe.ranobe.ui.views.SettingOptionView
             android:id="@+id/music_player_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package org.ranobe.ranobe.repository;
+package org.ranobe.ranobe.network.repository;
 
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.models.Chapter;

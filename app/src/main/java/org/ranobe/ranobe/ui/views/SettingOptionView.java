@@ -1,4 +1,4 @@
-package org.ranobe.ranobe.views;
+package org.ranobe.ranobe.ui.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;

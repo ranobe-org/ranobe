@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import org.ranobe.ranobe.models.NovelItem;
-import org.ranobe.ranobe.repository.Repository;
+import org.ranobe.ranobe.network.repository.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
