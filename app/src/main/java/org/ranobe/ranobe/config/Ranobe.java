@@ -26,6 +26,10 @@ public class Ranobe {
     public static final String MP_LITE_GITHUB_LINK = "https://github.com/AP-Atul/music_player_lite";
     public static final String DISCORD_INVITE_LINK = "https://discord.gg/6CQ6u64dca";
 
+    // database configs
+    public static final String DATABASE_NAME = "ranobe_database";
+    public static final int DATABASE_VERSION = 1;
+
     public static final String[] SILLY_EMOJI = new String[]{
             "( ╥﹏╥) ノシ",
             "༼ つ ◕_◕ ༽つ",
