@@ -9,21 +9,13 @@ import org.ranobe.ranobe.network.repository.Repository;
 public class DetailsViewModel extends ViewModel {
     private MutableLiveData<String> error = new MutableLiveData<>();
     private MutableLiveData<Novel> details;
-    private String oldUrl = "";
 
     public MutableLiveData<String> getError() {
         return error = new MutableLiveData<>();
     }
 
-    public MutableLiveData<Novel> getDetails(String novelUrl) {
-        if (details == null || !oldUrl.equals(novelUrl)) {
-            oldUrl = novelUrl;
-            details = new MutableLiveData<>();
-        }
-        return details;
-    }
-
-    public void details(String novelUrl) {
+    public MutableLiveData<Novel> details(String novelUrl) {
+        details = new MutableLiveData<>();
         new Repository().details(novelUrl, new Repository.Callback<Novel>() {
             @Override
             public void onComplete(Novel result) {
@@ -35,5 +27,6 @@ public class DetailsViewModel extends ViewModel {
                 error.postValue(e.getLocalizedMessage());
             }
         });
+        return details;
     }
 }

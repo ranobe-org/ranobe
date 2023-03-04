@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
 
 import org.ranobe.ranobe.R;
+import org.ranobe.ranobe.database.RanobeDatabase;
 import org.ranobe.ranobe.databinding.FragmentDetailsBinding;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.ui.details.viewmodel.DetailsViewModel;
@@ -44,11 +46,11 @@ public class Details extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentDetailsBinding.inflate(inflater, container, false);
         binding.chapterInfo.setOnClickListener(v -> navigateToChapterList());
+        binding.addToLibrary.setOnClickListener(v -> saveNovelToLibrary());
         binding.progress.show();
 
         viewModel.getError().observe(requireActivity(), this::setUpError);
-        viewModel.getDetails(novelUrl).observe(getViewLifecycleOwner(), this::setupUi);
-        viewModel.details(novelUrl);
+        viewModel.details(novelUrl).observe(getViewLifecycleOwner(), this::setupUi);
 
         return binding.getRoot();
     }
@@ -96,5 +98,14 @@ public class Details extends Fragment {
             chip.setText(genre);
             binding.genresLayout.addView(chip);
         }
+    }
+
+    private void saveNovelToLibrary() {
+        viewModel.details(novelUrl).observe(getViewLifecycleOwner(), novel ->
+        {
+            Toast.makeText(requireContext(), "Added novel to library", Toast.LENGTH_LONG).show();
+            RanobeDatabase.databaseExecutor.execute(() ->
+                    RanobeDatabase.database().novels().save(novel));
+        });
     }
 }
