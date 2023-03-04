@@ -22,7 +22,7 @@ public interface Source {
     List<ChapterItem> chapters(String url) throws Exception;
 
     // get content of the chapter from the url
-    Chapter chapter(String url) throws Exception;
+    Chapter chapter(String novelUrl, String chapterUrl) throws Exception;
 
     // search novels
     List<NovelItem> search(Filter filters, int page) throws Exception;

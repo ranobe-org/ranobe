@@ -13,13 +13,16 @@ public class SourceUtils {
     }
 
     public static String cleanContent(String raw) {
-        return raw.replaceAll("/[\\n]{2,}/gim", "\n");
+        return raw.replaceAll("\n\n", "\n");
     }
 
     // does simple concatenation and nothing else
     public static String buildUrl(String... args) {
         String url = "";
         for (String a : args) {
+            if (a == null) {
+                a = "";
+            }
             url = url.concat(a);
         }
         return url;

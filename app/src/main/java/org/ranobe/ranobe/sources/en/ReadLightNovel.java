@@ -123,11 +123,11 @@ public class ReadLightNovel implements Source {
     }
 
     @Override
-    public Chapter chapter(String url) throws IOException {
-        Chapter chapter = new Chapter(url);
+    public Chapter chapter(String novelUrl, String chapterUrl) throws IOException {
+        Chapter chapter = new Chapter(novelUrl);
         chapter.content = "";
-        chapter.url = url;
-        Element doc = Jsoup.parse(HttpClient.GET(url, HEADERS));
+        chapter.url = chapterUrl;
+        Element doc = Jsoup.parse(HttpClient.GET(chapterUrl, HEADERS));
 
         for (Element element : doc.select("div#chapterhidden > p")) {
             String text = element.text().trim();

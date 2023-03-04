@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ChapterItem;
-import org.ranobe.ranobe.repository.Repository;
+import org.ranobe.ranobe.network.repository.Repository;
 
 import java.util.List;
 
@@ -32,8 +32,8 @@ public class ReaderViewModel extends ViewModel {
         return error = new MutableLiveData<>();
     }
 
-    public void chapter(String chapterUrl) {
-        new Repository().chapter(chapterUrl, new Repository.Callback<Chapter>() {
+    public void chapter(String novelUrl, String chapterUrl) {
+        new Repository().chapter(novelUrl, chapterUrl, new Repository.Callback<Chapter>() {
             @Override
             public void onComplete(Chapter result) {
                 chapter.postValue(result);

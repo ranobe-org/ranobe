@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.repository.Repository;
+import org.ranobe.ranobe.network.repository.Repository;
 
 public class DetailsViewModel extends ViewModel {
     private MutableLiveData<String> error = new MutableLiveData<>();

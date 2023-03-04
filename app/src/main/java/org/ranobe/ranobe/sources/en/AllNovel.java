@@ -1,10 +1,7 @@
 package org.ranobe.ranobe.sources.en;
 
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.DataSource;
@@ -119,11 +116,11 @@ public class AllNovel implements Source {
     }
 
     @Override
-    public Chapter chapter(String url) throws Exception {
-        Chapter chapter = new Chapter(url);
-        Element doc = Jsoup.parse(HttpClient.GET(baseUrl+url, new HashMap<>()));
+    public Chapter chapter(String novelUrl, String chapterUrl) throws Exception {
+        Chapter chapter = new Chapter(novelUrl);
+        Element doc = Jsoup.parse(HttpClient.GET(baseUrl + chapterUrl, new HashMap<>()));
 
-        chapter.url = baseUrl+url;
+        chapter.url = baseUrl + chapterUrl;
         chapter.content = "";
 
         doc.select("div.chapter-c").select("p").append("::");

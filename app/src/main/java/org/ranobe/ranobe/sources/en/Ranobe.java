@@ -21,14 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Ranobe implements Source {
-    private final String baseUrl = "https://ranobe-org.github.io/";
     private final int sourceId = 6;
 
     @Override
     public DataSource metadata() {
         DataSource source = new DataSource();
         source.sourceId = sourceId;
-        source.url = baseUrl;
+        source.url = "https://ranobe-org.github.io/";
         source.name = "Ranobe Originals";
         source.lang = Lang.eng;
         source.dev = "ap-atul";
@@ -117,16 +116,16 @@ public class Ranobe implements Source {
     }
 
     @Override
-    public Chapter chapter(String url) throws IOException {
-        Chapter chapter = new Chapter(url);
-        Element doc = Jsoup.parse(HttpClient.GET(url, new HashMap<>()));
+    public Chapter chapter(String novelUrl, String chapterUrl) throws IOException {
+        Chapter chapter = new Chapter(novelUrl);
+        Element doc = Jsoup.parse(HttpClient.GET(chapterUrl, new HashMap<>()));
         Element main = doc.select("main").first();
 
-        if(main == null) {
+        if (main == null) {
             return null;
         }
 
-        chapter.url = url;
+        chapter.url = chapterUrl;
         chapter.content = "";
         main.select("p").append("::");
         main.select("h1").append("::");

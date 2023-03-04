@@ -1,4 +1,4 @@
-package org.ranobe.ranobe.repository;
+package org.ranobe.ranobe.network.repository;
 
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.models.Chapter;
@@ -55,10 +55,10 @@ public class Repository {
         });
     }
 
-    public void chapter(String chapterUrl, Callback<Chapter> callback) {
+    public void chapter(String novelUrl, String chapterUrl, Callback<Chapter> callback) {
         executor.execute(() -> {
             try {
-                Chapter item = source.chapter(chapterUrl);
+                Chapter item = source.chapter(novelUrl, chapterUrl);
                 callback.onComplete(item);
             } catch (Exception e) {
                 callback.onError(e);
