@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.ranobe.ranobe.R;
+import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentSearchBinding;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.NovelItem;
@@ -113,7 +114,7 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
         NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
 
         Bundle bundle = new Bundle();
-        bundle.putString("novel", item.url);
+        bundle.putString(Ranobe.KEY_NOVEL_URL, item.url);
         controller.navigate(R.id.details_fragment, bundle);
     }
 }

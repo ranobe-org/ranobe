@@ -22,6 +22,10 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.MyViewHolder
         this.listener = listener;
     }
 
+    public List<NovelItem> getItems() {
+        return items;
+    }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
