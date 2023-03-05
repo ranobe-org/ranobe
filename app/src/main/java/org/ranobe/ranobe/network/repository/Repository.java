@@ -1,6 +1,6 @@
 package org.ranobe.ranobe.network.repository;
 
-import org.ranobe.ranobe.config.Ranobe;
+import org.ranobe.ranobe.config.RanobeSettings;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.Filter;
@@ -19,7 +19,7 @@ public class Repository {
 
     public Repository() {
         this.executor = Executors.newCachedThreadPool();
-        this.source = SourceManager.getSource(Ranobe.getCurrentSource());
+        this.source = SourceManager.getSource(RanobeSettings.get().getCurrentSource());
     }
 
     public void novels(int page, Callback<List<NovelItem>> callback) {

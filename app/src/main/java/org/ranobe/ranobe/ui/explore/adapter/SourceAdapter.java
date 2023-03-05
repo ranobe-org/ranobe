@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import org.ranobe.ranobe.config.Ranobe;
+import org.ranobe.ranobe.config.RanobeSettings;
 import org.ranobe.ranobe.databinding.ItemSourceBinding;
 import org.ranobe.ranobe.models.DataSource;
 
@@ -24,7 +25,7 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
     public SourceAdapter(List<DataSource> sources, OnSourceSelected listener) {
         this.sources = sources;
         this.listener = listener;
-        this.currentSource = Ranobe.getCurrentSource();
+        this.currentSource = RanobeSettings.get().getCurrentSource();
     }
 
     @NonNull
