@@ -113,6 +113,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:padding="10dp"
+            android:textIsSelectable="true"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
         <Button
