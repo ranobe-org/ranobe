@@ -45,7 +45,6 @@ public class AllNovel implements Source {
     }
 
 
-
     private List<NovelItem> parse(String body) throws IOException {
         List<NovelItem> items = new ArrayList<>();
         Element doc = Jsoup.parse(body).select("div.col-truyen-main.archive").first();
@@ -59,8 +58,8 @@ public class AllNovel implements Source {
                 NovelItem item = new NovelItem(url);
                 item.sourceId = sourceId;
                 item.name = element.select("h3.truyen-title > a").text().trim();
-                Element img = Jsoup.parse(HttpClient.GET(baseUrl+url, new HashMap<>()));
-                item.cover = baseUrl+ img.select("div.books img").attr("src");
+                Element img = Jsoup.parse(HttpClient.GET(baseUrl + url, new HashMap<>()));
+                item.cover = baseUrl + img.select("div.books img").attr("src");
 
 
                 items.add(item);
@@ -74,10 +73,10 @@ public class AllNovel implements Source {
     @Override
     public Novel details(String url) throws Exception {
         Novel novel = new Novel(url);
-        Element doc = Jsoup.parse(HttpClient.GET(baseUrl+url, new HashMap<>()));
+        Element doc = Jsoup.parse(HttpClient.GET(baseUrl + url, new HashMap<>()));
         novel.sourceId = sourceId;
         novel.name = doc.select("div.books h3.title").text().trim();
-        novel.cover = baseUrl+doc.select("div.books img").attr("src").trim();
+        novel.cover = baseUrl + doc.select("div.books img").attr("src").trim();
         novel.summary = doc.select("div.desc-text > p").text().trim();
         novel.rating = NumberUtils.toFloat(doc.select("input#rateVal").attr("value")) / 2;
 
@@ -98,7 +97,7 @@ public class AllNovel implements Source {
     @Override
     public List<ChapterItem> chapters(String url) throws Exception {
         List<ChapterItem> items = new ArrayList<>();
-        Element novelId = Jsoup.parse(HttpClient.GET(baseUrl+url, new HashMap<>())); // getNovelId
+        Element novelId = Jsoup.parse(HttpClient.GET(baseUrl + url, new HashMap<>())); // getNovelId
         String id = novelId.select("div#rating").attr("data-novel-id");
 
         String base = baseUrl.concat("/ajax-chapter-option?novelId=").concat(id);

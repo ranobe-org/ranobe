@@ -29,11 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReaderActivity extends AppCompatActivity implements CustomizeReader.OnOptionSelection, Toolbar.OnMenuItemClickListener {
+    private final List<Chapter> chapters = new ArrayList<>();
     private ActivityReaderBinding binding;
     private PageAdapter adapter;
     private ReaderViewModel viewModel;
-
-    private final List<Chapter> chapters = new ArrayList<>();
     private List<ChapterItem> chapterItems = new ArrayList<>();
     private String currentChapterUrl;
     private String currentNovelUrl;

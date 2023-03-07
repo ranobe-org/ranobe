@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.ranobe.ranobe.R;
+import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentBrowseBinding;
 import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
@@ -97,7 +98,7 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
         NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
 
         Bundle bundle = new Bundle();
-        bundle.putString("novel", item.url);
-        controller.navigate(R.id.details_fragment, bundle);
+        bundle.putString(Ranobe.KEY_NOVEL_URL, item.url);
+        controller.navigate(R.id.browse_fragment_to_details, bundle);
     }
 }

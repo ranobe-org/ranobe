@@ -1,10 +1,13 @@
 package org.ranobe.ranobe.models;
 
+
 import androidx.annotation.NonNull;
+import androidx.room.PrimaryKey;
 
 import org.ranobe.ranobe.util.SourceUtils;
 
 public class NovelItem {
+    @PrimaryKey
     public long id;
     public int sourceId;
     public String name;

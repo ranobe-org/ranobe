@@ -38,7 +38,7 @@ public class Ranobe implements Source {
     @Override
     public List<NovelItem> novels(int page) throws Exception {
         List<NovelItem> items = new ArrayList<>();
-        if(page > 1) {
+        if (page > 1) {
             throw new Exception("well");
         }
 
@@ -66,22 +66,18 @@ public class Ranobe implements Source {
         novel.summary = doc.select("h2#summary").nextAll().select("p").text();
         novel.rating = 0;
 
-        for(Element element: doc.select("main > ul > li")) {
+        for (Element element : doc.select("main > ul > li")) {
             String value = element.text().trim();
 
-            if(value.contains("Alternative")) {
+            if (value.contains("Alternative")) {
                 novel.alternateNames = Arrays.asList(value.replace("Alternative Names:", "").trim().split(","));
-            }
-            else if(value.contains("Author")) {
+            } else if (value.contains("Author")) {
                 novel.authors = Arrays.asList(value.replace("Author:", "").trim().split(","));
-            }
-            else if (value.contains("Genre")) {
+            } else if (value.contains("Genre")) {
                 novel.genres = Arrays.asList(value.replace("Genre:", "").trim().split(","));
-            }
-            else if (value.contains("Year")) {
+            } else if (value.contains("Year")) {
                 novel.year = NumberUtils.toInt(value.replace("Year:", "").trim());
-            }
-            else if (value.contains("Status")) {
+            } else if (value.contains("Status")) {
                 novel.status = value.replace("Status:", "").trim();
             }
         }
@@ -99,8 +95,8 @@ public class Ranobe implements Source {
         List<ChapterItem> items = new ArrayList<>();
         Element doc = Jsoup.parse(HttpClient.GET(url, new HashMap<>()));
 
-        for (Element element: doc.select("li.chapter-item")) {
-            if(element.select("a").hasClass("active")) {
+        for (Element element : doc.select("li.chapter-item")) {
+            if (element.select("a").hasClass("active")) {
                 continue;
             }
 

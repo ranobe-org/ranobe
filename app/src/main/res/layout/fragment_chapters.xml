@@ -47,8 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/header_layout"
+        android:layout_marginTop="5dp"
         android:clipToPadding="false"
-        android:paddingBottom="200dp"
-        android:layout_marginTop="5dp" />
+        android:paddingBottom="200dp" />
 
 </RelativeLayout>

@@ -113,7 +113,19 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:padding="10dp"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textIsSelectable="true" />
+
+        <Button
+            android:id="@+id/add_to_library"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/summary"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="50dp"
+            android:layout_toStartOf="@id/chapter_info"
+            android:text="@string/add_to_library_btn" />
 
         <Button
             android:id="@+id/chapter_info"
@@ -121,7 +133,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/summary"
-            android:textIsSelectable="true"
             android:layout_alignParentEnd="true"
             android:layout_margin="10dp"
             android:layout_marginBottom="50dp"

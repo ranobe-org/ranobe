@@ -78,7 +78,8 @@ public class AzyNovel implements Source {
 
         novel.authors = Arrays.asList(doc.select("article.media div.media-content p:eq(1) a").text().split(","));
         List<String> genres = new ArrayList<>();
-        for (Element a : doc.select("article.media div.media-content p:eq(3) a")) genres.add(a.text());
+        for (Element a : doc.select("article.media div.media-content p:eq(3) a"))
+            genres.add(a.text());
         novel.genres = genres;
         novel.status = "unknown";
 

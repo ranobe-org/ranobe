@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.ranobe.ranobe.R;
+import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentChaptersBinding;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.ui.chapters.adapter.ChapterAdapter;
@@ -45,7 +46,7 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            novelUrl = getArguments().getString("novel");
+            novelUrl = getArguments().getString(Ranobe.KEY_NOVEL_URL);
         }
         viewModel = new ViewModelProvider(requireActivity()).get(ChaptersViewModel.class);
     }

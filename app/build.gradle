@@ -11,6 +11,12 @@ android {
         targetSdk 33
         versionCode 5
         versionName "v0.0.5"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -40,5 +46,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
+    implementation 'androidx.room:room-runtime:2.5.0'
+    annotationProcessor 'androidx.room:room-compiler:2.5.0'
     testImplementation 'junit:junit:4.13.2'
 }
