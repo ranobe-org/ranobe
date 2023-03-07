@@ -1,7 +1,6 @@
 package org.ranobe.ranobe.ui.details;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,14 +65,12 @@ public class Details extends Fragment {
             if (novel == null) {
                 setUpObservers();
             } else {
-                Log.d(Ranobe.DEBUG, "got from database");
                 setUpUi(novel);
             }
         });
     }
 
     private void setUpObservers() {
-        Log.d(Ranobe.DEBUG, "Setting up observers");
         viewModel.getError().observe(requireActivity(), this::setUpError);
         viewModel.details(novelUrl).observe(getViewLifecycleOwner(), this::setUpUi);
     }
