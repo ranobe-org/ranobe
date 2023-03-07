@@ -45,11 +45,13 @@ public class Ranobe implements Source {
         Novel level = new Novel("https://ranobe-org.github.io/level-unknown");
         level.name = "What is your level?";
         level.cover = "https://github.com/ranobe-org/level-unknown/raw/main/cover.jpg";
+        level.sourceId = sourceId;
         items.add(level);
 
         Novel elevator = new Novel("https://ranobe-org.github.io/elevator");
         elevator.name = "Elevator";
         elevator.cover = "https://github.com/ranobe-org/elevator/raw/main/cover.jpg";
+        elevator.sourceId = sourceId;
         items.add(elevator);
 
         return items;

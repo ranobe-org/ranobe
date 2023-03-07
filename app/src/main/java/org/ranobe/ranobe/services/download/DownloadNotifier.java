@@ -36,18 +36,19 @@ public class DownloadNotifier {
     }
 
     public void complete() {
-        notificationManager.cancel(Ranobe.NOTIF_DOWNLOAD_CHANNEL_ID);
-        builder.setContentTitle("Download complete");
+        builder.setOngoing(false)
+                .setContentTitle("Download completed.");
         notifyNow();
     }
 
     private void notifyNow() {
-        notificationManager.notify(Ranobe.NOTIF_DOWNLOAD_CHANNEL_ID, builder.build());
+        notificationManager.notify(Ranobe.NOTIF_DOWNLOAD_CONTINUE_ID, builder.build());
     }
 
     private Notification.Builder getNotificationBuilder() {
         Notification.Builder builder = new Notification.Builder(context)
                 .setSmallIcon(R.drawable.ic_download)
+                .setOngoing(true)
                 .setContentTitle("Downloading started...");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder.setChannelId(Ranobe.NOTIF_DOWNLOAD_CHANNEL_NAME);

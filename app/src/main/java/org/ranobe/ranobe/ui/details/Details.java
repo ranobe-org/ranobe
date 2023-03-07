@@ -55,7 +55,7 @@ public class Details extends Fragment {
     }
 
     private void setUpListeners() {
-        binding.chapterInfo.setOnClickListener(v -> navigateToChapterList());
+        binding.readChapter.setOnClickListener(v -> navigateToChapterList());
         binding.addToLibrary.setOnClickListener(v -> saveNovelToLibrary());
         binding.progress.show();
     }

@@ -124,11 +124,11 @@
             android:layout_below="@id/summary"
             android:layout_margin="10dp"
             android:layout_marginBottom="50dp"
-            android:layout_toStartOf="@id/chapter_info"
+            android:layout_toStartOf="@id/read_chapter"
             android:text="@string/add_to_library_btn" />
 
         <Button
-            android:id="@+id/chapter_info"
+            android:id="@+id/read_chapter"
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
