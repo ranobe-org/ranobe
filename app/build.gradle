@@ -49,4 +49,5 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.5.0'
     annotationProcessor 'androidx.room:room-compiler:2.5.0'
     testImplementation 'junit:junit:4.13.2'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 }
