@@ -42,6 +42,8 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
 
     public interface OnChapterItemClickListener {
         void onChapterItemClick(ChapterItem item);
+
+        void onDownloadChapterClick(ChapterItem item);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -53,6 +55,11 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
 
             binding.chapterItemLayout.setOnClickListener(v ->
                     listener.onChapterItemClick(items.get(getAdapterPosition())));
+
+            binding.downloadChapter.setOnClickListener(v -> {
+                binding.downloadChapter.setAlpha(0.5F);
+                listener.onDownloadChapterClick(items.get(getAdapterPosition()));
+            });
         }
     }
 }

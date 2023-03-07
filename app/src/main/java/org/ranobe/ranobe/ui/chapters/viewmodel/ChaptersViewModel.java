@@ -3,6 +3,7 @@ package org.ranobe.ranobe.ui.chapters.viewmodel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.network.repository.Repository;
 
@@ -37,5 +38,21 @@ public class ChaptersViewModel extends ViewModel {
                 error.postValue(e.getLocalizedMessage());
             }
         });
+    }
+
+    public MutableLiveData<Chapter> chapter(String novelUrl, String chapterUrl) {
+        MutableLiveData<Chapter> chapter = new MutableLiveData<>();
+        new Repository().chapter(novelUrl, chapterUrl, new Repository.Callback<Chapter>() {
+            @Override
+            public void onComplete(Chapter result) {
+                chapter.postValue(result);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                error.postValue(e.getLocalizedMessage());
+            }
+        });
+        return chapter;
     }
 }

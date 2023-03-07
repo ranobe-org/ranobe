@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
@@ -16,10 +17,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
+import org.ranobe.ranobe.config.RanobeSettings;
+import org.ranobe.ranobe.database.RanobeDatabase;
 import org.ranobe.ranobe.databinding.FragmentChaptersBinding;
 import org.ranobe.ranobe.models.ChapterItem;
+import org.ranobe.ranobe.services.download.DownloadService;
 import org.ranobe.ranobe.ui.chapters.adapter.ChapterAdapter;
 import org.ranobe.ranobe.ui.chapters.viewmodel.ChaptersViewModel;
 import org.ranobe.ranobe.ui.error.Error;
@@ -120,6 +126,35 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
         adapter.notifyItemRangeChanged(0, originalItems.size());
     }
 
+    private void downloadChapters() {
+        requireActivity().startService(new Intent(requireActivity(), DownloadService.class)
+                .putExtra(Ranobe.KEY_SOURCE_ID, RanobeSettings.get().getCurrentSource())
+                .putExtra(Ranobe.KEY_NOVEL_URL, novelUrl)
+        );
+    }
+
+    private void downloadChapter(ChapterItem item) {
+        Toast.makeText(requireContext(), String.format("Downloading chapter %s", item.id), Toast.LENGTH_SHORT).show();
+        viewModel.chapter(novelUrl, item.url).observe(getViewLifecycleOwner(), chapter ->
+                RanobeDatabase.databaseExecutor.execute(() -> {
+                    chapter.name = item.name;
+                    chapter.updated = item.updated;
+                    chapter.id = item.id;
+                    RanobeDatabase.database().chapters().save(chapter);
+                }));
+    }
+
+    private void showDownloadAlert() {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setMessage("Downloading all chapters will take some time depending on the no of chapters!")
+                .setPositiveButton("Continue", (dialog, which) -> {
+                    downloadChapters();
+                    dialog.dismiss();
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
     @Override
     public void onChapterItemClick(ChapterItem item) {
         requireActivity().startActivity(
@@ -131,12 +166,19 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     }
 
     @Override
+    public void onDownloadChapterClick(ChapterItem item) {
+        downloadChapter(item);
+    }
+
+    @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         int id = menuItem.getItemId();
         if (id == R.id.sort) {
             sort();
         } else if (id == R.id.search) {
             setSearchView();
+        } else if (id == R.id.download) {
+            showDownloadAlert();
         }
         return true;
     }

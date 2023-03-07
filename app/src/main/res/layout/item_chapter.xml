@@ -4,23 +4,42 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="10dp">
 
-    <TextView
-        android:id="@+id/chapter_name"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="?colorOnSurface"
-        android:textSize="15sp" />
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/updated"
-        android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/chapter_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="?colorOnSurface"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/updated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="?colorOnSurfaceVariant"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/download_chapter"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:textColor="?colorOnSurfaceVariant"
-        android:textSize="11sp" />
+        android:layout_gravity="center_vertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginHorizontal="5dp"
+        android:contentDescription="@string/image"
+        android:src="@drawable/ic_download" />
+
 </LinearLayout>

@@ -22,8 +22,12 @@ public class Ranobe {
     public static final String SETTINGS_READER_FONT = "shared_pref_reader_font";
     public static final String SETTING_SELECTED_SOURCE = "shared_pref_selected_source";
 
+    public static final String KEY_SOURCE_ID = "key_source_id";
     public static final String KEY_NOVEL_URL = "key_novel_url";
     public static final String KEY_NOVEL_ID = "key_novel_id";
+
+    public static final int NOTIF_DOWNLOAD_CHANNEL_ID = 101;
+    public static final String NOTIF_DOWNLOAD_CHANNEL_NAME = "download_notification";
 
     public static final String RANOBE_GITHUB_LINK = "https://github.com/ranobe-org/ranobe";
     public static final String MP_LITE_GITHUB_LINK = "https://github.com/AP-Atul/music_player_lite";
