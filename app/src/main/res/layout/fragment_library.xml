@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.browse.Browse">
+    tools:context=".ui.library.Library">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/novel_list"
