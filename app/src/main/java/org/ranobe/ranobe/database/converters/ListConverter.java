@@ -9,7 +9,7 @@ import java.util.List;
 public class ListConverter {
     @TypeConverter
     public static String listToString(List<String> value) {
-        if (value == null  || value.isEmpty()) return "";
+        if (value == null || value.isEmpty()) return "";
         return String.join("\t", value);
     }
 

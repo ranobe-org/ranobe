@@ -17,12 +17,12 @@ public class RanobeSettings {
         Ranobe.saveCurrentSource(currentSource);
     }
 
+    public int getCurrentSource() {
+        return currentSource;
+    }
+
     public RanobeSettings setCurrentSource(int sourceId) {
         currentSource = sourceId;
         return INSTANCE;
-    }
-
-    public int getCurrentSource() {
-        return currentSource;
     }
 }

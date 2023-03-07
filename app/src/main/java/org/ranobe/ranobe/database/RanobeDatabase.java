@@ -20,9 +20,6 @@ public abstract class RanobeDatabase extends RoomDatabase {
     public static final ExecutorService databaseExecutor = Executors.newSingleThreadExecutor();
     private static volatile RanobeDatabase INSTANCE;
 
-    // tables
-    public abstract NovelDao novels();
-
     public static RanobeDatabase database() {
         if (INSTANCE == null) {
             synchronized (RanobeDatabase.class) {
@@ -37,4 +34,7 @@ public abstract class RanobeDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
+
+    // tables
+    public abstract NovelDao novels();
 }

@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.config.RanobeSettings;
 import org.ranobe.ranobe.databinding.FragmentExploreBinding;
 import org.ranobe.ranobe.models.DataSource;

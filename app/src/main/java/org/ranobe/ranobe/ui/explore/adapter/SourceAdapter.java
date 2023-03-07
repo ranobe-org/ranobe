@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.config.RanobeSettings;
 import org.ranobe.ranobe.databinding.ItemSourceBinding;
 import org.ranobe.ranobe.models.DataSource;
