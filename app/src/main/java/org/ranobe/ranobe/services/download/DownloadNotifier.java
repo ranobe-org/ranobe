@@ -47,7 +47,7 @@ public class DownloadNotifier {
 
     private Notification.Builder getNotificationBuilder() {
         Notification.Builder builder = new Notification.Builder(context)
-                .setSmallIcon(R.drawable.ic_download)
+                .setSmallIcon(R.drawable.ic_library)
                 .setOngoing(true)
                 .setContentTitle("Downloading started...");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -1,5 +1,6 @@
 package org.ranobe.ranobe.ui.details;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +14,16 @@ import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
+import org.ranobe.ranobe.config.RanobeSettings;
 import org.ranobe.ranobe.database.RanobeDatabase;
 import org.ranobe.ranobe.databinding.FragmentDetailsBinding;
 import org.ranobe.ranobe.models.Novel;
+import org.ranobe.ranobe.services.download.DownloadService;
 import org.ranobe.ranobe.ui.details.viewmodel.DetailsViewModel;
 import org.ranobe.ranobe.ui.error.Error;
 
@@ -33,6 +37,7 @@ public class Details extends Fragment {
     private Long novelId;
 
     public Details() {
+        // Required
     }
 
     @Override
@@ -85,6 +90,7 @@ public class Details extends Fragment {
         NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
         Bundle bundle = new Bundle();
         bundle.putString(Ranobe.KEY_NOVEL_URL, novelUrl);
+        bundle.putString(Ranobe.KEY_FROM_PAGE, Ranobe.VAL_PAGE_LIB);
         controller.navigate(R.id.details_fragment_to_chapters, bundle);
     }
 
@@ -121,11 +127,28 @@ public class Details extends Fragment {
     }
 
     private void saveNovelToLibrary() {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setMessage("Downloading novel and all chapters will take some time depending on the number of chapters!")
+                .setPositiveButton("Continue", (dialog, which) -> {
+                    Snackbar.make(binding.getRoot(), "Downloading started...", Snackbar.LENGTH_SHORT).show();
+                    addNovelToDatabase();
+                    downloadChapters();
+                    dialog.dismiss();
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    private void addNovelToDatabase() {
         viewModel.details(novelUrl).observe(getViewLifecycleOwner(), novel ->
-        {
-            Snackbar.make(binding.getRoot(), "Added novel to library", Snackbar.LENGTH_SHORT).show();
-            RanobeDatabase.databaseExecutor.execute(() ->
-                    RanobeDatabase.database().novels().save(novel));
-        });
+                RanobeDatabase.databaseExecutor.execute(() ->
+                        RanobeDatabase.database().novels().save(novel)));
+    }
+
+    private void downloadChapters() {
+        requireActivity().startService(new Intent(requireActivity(), DownloadService.class)
+                .putExtra(Ranobe.KEY_SOURCE_ID, RanobeSettings.get().getCurrentSource())
+                .putExtra(Ranobe.KEY_NOVEL_URL, novelUrl)
+        );
     }
 }

@@ -15,7 +15,7 @@ import java.util.Map;
         "squid:S3599", "squid:S2386", "squid:S1171", "squid:S1118"
 })
 public class Ranobe {
-    public static final String DEBUG = "ranobe.debug";
+    public static final String DEBUG = "ranobe-debug";
     public static final String PACKAGE_NAME = "org.ranobe.ranobe";
     public static final String SETTINGS_THEME_MODE = "shared_pref_theme_mode";
     public static final String SETTINGS_READER_THEME = "shared_pref_reader_theme";
@@ -26,6 +26,8 @@ public class Ranobe {
     public static final String KEY_NOVEL_URL = "key_novel_url";
     public static final String KEY_NOVEL_ID = "key_novel_id";
     public static final String KEY_CHAPTER_URL = "key_chapter_url";
+    public static final String KEY_FROM_PAGE = "key_from_page";
+    public static final String VAL_PAGE_LIB = "value_page_library";
 
     public static final int NOTIF_DOWNLOAD_CONTINUE_ID = 101;
     public static final String NOTIF_DOWNLOAD_CHANNEL_NAME = "download_notification";

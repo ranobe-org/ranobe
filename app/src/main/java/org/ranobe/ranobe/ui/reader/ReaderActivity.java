@@ -48,8 +48,8 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         setContentView(binding.getRoot());
         binding.customize.setOnMenuItemClickListener(this);
 
-        currentNovelUrl = getIntent().getStringExtra("novel");
-        currentChapterUrl = getIntent().getStringExtra("currentChapter");
+        currentNovelUrl = getIntent().getStringExtra(Ranobe.KEY_NOVEL_URL);
+        currentChapterUrl = getIntent().getStringExtra(Ranobe.KEY_CHAPTER_URL);
         viewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
 
         adapter = new PageAdapter(chapters);
