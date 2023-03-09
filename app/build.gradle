@@ -9,8 +9,8 @@ android {
         applicationId "org.ranobe.ranobe"
         minSdk 21
         targetSdk 33
-        versionCode 5
-        versionName "v0.0.5"
+        versionCode 6
+        versionName "v0.0.6"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -20,6 +20,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            debuggable true
+        }
+
         release {
             minifyEnabled true
             shrinkResources true
@@ -49,4 +55,5 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.5.0'
     annotationProcessor 'androidx.room:room-compiler:2.5.0'
     testImplementation 'junit:junit:4.13.2'
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 }

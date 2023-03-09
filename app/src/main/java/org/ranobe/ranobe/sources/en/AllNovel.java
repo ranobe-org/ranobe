@@ -61,10 +61,8 @@ public class AllNovel implements Source {
                 Element img = Jsoup.parse(HttpClient.GET(baseUrl + url, new HashMap<>()));
                 item.cover = baseUrl + img.select("div.books img").attr("src");
 
-
                 items.add(item);
             }
-
         }
 
         return items;

@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
+import org.ranobe.ranobe.database.RanobeDatabase;
 import org.ranobe.ranobe.databinding.FragmentChaptersBinding;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.ui.chapters.adapter.ChapterAdapter;
@@ -25,6 +27,7 @@ import org.ranobe.ranobe.ui.chapters.viewmodel.ChaptersViewModel;
 import org.ranobe.ranobe.ui.error.Error;
 import org.ranobe.ranobe.ui.reader.ReaderActivity;
 import org.ranobe.ranobe.util.ListUtils;
+import org.ranobe.ranobe.util.SourceUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +39,7 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     private FragmentChaptersBinding binding;
     private ChaptersViewModel viewModel;
     private String novelUrl;
+    private String fromPage;
     private ChapterAdapter adapter;
 
     public Chapters() {
@@ -47,6 +51,7 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             novelUrl = getArguments().getString(Ranobe.KEY_NOVEL_URL);
+            fromPage = getArguments().getString(Ranobe.KEY_FROM_PAGE, "na");
         }
         viewModel = new ViewModelProvider(requireActivity()).get(ChaptersViewModel.class);
     }
@@ -55,33 +60,46 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentChaptersBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setUpUi();
+        checkDatabase();
+    }
+
+    private void checkDatabase() {
+        if (!fromPage.equals(Ranobe.VAL_PAGE_LIB)) {
+            setUpObservers();
+            return;
+        }
+        RanobeDatabase.database()
+                .chapters()
+                .list(SourceUtils.generateId(novelUrl))
+                .observe(getViewLifecycleOwner(), chapters -> {
+                    if (chapters.size() > 0) {
+                        setChapter(new ArrayList<>(chapters));
+                    } else {
+                        setUpObservers();
+                    }
+                });
+    }
+
+    private void setUpObservers() {
+        viewModel.getError().observe(requireActivity(), this::setUpError);
+        viewModel.getChapters(novelUrl).observe(requireActivity(), this::setChapter);
+        viewModel.chapters(novelUrl);
+    }
+
+    private void setUpUi() {
         binding.toolbar.setOnMenuItemClickListener(this::onMenuItemClick);
-        binding.searchField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                searchResults(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
+        binding.searchField.addTextChangedListener(new SearchBarTextWatcher());
 
         adapter = new ChapterAdapter(originalItems, this);
         binding.chapterList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.chapterList.setAdapter(adapter);
-
-        viewModel.getError().observe(requireActivity(), this::setUpError);
-        viewModel.getChapters(novelUrl).observe(requireActivity(), this::setChapter);
-        viewModel.chapters(novelUrl);
-
-        return binding.getRoot();
     }
 
     private void setUpError(String error) {
@@ -124,9 +142,8 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     public void onChapterItemClick(ChapterItem item) {
         requireActivity().startActivity(
                 new Intent(requireActivity(), ReaderActivity.class)
-                        .putExtra("chapter", item.url)
-                        .putExtra("novel", novelUrl)
-                        .putExtra("currentChapter", item.url)
+                        .putExtra(Ranobe.KEY_NOVEL_URL, novelUrl)
+                        .putExtra(Ranobe.KEY_CHAPTER_URL, item.url)
         );
     }
 
@@ -139,5 +156,23 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
             setSearchView();
         }
         return true;
+    }
+
+    public class SearchBarTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            searchResults(charSequence.toString());
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
     }
 }
