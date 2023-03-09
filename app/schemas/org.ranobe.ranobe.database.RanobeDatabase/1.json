@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "054f6e7254fd3b902dc734dd69dffea5",
+    "identityHash": "734f64f864a10f09d04c688774f108b6",
     "entities": [
       {
         "tableName": "Novel",
@@ -92,13 +92,19 @@
       },
       {
         "tableName": "Chapter",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`content` TEXT, `id` REAL NOT NULL, `novelId` INTEGER NOT NULL, `name` TEXT, `updated` TEXT, `url` TEXT NOT NULL, PRIMARY KEY(`url`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`content` TEXT, `reads` INTEGER NOT NULL, `id` REAL NOT NULL, `novelId` INTEGER NOT NULL, `name` TEXT, `updated` TEXT, `url` TEXT NOT NULL, PRIMARY KEY(`url`))",
         "fields": [
           {
             "fieldPath": "content",
             "columnName": "content",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "reads",
+            "columnName": "reads",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "id",
@@ -144,7 +150,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '054f6e7254fd3b902dc734dd69dffea5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '734f64f864a10f09d04c688774f108b6')"
     ]
   }
 }
