@@ -27,6 +27,5 @@
     <string name="mp_lite_subtitle">an open source music player from same dev</string>
     <string name="add_to_library_btn">Add to library</string>
     <string name="nav_library">Library</string>
-    <string name="download_chapters">Download chapters</string>
 
 </resources>

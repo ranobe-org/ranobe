@@ -14,9 +14,4 @@
         android:title="@string/sort"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/download"
-        android:icon="@drawable/ic_download"
-        android:title="@string/download_chapters"
-        app:showAsAction="ifRoom" />
 </menu>
