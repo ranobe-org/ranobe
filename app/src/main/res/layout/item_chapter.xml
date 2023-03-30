@@ -23,4 +23,5 @@
         android:maxLines="1"
         android:textColor="?colorOnSurfaceVariant"
         android:textSize="11sp" />
+
 </LinearLayout>

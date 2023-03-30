@@ -22,6 +22,11 @@ public class Repository {
         this.source = SourceManager.getSource(RanobeSettings.get().getCurrentSource());
     }
 
+    public Repository(int sourceId) {
+        this.executor = Executors.newFixedThreadPool(1);
+        this.source = SourceManager.getSource(sourceId);
+    }
+
     public void novels(int page, Callback<List<NovelItem>> callback) {
         executor.execute(() -> {
             try {

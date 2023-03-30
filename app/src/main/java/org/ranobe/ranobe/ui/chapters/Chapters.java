@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,33 +56,29 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentChaptersBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setUpUi();
+        setUpObservers();
+    }
+
+    private void setUpObservers() {
+        viewModel.getError().observe(requireActivity(), this::setUpError);
+        viewModel.getChapters(novelUrl).observe(requireActivity(), this::setChapter);
+        viewModel.chapters(novelUrl);
+    }
+
+    private void setUpUi() {
         binding.toolbar.setOnMenuItemClickListener(this::onMenuItemClick);
-        binding.searchField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                searchResults(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
+        binding.searchField.addTextChangedListener(new SearchBarTextWatcher());
 
         adapter = new ChapterAdapter(originalItems, this);
         binding.chapterList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.chapterList.setAdapter(adapter);
-
-        viewModel.getError().observe(requireActivity(), this::setUpError);
-        viewModel.getChapters(novelUrl).observe(requireActivity(), this::setChapter);
-        viewModel.chapters(novelUrl);
-
-        return binding.getRoot();
     }
 
     private void setUpError(String error) {
@@ -122,12 +119,11 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
 
     @Override
     public void onChapterItemClick(ChapterItem item) {
-        requireActivity().startActivity(
-                new Intent(requireActivity(), ReaderActivity.class)
-                        .putExtra("chapter", item.url)
-                        .putExtra("novel", novelUrl)
-                        .putExtra("currentChapter", item.url)
-        );
+        Bundle bundle = new Bundle();
+        bundle.putString(Ranobe.KEY_NOVEL_URL, novelUrl);
+        bundle.putString(Ranobe.KEY_CHAPTER_URL, item.url);
+
+        requireActivity().startActivity(new Intent(requireActivity(), ReaderActivity.class).putExtras(bundle));
     }
 
     @Override
@@ -139,5 +135,23 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
             setSearchView();
         }
         return true;
+    }
+
+    public class SearchBarTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            searchResults(charSequence.toString());
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
     }
 }

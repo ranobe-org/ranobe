@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -47,8 +48,14 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentBrowseBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        binding = FragmentBrowseBinding.bind(view);
 
         adapter = new NovelAdapter(list, this);
         DisplayUtils utils = new DisplayUtils(requireContext(), R.layout.item_novel);
@@ -78,7 +85,6 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
         });
 
         fetchNovels();
-        return binding.getRoot();
     }
 
     private void setUpError(String error) {

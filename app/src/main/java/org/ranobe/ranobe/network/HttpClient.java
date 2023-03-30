@@ -26,7 +26,12 @@ public class HttpClient {
         if (client == null) {
             File cacheDir = new File(App.getContext().getCacheDir(), "cache-files");
             Cache cache = new Cache(cacheDir, 10 * 1024 * 1024); //10 MiB
-            client = new OkHttpClient.Builder().addNetworkInterceptor(new CacheInterceptor()).cache(cache).build();
+            client = new OkHttpClient
+                    .Builder()
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .addNetworkInterceptor(new CacheInterceptor()).cache(cache).build();
         }
         return client;
     }

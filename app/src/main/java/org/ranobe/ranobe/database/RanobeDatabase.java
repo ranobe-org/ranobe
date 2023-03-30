@@ -8,13 +8,15 @@ import androidx.room.TypeConverters;
 import org.ranobe.ranobe.App;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.database.converters.ListConverter;
+import org.ranobe.ranobe.database.dao.ChapterDao;
 import org.ranobe.ranobe.database.dao.NovelDao;
+import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.Novel;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Novel.class}, version = Ranobe.DATABASE_VERSION)
+@Database(entities = {Novel.class, Chapter.class}, version = Ranobe.DATABASE_VERSION)
 @TypeConverters({ListConverter.class})
 public abstract class RanobeDatabase extends RoomDatabase {
     public static final ExecutorService databaseExecutor = Executors.newSingleThreadExecutor();
@@ -37,4 +39,5 @@ public abstract class RanobeDatabase extends RoomDatabase {
 
     // tables
     public abstract NovelDao novels();
+    public abstract ChapterDao chapters();
 }

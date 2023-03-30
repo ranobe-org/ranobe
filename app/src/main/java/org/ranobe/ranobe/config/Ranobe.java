@@ -15,15 +15,19 @@ import java.util.Map;
         "squid:S3599", "squid:S2386", "squid:S1171", "squid:S1118"
 })
 public class Ranobe {
-    public static final String DEBUG = "ranobe.debug";
+    public static final String DEBUG = "ranobe-debug";
     public static final String PACKAGE_NAME = "org.ranobe.ranobe";
     public static final String SETTINGS_THEME_MODE = "shared_pref_theme_mode";
     public static final String SETTINGS_READER_THEME = "shared_pref_reader_theme";
     public static final String SETTINGS_READER_FONT = "shared_pref_reader_font";
     public static final String SETTING_SELECTED_SOURCE = "shared_pref_selected_source";
 
+    public static final String KEY_SOURCE_ID = "key_source_id";
     public static final String KEY_NOVEL_URL = "key_novel_url";
     public static final String KEY_NOVEL_ID = "key_novel_id";
+    public static final String KEY_CHAPTER_URL = "key_chapter_url";
+
+    public static final String NOTIF_DOWNLOAD_CHANNEL_NAME = "download_notification";
 
     public static final String RANOBE_GITHUB_LINK = "https://github.com/ranobe-org/ranobe";
     public static final String MP_LITE_GITHUB_LINK = "https://github.com/AP-Atul/music_player_lite";
