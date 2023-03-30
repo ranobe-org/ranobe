@@ -19,11 +19,12 @@ public class DownloadService extends Service implements DownloadManager.Download
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        notifier = new DownloadNotifier(getApplicationContext());
-        notifier.showNotification();
-
         int sourceId = intent.getIntExtra(Ranobe.KEY_SOURCE_ID, 1);
         String novelUrl = intent.getStringExtra(Ranobe.KEY_NOVEL_URL);
+
+        notifier = new DownloadNotifier(getApplicationContext(), novelUrl.hashCode());
+        notifier.showNotification();
+
         new DownloadManager(sourceId, novelUrl, this).start();
         return START_NOT_STICKY;
     }

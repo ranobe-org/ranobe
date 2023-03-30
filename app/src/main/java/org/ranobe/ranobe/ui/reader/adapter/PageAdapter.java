@@ -67,9 +67,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
         }
 
         holder.binding.content.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize);
-
-        holder.binding.pageStart.setText(String.format(Locale.getDefault(), "Start of Chapter %.1f", chapter.id));
-        holder.binding.pageEnd.setText(String.format(Locale.getDefault(), "End of Chapter %.1f", chapter.id));
+        holder.binding.chapterTitle.setText(String.format(Locale.getDefault(), "Chapter %.0f", chapter.id));
         holder.binding.content.setText(chapter.content);
         holder.binding.pageLayout.setLayoutParams(params);
         holder.binding.content.setLayoutParams(params);

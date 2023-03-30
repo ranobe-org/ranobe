@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
-import org.ranobe.ranobe.database.RanobeDatabase;
 import org.ranobe.ranobe.databinding.FragmentChaptersBinding;
 import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.ui.chapters.adapter.ChapterAdapter;
@@ -27,7 +26,6 @@ import org.ranobe.ranobe.ui.chapters.viewmodel.ChaptersViewModel;
 import org.ranobe.ranobe.ui.error.Error;
 import org.ranobe.ranobe.ui.reader.ReaderActivity;
 import org.ranobe.ranobe.util.ListUtils;
-import org.ranobe.ranobe.util.SourceUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +37,6 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     private FragmentChaptersBinding binding;
     private ChaptersViewModel viewModel;
     private String novelUrl;
-    private String fromPage;
     private ChapterAdapter adapter;
 
     public Chapters() {
@@ -51,7 +48,6 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             novelUrl = getArguments().getString(Ranobe.KEY_NOVEL_URL);
-            fromPage = getArguments().getString(Ranobe.KEY_FROM_PAGE, "na");
         }
         viewModel = new ViewModelProvider(requireActivity()).get(ChaptersViewModel.class);
     }
@@ -67,24 +63,7 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpUi();
-        checkDatabase();
-    }
-
-    private void checkDatabase() {
-        if (!fromPage.equals(Ranobe.VAL_PAGE_LIB)) {
-            setUpObservers();
-            return;
-        }
-        RanobeDatabase.database()
-                .chapters()
-                .list(SourceUtils.generateId(novelUrl))
-                .observe(getViewLifecycleOwner(), chapters -> {
-                    if (chapters.size() > 0) {
-                        setChapter(new ArrayList<>(chapters));
-                    } else {
-                        setUpObservers();
-                    }
-                });
+        setUpObservers();
     }
 
     private void setUpObservers() {
@@ -140,11 +119,11 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
 
     @Override
     public void onChapterItemClick(ChapterItem item) {
-        requireActivity().startActivity(
-                new Intent(requireActivity(), ReaderActivity.class)
-                        .putExtra(Ranobe.KEY_NOVEL_URL, novelUrl)
-                        .putExtra(Ranobe.KEY_CHAPTER_URL, item.url)
-        );
+        Bundle bundle = new Bundle();
+        bundle.putString(Ranobe.KEY_NOVEL_URL, novelUrl);
+        bundle.putString(Ranobe.KEY_CHAPTER_URL, item.url);
+
+        requireActivity().startActivity(new Intent(requireActivity(), ReaderActivity.class).putExtras(bundle));
     }
 
     @Override

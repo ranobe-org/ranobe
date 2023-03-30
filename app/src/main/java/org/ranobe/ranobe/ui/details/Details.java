@@ -90,7 +90,6 @@ public class Details extends Fragment {
         NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
         Bundle bundle = new Bundle();
         bundle.putString(Ranobe.KEY_NOVEL_URL, novelUrl);
-        bundle.putString(Ranobe.KEY_FROM_PAGE, Ranobe.VAL_PAGE_LIB);
         controller.navigate(R.id.details_fragment_to_chapters, bundle);
     }
 

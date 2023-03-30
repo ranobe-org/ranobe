@@ -16,9 +16,11 @@ public class DownloadNotifier {
     private final NotificationManager notificationManager;
     private final Notification.Builder builder;
     private final Context context;
+    private final int notificationId;
 
-    public DownloadNotifier(Context context) {
+    public DownloadNotifier(Context context, int notificationId) {
         this.context = context;
+        this.notificationId = notificationId;
         notificationManager = ContextCompat.getSystemService(context, NotificationManager.class);
         builder = getNotificationBuilder();
     }
@@ -37,12 +39,13 @@ public class DownloadNotifier {
 
     public void complete() {
         builder.setOngoing(false)
+                .setProgress(0, 0, false)
                 .setContentTitle("Download completed.");
         notifyNow();
     }
 
     private void notifyNow() {
-        notificationManager.notify(Ranobe.NOTIF_DOWNLOAD_CONTINUE_ID, builder.build());
+        notificationManager.notify(notificationId, builder.build());
     }
 
     private Notification.Builder getNotificationBuilder() {
