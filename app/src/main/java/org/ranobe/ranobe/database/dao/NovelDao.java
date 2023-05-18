@@ -19,9 +19,12 @@ public interface NovelDao {
     @Query("SELECT * FROM novel ORDER BY name ASC")
     LiveData<List<Novel>> list();
 
-    @Query("DELETE FROM novel WHERE id=:id")
-    int delete(long id);
+    @Query("DELETE FROM novel WHERE url=:novelUrl")
+    int delete(String novelUrl);
 
     @Query("SELECT * FROM novel WHERE id=:id")
     LiveData<Novel> get(long id);
+
+    @Query("SELECT * FROM novel WHERE url=:novelUrl")
+    LiveData<Novel> getByUrl(String novelUrl);
 }

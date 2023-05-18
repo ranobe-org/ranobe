@@ -16,10 +16,17 @@ import java.util.List;
 public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.MyViewHolder> {
     private final List<Novel> items;
     private final OnNovelItemClickListener listener;
+    private OnNovelLongClickListener longClickListener;
 
     public NovelAdapter(List<Novel> items, OnNovelItemClickListener listener) {
         this.items = items;
         this.listener = listener;
+    }
+
+    public NovelAdapter(List<Novel> items, OnNovelItemClickListener listener, OnNovelLongClickListener longClickListener) {
+        this.items = items;
+        this.listener = listener;
+        this.longClickListener = longClickListener;
     }
 
     public List<Novel> getItems() {
@@ -51,6 +58,10 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.MyViewHolder
         void onNovelItemClick(Novel item);
     }
 
+    public interface OnNovelLongClickListener {
+        void onNovelLongClick(Novel novel);
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private final ItemNovelBinding binding;
 
@@ -60,6 +71,14 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.MyViewHolder
 
             binding.novelCoverLayout.setOnClickListener(v ->
                     listener.onNovelItemClick(items.get(getAdapterPosition())));
+
+            binding.novelCoverLayout.setOnLongClickListener(v -> {
+                if (longClickListener != null) {
+                    longClickListener.onNovelLongClick(items.get(getAdapterPosition()));
+                    return true;
+                }
+                return false;
+            });
         }
     }
 }

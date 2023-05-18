@@ -7,6 +7,11 @@
         android:title="@string/nav_explore" />
 
     <item
+        android:id="@+id/library_fragment"
+        android:icon="@drawable/ic_library"
+        android:title="@string/nav_library" />
+
+    <item
         android:id="@+id/search_fragment"
         android:icon="@drawable/ic_search"
         android:title="@string/search" />

@@ -116,6 +116,20 @@
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textIsSelectable="true" />
 
+
+        <Button
+            android:id="@+id/add_to_lib"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/summary"
+            android:layout_toStartOf="@id/read_chapter"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/add_to_lib_info" />
+
         <Button
             android:id="@+id/read_chapter"
             style="@style/Widget.Material3.Button.TonalButton"
@@ -123,8 +137,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/summary"
             android:layout_alignParentEnd="true"
-            android:layout_margin="10dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/read_info" />
 
     </RelativeLayout>

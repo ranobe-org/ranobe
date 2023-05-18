@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -22,11 +23,13 @@ public class Chapter implements Parcelable {
         this.url = "";
     }
 
+    @Ignore
     public Chapter(String novelUrl) {
         this.novelUrl = novelUrl;
         this.url = "";
     }
 
+    @Ignore
     protected Chapter(Parcel in) {
         url = in.readString();
         novelUrl = in.readString();

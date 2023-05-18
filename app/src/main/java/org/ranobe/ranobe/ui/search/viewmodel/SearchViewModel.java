@@ -12,22 +12,15 @@ import java.util.List;
 
 public class SearchViewModel extends ViewModel {
     private MutableLiveData<String> error = new MutableLiveData<>();
-    private MutableLiveData<List<Novel>> items;
     private Filter oldFilter = new Filter();
-
-    public MutableLiveData<List<Novel>> getNovels() {
-        if (items == null) {
-            items = new MutableLiveData<>();
-        }
-        return items;
-    }
 
     public MutableLiveData<String> getError() {
         return error = new MutableLiveData<>();
     }
 
-    public void search(Filter filter, int page) {
-        new Repository().search(filter, page, new Repository.Callback<List<Novel>>() {
+    public MutableLiveData<List<Novel>> search(int sourceId, Filter filter, int page) {
+        MutableLiveData<List<Novel>> items = new MutableLiveData<>();
+        new Repository(sourceId).search(filter, page, new Repository.Callback<List<Novel>>() {
             @Override
             public void onComplete(List<Novel> result) {
                 List<Novel> old = items.getValue();
@@ -50,6 +43,7 @@ public class SearchViewModel extends ViewModel {
                 error.postValue(e.getLocalizedMessage());
             }
         });
+        return items;
     }
 
 }

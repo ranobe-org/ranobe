@@ -13,9 +13,12 @@ import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
+import org.ranobe.ranobe.config.RanobeSettings;
+import org.ranobe.ranobe.database.RanobeDatabase;
 import org.ranobe.ranobe.databinding.FragmentDetailsBinding;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.ui.details.viewmodel.DetailsViewModel;
@@ -38,6 +41,7 @@ public class Details extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             novel = getArguments().getParcelable(Ranobe.KEY_NOVEL);
+            RanobeSettings.get().setCurrentSource(novel.sourceId).save();
         }
         viewModel = new ViewModelProvider(requireActivity()).get(DetailsViewModel.class);
     }
@@ -53,6 +57,7 @@ public class Details extends Fragment {
 
     private void setUpListeners() {
         binding.readChapter.setOnClickListener(v -> navigateToChapterList());
+        binding.addToLib.setOnClickListener(v -> addToLibrary(novel));
         binding.progress.show();
     }
 
@@ -105,5 +110,11 @@ public class Details extends Fragment {
             chip.setText(genre);
             binding.genresLayout.addView(chip);
         }
+    }
+
+    private void addToLibrary(Novel novel) {
+        if (novel == null) return;
+        RanobeDatabase.databaseExecutor.execute( () -> RanobeDatabase.database().novels().save(novel));
+        Snackbar.make(binding.getRoot(), "Added novel to library", Snackbar.LENGTH_SHORT).show();
     }
 }
