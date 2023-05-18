@@ -9,20 +9,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import org.ranobe.ranobe.databinding.ItemNovelBinding;
-import org.ranobe.ranobe.models.NovelItem;
+import org.ranobe.ranobe.models.Novel;
 
 import java.util.List;
 
 public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.MyViewHolder> {
-    private final List<NovelItem> items;
+    private final List<Novel> items;
     private final OnNovelItemClickListener listener;
 
-    public NovelAdapter(List<NovelItem> items, OnNovelItemClickListener listener) {
+    public NovelAdapter(List<Novel> items, OnNovelItemClickListener listener) {
         this.items = items;
         this.listener = listener;
     }
 
-    public List<NovelItem> getItems() {
+    public List<Novel> getItems() {
         return items;
     }
 
@@ -35,7 +35,7 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        NovelItem item = items.get(position);
+        Novel item = items.get(position);
         holder.binding.novelName.setText(item.name);
         Glide.with(holder.binding.novelCover.getContext())
                 .load(item.cover)
@@ -48,7 +48,7 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.MyViewHolder
     }
 
     public interface OnNovelItemClickListener {
-        void onNovelItemClick(NovelItem item);
+        void onNovelItemClick(Novel item);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

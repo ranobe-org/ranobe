@@ -27,8 +27,7 @@ public class Details extends Fragment {
     private FragmentDetailsBinding binding;
     private DetailsViewModel viewModel;
 
-    private String novelUrl;
-    private Long novelId;
+    private Novel novel;
 
     public Details() {
         // Required
@@ -38,8 +37,7 @@ public class Details extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            novelUrl = getArguments().getString(Ranobe.KEY_NOVEL_URL);
-            novelId = getArguments().getLong(Ranobe.KEY_NOVEL_ID, -1L);
+            novel = getArguments().getParcelable(Ranobe.KEY_NOVEL);
         }
         viewModel = new ViewModelProvider(requireActivity()).get(DetailsViewModel.class);
     }
@@ -60,7 +58,7 @@ public class Details extends Fragment {
 
     private void setUpObservers() {
         viewModel.getError().observe(requireActivity(), this::setUpError);
-        viewModel.details(novelUrl).observe(getViewLifecycleOwner(), this::setUpUi);
+        viewModel.details(novel).observe(getViewLifecycleOwner(), this::setUpUi);
     }
 
     private void setUpError(String error) {
@@ -69,14 +67,15 @@ public class Details extends Fragment {
     }
 
     private void navigateToChapterList() {
-        if (novelUrl == null) return;
+        if(novel == null) return;
         NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
         Bundle bundle = new Bundle();
-        bundle.putString(Ranobe.KEY_NOVEL_URL, novelUrl);
+        bundle.putParcelable(Ranobe.KEY_NOVEL, novel);
         controller.navigate(R.id.details_fragment_to_chapters, bundle);
     }
 
     private void setUpUi(Novel novel) {
+        this.novel = novel;
         Glide.with(binding.novelCover.getContext()).load(novel.cover).into(binding.novelCover);
         binding.novelName.setText(novel.name);
         binding.rating.setRating(novel.rating);

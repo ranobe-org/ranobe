@@ -58,16 +58,6 @@
             android:textColor="?colorOnSurfaceVariant"
             android:textSize="@dimen/text_small" />
 
-        <TextView
-            android:id="@+id/active"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/currently_active"
-            android:textColor="?colorTertiary"
-            android:textSize="@dimen/text_small"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
     </LinearLayout>
 
 </LinearLayout>

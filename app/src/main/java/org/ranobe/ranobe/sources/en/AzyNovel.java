@@ -3,12 +3,10 @@ package org.ranobe.ranobe.sources.en;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.ranobe.ranobe.models.Chapter;
-import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.network.HttpClient;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
@@ -37,13 +35,13 @@ public class AzyNovel implements Source {
     }
 
     @Override
-    public List<NovelItem> novels(int page) throws Exception {
+    public List<Novel> novels(int page) throws Exception {
         String web = baseUrl + "/popular-novels?page=" + page;
         return parse(HttpClient.GET(web, new HashMap<>()));
     }
 
-    private List<NovelItem> parse(String body) {
-        List<NovelItem> items = new ArrayList<>();
+    private List<Novel> parse(String body) {
+        List<Novel> items = new ArrayList<>();
         Element doc = Jsoup.parse(body).select("div.columns.is-multiline").first();
         if (doc == null) return items;
 
@@ -51,7 +49,7 @@ public class AzyNovel implements Source {
             String url = element.attr("href").trim();
 
             if (url.length() > 0) {
-                NovelItem item = new NovelItem(url);
+                Novel item = new Novel(url);
                 item.sourceId = sourceId;
                 item.name = element.select("div.content > p.gtitle").attr("title").trim();
                 item.cover = element.select("img.athumbnail").attr("data-src");
@@ -66,9 +64,8 @@ public class AzyNovel implements Source {
     }
 
     @Override
-    public Novel details(String url) throws Exception {
-        Novel novel = new Novel(url);
-        Element doc = Jsoup.parse(HttpClient.GET(baseUrl + url, new HashMap<>()));
+    public Novel details(Novel novel) throws Exception {
+        Element doc = Jsoup.parse(HttpClient.GET(baseUrl + novel.url, new HashMap<>()));
         novel.sourceId = sourceId;
         novel.name = doc.select("article.media div.media-content h1:eq(0)").text().trim();
         novel.cover = doc.select("div.media-left img").attr("data-src").trim();
@@ -88,13 +85,13 @@ public class AzyNovel implements Source {
     }
 
     @Override
-    public List<ChapterItem> chapters(String url) throws Exception {
-        List<ChapterItem> items = new ArrayList<>();
-        String base = baseUrl.concat(url);
+    public List<Chapter> chapters(Novel novel) throws Exception {
+        List<Chapter> items = new ArrayList<>();
+        String base = baseUrl.concat(novel.url);
         Element doc = Jsoup.parse(HttpClient.GET(base, new HashMap<>()));
 
         for (Element element : doc.select("div.chapter-list a")) {
-            ChapterItem item = new ChapterItem(url);
+            Chapter item = new Chapter(novel.url);
 
             item.url = element.attr("href").trim();
             item.name = element.text().trim();
@@ -105,11 +102,10 @@ public class AzyNovel implements Source {
     }
 
     @Override
-    public Chapter chapter(String novelUrl, String chapterUrl) throws Exception {
-        Chapter chapter = new Chapter(novelUrl);
-        Element doc = Jsoup.parse(HttpClient.GET(baseUrl + chapterUrl, new HashMap<>()));
+    public Chapter chapter(Chapter chapter) throws Exception {
+        Element doc = Jsoup.parse(HttpClient.GET(baseUrl + chapter.url, new HashMap<>()));
 
-        chapter.url = baseUrl + chapterUrl;
+        chapter.url = baseUrl + chapter.url;
         chapter.content = "";
 
         doc.select("div.columns div div:eq(4)").select("p").append("::");
@@ -121,7 +117,7 @@ public class AzyNovel implements Source {
     }
 
     @Override
-    public List<NovelItem> search(Filter filters, int page) throws Exception {
+    public List<Novel> search(Filter filters, int page) throws Exception {
         if (filters.hashKeyword()) {
             String keyword = filters.getKeyword();
             String web = SourceUtils.buildUrl(baseUrl, "/search?q=", keyword, "&page=", String.valueOf(page));

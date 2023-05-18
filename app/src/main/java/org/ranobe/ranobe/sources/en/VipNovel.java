@@ -3,12 +3,10 @@ package org.ranobe.ranobe.sources.en;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.ranobe.ranobe.models.Chapter;
-import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.network.HttpClient;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
@@ -41,8 +39,8 @@ public class VipNovel implements Source {
     }
 
     @Override
-    public List<NovelItem> novels(int page) throws IOException {
-        List<NovelItem> items = new ArrayList<>();
+    public List<Novel> novels(int page) throws IOException {
+        List<Novel> items = new ArrayList<>();
         String web = baseUrl.concat("/page/").concat(String.valueOf(page));
         Element doc = Jsoup.parse(HttpClient.GET(web, new HashMap<>()));
 
@@ -50,7 +48,7 @@ public class VipNovel implements Source {
             String url = element.select(".h5 > a").attr("href").trim();
 
             if (url.length() > 0) {
-                NovelItem item = new NovelItem(url);
+                Novel item = new Novel(url);
                 item.sourceId = sourceId;
                 item.name = element.select(".h5 > a").text().trim();
                 item.cover = cleanImg(element.select("img").attr("src").trim());
@@ -62,9 +60,8 @@ public class VipNovel implements Source {
     }
 
     @Override
-    public Novel details(String url) throws IOException {
-        Novel novel = new Novel(url);
-        Element doc = Jsoup.parse(HttpClient.GET(url, new HashMap<>()));
+    public Novel details(Novel novel) throws IOException {
+        Element doc = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>()));
 
         novel.sourceId = sourceId;
         novel.name = doc.select(".post-title > h1").text().trim();
@@ -97,13 +94,13 @@ public class VipNovel implements Source {
     }
 
     @Override
-    public List<ChapterItem> chapters(String url) throws IOException {
-        List<ChapterItem> items = new ArrayList<>();
-        String web = url.concat("ajax/chapters");
+    public List<Chapter> chapters(Novel novel) throws IOException {
+        List<Chapter> items = new ArrayList<>();
+        String web = novel.url.concat("ajax/chapters");
         Element doc = Jsoup.parse(HttpClient.POST(web, new HashMap<>(), new HashMap<>()));
 
         for (Element element : doc.select(".wp-manga-chapter")) {
-            ChapterItem item = new ChapterItem(url);
+            Chapter item = new Chapter(novel.url);
 
             item.url = element.select("a").attr("href").trim();
             item.name = element.select("a").text().trim();
@@ -116,16 +113,14 @@ public class VipNovel implements Source {
     }
 
     @Override
-    public Chapter chapter(String novelUrl, String chapterUrl) throws IOException {
-        Chapter chapter = new Chapter(novelUrl);
-        Element doc = Jsoup.parse(HttpClient.GET(chapterUrl, new HashMap<>()));
+    public Chapter chapter(Chapter chapter) throws IOException {
+        Element doc = Jsoup.parse(HttpClient.GET(chapter.url, new HashMap<>()));
         Element main = doc.select(".reading-content").first();
 
         if (main == null) {
             return null;
         }
 
-        chapter.url = chapterUrl;
         chapter.content = "";
         main.select("p").append("::");
         chapter.content = SourceUtils.cleanContent(main.text().replaceAll("::", "\n\n").trim());
@@ -134,8 +129,8 @@ public class VipNovel implements Source {
     }
 
     @Override
-    public List<NovelItem> search(Filter filters, int page) throws IOException {
-        List<NovelItem> items = new ArrayList<>();
+    public List<Novel> search(Filter filters, int page) throws IOException {
+        List<Novel> items = new ArrayList<>();
 
         if (filters.hashKeyword()) {
             String web = SourceUtils.buildUrl(baseUrl, "/page/", String.valueOf(page), "/?s=", filters.getKeyword(), "&post_type=wp-manga");
@@ -144,7 +139,7 @@ public class VipNovel implements Source {
                 String url = element.select(".tab-thumb  > a").attr("href").trim();
 
                 if (url.length() > 0) {
-                    NovelItem item = new NovelItem(url);
+                    Novel item = new Novel(url);
                     item.sourceId = sourceId;
                     item.url = url;
                     item.name = element.select(".post-title > h3 > a").text().trim();

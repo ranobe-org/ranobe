@@ -1,9 +1,12 @@
 package org.ranobe.ranobe.ui.browse.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import org.ranobe.ranobe.models.NovelItem;
+import org.ranobe.ranobe.config.Ranobe;
+import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.repository.Repository;
 
 import java.util.ArrayList;
@@ -11,26 +14,28 @@ import java.util.List;
 
 public class BrowseViewModel extends ViewModel {
     private MutableLiveData<String> error = new MutableLiveData<>();
-    private MutableLiveData<List<NovelItem>> items;
+    private MutableLiveData<List<Novel>> items;
+    private int currentSourceId = -1;
     private int page = 0;
-
-    public MutableLiveData<List<NovelItem>> getNovels() {
-        if (items == null) {
-            items = new MutableLiveData<>();
-        }
-        return items;
-    }
 
     public MutableLiveData<String> getError() {
         return error = new MutableLiveData<>();
     }
 
-    public void novels() {
-        page += 1;
-        new Repository().novels(page, new Repository.Callback<List<NovelItem>>() {
+    public MutableLiveData<List<Novel>> getNovels(int sourceId) {
+        if (currentSourceId != sourceId) {
+            Log.d(Ranobe.DEBUG, "Refreshing data " + sourceId);
+            items = new MutableLiveData<>();
+            page = 0;
+            currentSourceId = sourceId;
+        } else {
+            page += 1;
+        }
+        Log.d(Ranobe.DEBUG, "Getting for source " + sourceId);
+        new Repository(sourceId).novels(page, new Repository.Callback<List<Novel>>() {
             @Override
-            public void onComplete(List<NovelItem> result) {
-                List<NovelItem> old = items.getValue();
+            public void onComplete(List<Novel> result) {
+                List<Novel> old = items.getValue();
                 if (old == null) {
                     old = new ArrayList<>();
                 }
@@ -43,5 +48,6 @@ public class BrowseViewModel extends ViewModel {
                 error.postValue(e.getLocalizedMessage());
             }
         });
+        return items;
     }
 }

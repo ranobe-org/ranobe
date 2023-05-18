@@ -4,32 +4,23 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import org.ranobe.ranobe.models.Chapter;
-import org.ranobe.ranobe.models.ChapterItem;
+import org.ranobe.ranobe.models.Chapter;
+import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.repository.Repository;
 
 import java.util.List;
 
 public class ChaptersViewModel extends ViewModel {
     private MutableLiveData<String> error = new MutableLiveData<>();
-    private MutableLiveData<List<ChapterItem>> chapters;
-    private String oldUrl = "";
-
     public MutableLiveData<String> getError() {
         return error = new MutableLiveData<>();
     }
 
-    public MutableLiveData<List<ChapterItem>> getChapters(String novelUrl) {
-        if (chapters == null || !oldUrl.equals(novelUrl)) {
-            oldUrl = novelUrl;
-            chapters = new MutableLiveData<>();
-        }
-        return chapters;
-    }
-
-    public void chapters(String novelUrl) {
-        new Repository().chapters(novelUrl, new Repository.Callback<List<ChapterItem>>() {
+    public MutableLiveData<List<Chapter>> getChapters(Novel novel) {
+        MutableLiveData<List<Chapter>> chapters = new MutableLiveData<>();
+        new Repository().chapters(novel, new Repository.Callback<List<Chapter>>() {
             @Override
-            public void onComplete(List<ChapterItem> result) {
+            public void onComplete(List<Chapter> result) {
                 chapters.postValue(result);
             }
 
@@ -38,11 +29,12 @@ public class ChaptersViewModel extends ViewModel {
                 error.postValue(e.getLocalizedMessage());
             }
         });
+        return chapters;
     }
 
-    public MutableLiveData<Chapter> chapter(String novelUrl, String chapterUrl) {
+    public MutableLiveData<Chapter> chapter(Chapter chap) {
         MutableLiveData<Chapter> chapter = new MutableLiveData<>();
-        new Repository().chapter(novelUrl, chapterUrl, new Repository.Callback<Chapter>() {
+        new Repository().chapter(chap, new Repository.Callback<Chapter>() {
             @Override
             public void onComplete(Chapter result) {
                 chapter.postValue(result);

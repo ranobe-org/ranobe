@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@+id/browse_fragment">
+    app:startDestination="@+id/explore_fragment">
 
     <fragment
         android:id="@+id/browse_fragment"
@@ -29,7 +29,11 @@
         android:id="@+id/explore_fragment"
         android:name="org.ranobe.ranobe.ui.explore.Explore"
         android:label="fragment_explore"
-        tools:layout="@layout/fragment_explore" />
+        tools:layout="@layout/fragment_explore">
+        <action
+            android:id="@+id/explore_fragment_to_browse"
+            app:destination="@id/browse_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/settings_fragment"

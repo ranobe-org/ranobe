@@ -7,15 +7,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.ranobe.ranobe.databinding.ItemChapterBinding;
-import org.ranobe.ranobe.models.ChapterItem;
+import org.ranobe.ranobe.models.Chapter;
 
 import java.util.List;
 
 public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHolder> {
-    private final List<ChapterItem> items;
+    private final List<Chapter> items;
     private final OnChapterItemClickListener listener;
 
-    public ChapterAdapter(List<ChapterItem> items, OnChapterItemClickListener listener) {
+    public ChapterAdapter(List<Chapter> items, OnChapterItemClickListener listener) {
         this.items = items;
         this.listener = listener;
     }
@@ -29,7 +29,7 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        ChapterItem item = items.get(position);
+        Chapter item = items.get(position);
         holder.binding.chapterName.setText(item.name);
         if (item.updated != null && item.updated.length() > 0)
             holder.binding.updated.setText(item.updated);
@@ -41,7 +41,7 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
     }
 
     public interface OnChapterItemClickListener {
-        void onChapterItemClick(ChapterItem item);
+        void onChapterItemClick(Chapter item);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

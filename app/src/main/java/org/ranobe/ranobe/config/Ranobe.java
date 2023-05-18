@@ -23,9 +23,8 @@ public class Ranobe {
     public static final String SETTING_SELECTED_SOURCE = "shared_pref_selected_source";
 
     public static final String KEY_SOURCE_ID = "key_source_id";
-    public static final String KEY_NOVEL_URL = "key_novel_url";
-    public static final String KEY_NOVEL_ID = "key_novel_id";
-    public static final String KEY_CHAPTER_URL = "key_chapter_url";
+    public static final String KEY_NOVEL = "key_novel";
+    public static final String KEY_CHAPTER = "key_chapter";
 
     public static final String NOTIF_DOWNLOAD_CHANNEL_NAME = "download_notification";
 

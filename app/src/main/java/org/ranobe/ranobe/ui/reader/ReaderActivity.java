@@ -18,7 +18,7 @@ import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.ActivityReaderBinding;
 import org.ranobe.ranobe.models.Chapter;
-import org.ranobe.ranobe.models.ChapterItem;
+import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.models.ReaderTheme;
 import org.ranobe.ranobe.ui.reader.adapter.PageAdapter;
 import org.ranobe.ranobe.ui.reader.sheet.CustomizeReader;
@@ -33,9 +33,8 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     private ActivityReaderBinding binding;
     private PageAdapter adapter;
     private ReaderViewModel viewModel;
-    private List<ChapterItem> chapterItems = new ArrayList<>();
-    private String currentChapterUrl;
-    private String currentNovelUrl;
+    private List<Chapter> chapterItems = new ArrayList<>();
+    private Chapter currentChapter;
     private boolean isLoading = false;
     private int currentChapterIndex;
 
@@ -48,8 +47,8 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         setContentView(binding.getRoot());
         binding.customize.setOnMenuItemClickListener(this);
 
-        currentNovelUrl = getIntent().getStringExtra(Ranobe.KEY_NOVEL_URL);
-        currentChapterUrl = getIntent().getStringExtra(Ranobe.KEY_CHAPTER_URL);
+        Novel currentNovel = getIntent().getParcelableExtra(Ranobe.KEY_NOVEL);
+        currentChapter = getIntent().getParcelableExtra(Ranobe.KEY_CHAPTER);
         viewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
 
         adapter = new PageAdapter(chapters);
@@ -65,27 +64,24 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
 
                     if (currentChapterIndex < chapterItems.size()) {
                         binding.progress.show();
-                        viewModel.chapter(currentNovelUrl, chapterItems.get(currentChapterIndex).url);
+                        viewModel.getChapter(chapterItems.get(currentChapterIndex)).observe(ReaderActivity.this, chapter -> setChapter(chapter));
                     }
                 }
             }
         });
 
-        viewModel.getChapters().observe(this, this::setChapters);
-        viewModel.getChapter().observe(this, this::setChapter);
+        viewModel.getChapters(currentNovel).observe(this, this::setChapters);
         viewModel.getError().observe(this, this::setError);
-        viewModel.chapters(currentNovelUrl);
     }
 
-    private void setChapters(List<ChapterItem> items) {
+    private void setChapters(List<Chapter> items) {
         chapterItems = ListUtils.sortById(items);
-        for (int i = 0; i < chapterItems.size(); i++) {
-            if (chapterItems.get(i).url.equals(currentChapterUrl)) {
-                currentChapterIndex = i;
-                break;
+        for(Chapter chapter : items) {
+            if(chapter.url.equals(currentChapter.url)) {
+                currentChapterIndex = chapterItems.indexOf(chapter);
             }
         }
-        viewModel.chapter(currentNovelUrl, currentChapterUrl);
+        viewModel.getChapter(currentChapter).observe(ReaderActivity.this, this::setChapter);
     }
 
     private void setUpCustomizeReader() {
@@ -96,7 +92,6 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     private void setChapter(Chapter chapter) {
         isLoading = false;
         binding.progress.hide();
-        chapter.id = chapterItems.get(currentChapterIndex).id;
         chapters.add(chapter);
         adapter.notifyItemInserted(chapters.size() - 1);
     }

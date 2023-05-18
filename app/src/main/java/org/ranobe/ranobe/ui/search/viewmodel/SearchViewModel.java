@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import org.ranobe.ranobe.models.Filter;
-import org.ranobe.ranobe.models.NovelItem;
+import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.repository.Repository;
 
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import java.util.List;
 
 public class SearchViewModel extends ViewModel {
     private MutableLiveData<String> error = new MutableLiveData<>();
-    private MutableLiveData<List<NovelItem>> items;
+    private MutableLiveData<List<Novel>> items;
     private Filter oldFilter = new Filter();
 
-    public MutableLiveData<List<NovelItem>> getNovels() {
+    public MutableLiveData<List<Novel>> getNovels() {
         if (items == null) {
             items = new MutableLiveData<>();
         }
@@ -27,10 +27,10 @@ public class SearchViewModel extends ViewModel {
     }
 
     public void search(Filter filter, int page) {
-        new Repository().search(filter, page, new Repository.Callback<List<NovelItem>>() {
+        new Repository().search(filter, page, new Repository.Callback<List<Novel>>() {
             @Override
-            public void onComplete(List<NovelItem> result) {
-                List<NovelItem> old = items.getValue();
+            public void onComplete(List<Novel> result) {
+                List<Novel> old = items.getValue();
                 // add more items without losing old ones
                 if (old == null) {
                     old = new ArrayList<>();

@@ -2,12 +2,42 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "734f64f864a10f09d04c688774f108b6",
+    "identityHash": "6cc4919a26e192725ae077ecc3f9a934",
     "entities": [
       {
         "tableName": "Novel",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`status` TEXT, `summary` TEXT, `alternateNames` TEXT, `authors` TEXT, `genres` TEXT, `rating` REAL NOT NULL, `year` INTEGER NOT NULL, `id` INTEGER NOT NULL, `sourceId` INTEGER NOT NULL, `name` TEXT, `cover` TEXT, `url` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `sourceId` INTEGER NOT NULL, `name` TEXT, `cover` TEXT, `url` TEXT, `status` TEXT, `summary` TEXT, `alternateNames` TEXT, `authors` TEXT, `genres` TEXT, `rating` REAL NOT NULL, `year` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceId",
+            "columnName": "sourceId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cover",
+            "columnName": "cover",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
           {
             "fieldPath": "status",
             "columnName": "status",
@@ -49,36 +79,6 @@
             "columnName": "year",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sourceId",
-            "columnName": "sourceId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "cover",
-            "columnName": "cover",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "url",
-            "columnName": "url",
-            "affinity": "TEXT",
-            "notNull": false
           }
         ],
         "primaryKey": {
@@ -92,31 +92,25 @@
       },
       {
         "tableName": "Chapter",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`content` TEXT, `reads` INTEGER NOT NULL, `id` REAL NOT NULL, `novelId` INTEGER NOT NULL, `name` TEXT, `updated` TEXT, `url` TEXT NOT NULL, PRIMARY KEY(`url`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`url` TEXT NOT NULL, `novelUrl` TEXT, `content` TEXT, `name` TEXT, `updated` TEXT, `id` REAL NOT NULL, PRIMARY KEY(`url`))",
         "fields": [
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "novelUrl",
+            "columnName": "novelUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
           {
             "fieldPath": "content",
             "columnName": "content",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "reads",
-            "columnName": "reads",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "novelId",
-            "columnName": "novelId",
-            "affinity": "INTEGER",
-            "notNull": true
           },
           {
             "fieldPath": "name",
@@ -131,9 +125,9 @@
             "notNull": false
           },
           {
-            "fieldPath": "url",
-            "columnName": "url",
-            "affinity": "TEXT",
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "REAL",
             "notNull": true
           }
         ],
@@ -150,7 +144,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '734f64f864a10f09d04c688774f108b6')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6cc4919a26e192725ae077ecc3f9a934')"
     ]
   }
 }

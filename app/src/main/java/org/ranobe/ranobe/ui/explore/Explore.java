@@ -1,23 +1,24 @@
 package org.ranobe.ranobe.ui.explore;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import org.ranobe.ranobe.R;
+import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.config.RanobeSettings;
 import org.ranobe.ranobe.databinding.FragmentExploreBinding;
 import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.explore.adapter.SourceAdapter;
-import org.ranobe.ranobe.ui.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,19 +59,15 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected 
 
     @Override
     public void select(DataSource source) {
-        int oldSource = RanobeSettings.get().getCurrentSource();
-        int newSource = source.sourceId;
-
-        if (oldSource != newSource) {
-            Toast.makeText(requireActivity(), "Updating source to " + source.name, Toast.LENGTH_SHORT).show();
-            RanobeSettings.get().setCurrentSource(source.sourceId).save();
-            restartApp();
-        }
+        RanobeSettings.get().setCurrentSource(source.sourceId).save();
+        navigateToBrowse(source.sourceId);
     }
 
-    private void restartApp() {
-        Intent intent = new Intent(requireContext(), MainActivity.class);
-        requireActivity().startActivity(intent);
-        requireActivity().finishActivity(101);
+    private void navigateToBrowse(int sourceId) {
+        NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(Ranobe.KEY_SOURCE_ID, sourceId);
+        controller.navigate(R.id.explore_fragment_to_browse, bundle);
     }
 }

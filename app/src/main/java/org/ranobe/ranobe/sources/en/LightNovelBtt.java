@@ -1,14 +1,14 @@
 package org.ranobe.ranobe.sources.en;
 
+import android.util.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.ranobe.ranobe.models.Chapter;
-import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.network.HttpClient;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
@@ -37,7 +37,7 @@ public class LightNovelBtt implements Source {
     }
 
     @Override
-    public List<NovelItem> novels(int page) throws IOException {
+    public List<Novel> novels(int page) throws IOException {
         String web = baseUrl.concat("/?page=").concat(String.valueOf(page)).concat("&typegroup=0");
         return parse(HttpClient.GET(web, new HashMap<>()));
     }
@@ -46,8 +46,8 @@ public class LightNovelBtt implements Source {
         return url.replace("http://", "https://");
     }
 
-    private List<NovelItem> parse(String body) {
-        List<NovelItem> items = new ArrayList<>();
+    private List<Novel> parse(String body) {
+        List<Novel> items = new ArrayList<>();
         Element doc = Jsoup.parse(body).select("div.items").first();
 
         if (doc == null) return items;
@@ -56,7 +56,7 @@ public class LightNovelBtt implements Source {
             String url = element.select("div.box_img > a").attr("href").trim();
 
             if (url.length() > 0) {
-                NovelItem item = new NovelItem(url);
+                Novel item = new Novel(url);
                 item.sourceId = sourceId;
                 item.name = element.select("div.title").text().trim();
                 item.cover = httpsImage(element.select("img").attr("data-src").trim());
@@ -68,9 +68,8 @@ public class LightNovelBtt implements Source {
     }
 
     @Override
-    public Novel details(String url) throws IOException {
-        Novel novel = new Novel(url);
-        Element doc = Jsoup.parse(HttpClient.GET(url, new HashMap<>()));
+    public Novel details(Novel novel) throws Exception {
+        Element doc = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>()));
 
         novel.sourceId = sourceId;
         novel.name = doc.select("h1.title-detail").text().trim();
@@ -88,12 +87,12 @@ public class LightNovelBtt implements Source {
     }
 
     @Override
-    public List<ChapterItem> chapters(String url) throws IOException {
-        List<ChapterItem> items = new ArrayList<>();
-        Element doc = Jsoup.parse(HttpClient.GET(url, new HashMap<>()));
+    public List<Chapter> chapters(Novel novel) throws Exception {
+        List<Chapter> items = new ArrayList<>();
+        Element doc = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>()));
 
         for (Element element : doc.select("div.list-chapter").select("li.row")) {
-            ChapterItem item = new ChapterItem(url);
+            Chapter item = new Chapter(novel.url);
 
             if (element.hasClass("heading")) {
                 continue;
@@ -110,13 +109,10 @@ public class LightNovelBtt implements Source {
     }
 
     @Override
-    public Chapter chapter(String novelUrl, String chapterUrl) throws IOException {
-        Chapter chapter = new Chapter(novelUrl);
-        Element doc = Jsoup.parse(HttpClient.GET(chapterUrl, new HashMap<>()));
+    public Chapter chapter(Chapter chapter) throws Exception {
+        Element doc = Jsoup.parse(HttpClient.GET(chapter.url, new HashMap<>()));
 
-        chapter.url = chapterUrl;
         chapter.content = "";
-
         doc.select("div.reading-detail").select("p").append("::");
         chapter.content = SourceUtils.cleanContent(
                 doc.select("div.reading-detail").text().replaceAll("::", "\n\n").trim()
@@ -126,7 +122,7 @@ public class LightNovelBtt implements Source {
     }
 
     @Override
-    public List<NovelItem> search(Filter filters, int page) throws IOException {
+    public List<Novel> search(Filter filters, int page) throws IOException {
         if (filters.hashKeyword()) {
             String keyword = filters.getKeyword();
             String web = SourceUtils.buildUrl(baseUrl, "/find-story?keyword=", keyword, "&page=", String.valueOf(page));

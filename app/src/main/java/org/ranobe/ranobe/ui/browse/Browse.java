@@ -1,6 +1,7 @@
 package org.ranobe.ranobe.ui.browse;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentBrowseBinding;
-import org.ranobe.ranobe.models.NovelItem;
+import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
 import org.ranobe.ranobe.ui.browse.viewmodel.BrowseViewModel;
 import org.ranobe.ranobe.ui.error.Error;
@@ -28,12 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickListener {
-    private final List<NovelItem> list = new ArrayList<>();
+    private final List<Novel> list = new ArrayList<>();
     private FragmentBrowseBinding binding;
 
     private BrowseViewModel viewModel;
     private NovelAdapter adapter;
 
+    private int sourceId = -1;
     private boolean isLoading = false;
 
     public Browse() {
@@ -42,6 +44,9 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            sourceId = getArguments().getInt(Ranobe.KEY_SOURCE_ID);
+        }
         viewModel = new ViewModelProvider(requireActivity()).get(BrowseViewModel.class);
     }
 
@@ -69,13 +74,14 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
                 if (!recyclerView.canScrollVertically(1) && !isLoading) {
                     binding.progress.show();
                     isLoading = true;
-                    fetchNovels();
+                    viewModel.getNovels(sourceId);
                 }
             }
         });
 
         viewModel.getError().observe(requireActivity(), this::setUpError);
-        viewModel.getNovels().observe(requireActivity(), (novels) -> {
+        viewModel.getNovels(sourceId).observe(requireActivity(), (novels) -> {
+            Log.d(Ranobe.DEBUG, "setting data");
             binding.progress.hide();
             isLoading = false;
             int old = list.size();
@@ -83,8 +89,6 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
             list.addAll(novels);
             adapter.notifyItemRangeInserted(old, list.size());
         });
-
-        fetchNovels();
     }
 
     private void setUpError(String error) {
@@ -95,16 +99,12 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
         }
     }
 
-    private void fetchNovels() {
-        viewModel.novels();
-    }
-
     @Override
-    public void onNovelItemClick(NovelItem item) {
+    public void onNovelItemClick(Novel item) {
         NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
 
         Bundle bundle = new Bundle();
-        bundle.putString(Ranobe.KEY_NOVEL_URL, item.url);
+        bundle.putParcelable(Ranobe.KEY_NOVEL, item);
         controller.navigate(R.id.browse_fragment_to_details, bundle);
     }
 }

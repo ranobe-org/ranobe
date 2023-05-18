@@ -1,14 +1,26 @@
 package org.ranobe.ranobe.models;
 
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import org.ranobe.ranobe.util.SourceUtils;
 
 import java.util.List;
 
 @Entity
-public class Novel extends NovelItem {
+public class Novel implements Parcelable {
+    @PrimaryKey
+    public long id;
+    public int sourceId;
+    public String name;
+    public String cover;
+    public String url;
+
     public String status;
     public String summary;
     public List<String> alternateNames;
@@ -18,27 +30,74 @@ public class Novel extends NovelItem {
     public int year;
 
     public Novel(String url) {
-        super(url);
         this.id = SourceUtils.generateId(url);
         this.url = url;
     }
+
+    protected Novel(Parcel in) {
+        id = in.readLong();
+        sourceId = in.readInt();
+        name = in.readString();
+        cover = in.readString();
+        url = in.readString();
+        status = in.readString();
+        summary = in.readString();
+        alternateNames = in.createStringArrayList();
+        authors = in.createStringArrayList();
+        genres = in.createStringArrayList();
+        rating = in.readFloat();
+        year = in.readInt();
+    }
+
+    public static final Creator<Novel> CREATOR = new Creator<Novel>() {
+        @Override
+        public Novel createFromParcel(Parcel in) {
+            return new Novel(in);
+        }
+
+        @Override
+        public Novel[] newArray(int size) {
+            return new Novel[size];
+        }
+    };
 
     @NonNull
     @Override
     public String toString() {
         return "Novel{" +
-                "status='" + status + '\'' +
+                "id=" + id +
+                ", sourceId=" + sourceId +
+                ", name='" + name + '\'' +
+                ", cover='" + cover + '\'' +
+                ", url='" + url + '\'' +
+                ", status='" + status + '\'' +
                 ", summary='" + summary + '\'' +
                 ", alternateNames=" + alternateNames +
                 ", authors=" + authors +
                 ", genres=" + genres +
                 ", rating=" + rating +
                 ", year=" + year +
-                ", id=" + id +
-                ", sourceId=" + sourceId +
-                ", name='" + name + '\'' +
-                ", cover='" + cover + '\'' +
-                ", url='" + url + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeInt(sourceId);
+        parcel.writeString(name);
+        parcel.writeString(cover);
+        parcel.writeString(url);
+        parcel.writeString(status);
+        parcel.writeString(summary);
+        parcel.writeStringList(alternateNames);
+        parcel.writeStringList(authors);
+        parcel.writeStringList(genres);
+        parcel.writeFloat(rating);
+        parcel.writeInt(year);
     }
 }

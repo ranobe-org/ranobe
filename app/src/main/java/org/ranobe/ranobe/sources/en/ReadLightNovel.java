@@ -4,12 +4,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.ranobe.ranobe.models.Chapter;
-import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.network.HttpClient;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
@@ -41,20 +39,20 @@ public class ReadLightNovel implements Source {
     }
 
     @Override
-    public List<NovelItem> novels(int page) throws IOException {
+    public List<Novel> novels(int page) throws IOException {
         String url = baseUrl + "/top-novels/new/" + page;
         String body = HttpClient.GET(url, HEADERS);
         return parse(body);
     }
 
-    public List<NovelItem> parse(String body) {
-        List<NovelItem> items = new ArrayList<>();
+    public List<Novel> parse(String body) {
+        List<Novel> items = new ArrayList<>();
         Element doc = Jsoup.parse(body);
 
         for (Element element : doc.select("div.top-novel-block")) {
             String url = element.select("div.top-novel-header > h2 > a").attr("href").trim();
             if (url.length() > 0) {
-                NovelItem item = new NovelItem(url);
+                Novel item = new Novel(url);
                 item.sourceId = 1;
                 item.name = element.select("div.top-novel-header > h2 > a").text().trim();
                 item.url = element.select("div.top-novel-header > h2 > a").attr("href").trim();
@@ -67,12 +65,10 @@ public class ReadLightNovel implements Source {
     }
 
     @Override
-    public Novel details(String url) throws IOException {
-        Novel novel = new Novel(url);
-        Element doc = Jsoup.parse(HttpClient.GET(url, HEADERS));
+    public Novel details(Novel novel) throws IOException {
+        Element doc = Jsoup.parse(HttpClient.GET(novel.url, HEADERS));
 
         novel.sourceId = 1;
-        novel.url = url;
         novel.name = doc.select("div.novel-cover > a > img").attr("alt").trim();
         novel.cover = doc.select("div.novel-cover > a > img").attr("src").trim();
 
@@ -105,13 +101,13 @@ public class ReadLightNovel implements Source {
     }
 
     @Override
-    public List<ChapterItem> chapters(String url) throws IOException {
-        List<ChapterItem> items = new ArrayList<>();
-        Element doc = Jsoup.parse(HttpClient.GET(url, HEADERS));
+    public List<Chapter> chapters(Novel novel) throws IOException {
+        List<Chapter> items = new ArrayList<>();
+        Element doc = Jsoup.parse(HttpClient.GET(novel.url, HEADERS));
 
         Elements main = doc.select("div.tab-content");
         for (Element element : main.select("a")) {
-            ChapterItem item = new ChapterItem(url);
+            Chapter item = new Chapter(novel.url);
 
             item.name = element.text().trim();
             item.id = NumberUtils.toFloat(item.name);
@@ -123,11 +119,9 @@ public class ReadLightNovel implements Source {
     }
 
     @Override
-    public Chapter chapter(String novelUrl, String chapterUrl) throws IOException {
-        Chapter chapter = new Chapter(novelUrl);
+    public Chapter chapter(Chapter chapter) throws IOException {
         chapter.content = "";
-        chapter.url = chapterUrl;
-        Element doc = Jsoup.parse(HttpClient.GET(chapterUrl, HEADERS));
+        Element doc = Jsoup.parse(HttpClient.GET(chapter.url, HEADERS));
 
         for (Element element : doc.select("div#chapterhidden > p")) {
             String text = element.text().trim();
@@ -138,7 +132,7 @@ public class ReadLightNovel implements Source {
 
     @Override
     // returns only 50 results
-    public List<NovelItem> search(Filter filters, int page) throws IOException {
+    public List<Novel> search(Filter filters, int page) throws IOException {
         String url = "https://www.readlightnovel.me/detailed-search-210922";
         if (page > 1) return new ArrayList<>();
         if (filters.hashKeyword()) {

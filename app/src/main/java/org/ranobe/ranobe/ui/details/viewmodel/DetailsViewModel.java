@@ -8,19 +8,12 @@ import org.ranobe.ranobe.network.repository.Repository;
 
 public class DetailsViewModel extends ViewModel {
     private MutableLiveData<String> error = new MutableLiveData<>();
-    private MutableLiveData<Novel> details;
-    private String oldUrl = "";
-
     public MutableLiveData<String> getError() {
         return error = new MutableLiveData<>();
     }
-
-    public MutableLiveData<Novel> details(String novelUrl) {
-        if (details != null && novelUrl.equals(oldUrl)) return details;
-
-        oldUrl = novelUrl;
-        details = new MutableLiveData<>();
-        new Repository().details(novelUrl, new Repository.Callback<Novel>() {
+    public MutableLiveData<Novel> details(Novel novel) {
+        MutableLiveData<Novel> details = new MutableLiveData<>();
+        new Repository().details(novel, new Repository.Callback<Novel>() {
             @Override
             public void onComplete(Novel result) {
                 details.postValue(result);

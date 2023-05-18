@@ -2,10 +2,8 @@ package org.ranobe.ranobe.network.repository;
 
 import org.ranobe.ranobe.config.RanobeSettings;
 import org.ranobe.ranobe.models.Chapter;
-import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.sources.SourceManager;
 
@@ -23,14 +21,14 @@ public class Repository {
     }
 
     public Repository(int sourceId) {
-        this.executor = Executors.newFixedThreadPool(1);
+        this.executor = Executors.newCachedThreadPool();
         this.source = SourceManager.getSource(sourceId);
     }
 
-    public void novels(int page, Callback<List<NovelItem>> callback) {
+    public void novels(int page, Callback<List<Novel>> callback) {
         executor.execute(() -> {
             try {
-                List<NovelItem> result = source.novels(page);
+                List<Novel> result = source.novels(page);
                 callback.onComplete(result);
             } catch (Exception e) {
                 callback.onError(e);
@@ -38,10 +36,10 @@ public class Repository {
         });
     }
 
-    public void details(String novelUrl, Callback<Novel> callback) {
+    public void details(Novel novel, Callback<Novel> callback) {
         executor.execute(() -> {
             try {
-                Novel result = source.details(novelUrl);
+                Novel result = source.details(novel);
                 callback.onComplete(result);
             } catch (Exception e) {
                 callback.onError(e);
@@ -49,10 +47,10 @@ public class Repository {
         });
     }
 
-    public void chapters(String novelUrl, Callback<List<ChapterItem>> callback) {
+    public void chapters(Novel novel, Callback<List<Chapter>> callback) {
         executor.execute(() -> {
             try {
-                List<ChapterItem> items = source.chapters(novelUrl);
+                List<Chapter> items = source.chapters(novel);
                 callback.onComplete(items);
             } catch (Exception e) {
                 callback.onError(e);
@@ -60,10 +58,10 @@ public class Repository {
         });
     }
 
-    public void chapter(String novelUrl, String chapterUrl, Callback<Chapter> callback) {
+    public void chapter(Chapter chapter, Callback<Chapter> callback) {
         executor.execute(() -> {
             try {
-                Chapter item = source.chapter(novelUrl, chapterUrl);
+                Chapter item = source.chapter(chapter);
                 callback.onComplete(item);
             } catch (Exception e) {
                 callback.onError(e);
@@ -71,10 +69,10 @@ public class Repository {
         });
     }
 
-    public void search(Filter filter, int page, Callback<List<NovelItem>> callback) {
+    public void search(Filter filter, int page, Callback<List<Novel>> callback) {
         executor.execute(() -> {
             try {
-                List<NovelItem> items = source.search(filter, page);
+                List<Novel> items = source.search(filter, page);
                 callback.onComplete(items);
             } catch (Exception e) {
                 callback.onError(e);

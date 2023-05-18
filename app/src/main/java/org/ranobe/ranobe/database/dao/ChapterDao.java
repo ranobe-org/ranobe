@@ -16,8 +16,8 @@ public interface ChapterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void save(Chapter chapter);
 
-    @Query("SELECT * FROM chapter WHERE novelId=:novelId ORDER BY id ASC")
-    LiveData<List<Chapter>> list(long novelId);
+    @Query("SELECT * FROM chapter WHERE novelUrl=:novelUrl ORDER BY id ASC")
+    LiveData<List<Chapter>> list(String novelUrl);
 
     @Query("DELETE FROM chapter WHERE url=:chapterUrl")
     int delete(String chapterUrl);

@@ -18,7 +18,7 @@ import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentSearchBinding;
 import org.ranobe.ranobe.models.Filter;
-import org.ranobe.ranobe.models.NovelItem;
+import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
 import org.ranobe.ranobe.ui.error.Error;
 import org.ranobe.ranobe.ui.search.viewmodel.SearchViewModel;
@@ -30,7 +30,7 @@ import java.util.List;
 
 
 public class Search extends Fragment implements NovelAdapter.OnNovelItemClickListener {
-    private final List<NovelItem> list = new ArrayList<>();
+    private final List<Novel> list = new ArrayList<>();
     private FragmentSearchBinding binding;
     private SearchViewModel viewModel;
     private NovelAdapter adapter;
@@ -84,7 +84,7 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void setUpAdapter(List<NovelItem> novels) {
+    private void setUpAdapter(List<Novel> novels) {
         binding.progress.hide();
         isLoading = false;
         // expand the current list without changing list reference
@@ -110,11 +110,11 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
     }
 
     @Override
-    public void onNovelItemClick(NovelItem item) {
+    public void onNovelItemClick(Novel item) {
         NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
 
         Bundle bundle = new Bundle();
-        bundle.putString(Ranobe.KEY_NOVEL_URL, item.url);
+        bundle.putString(Ranobe.KEY_NOVEL, item.url);
         controller.navigate(R.id.details_fragment, bundle);
     }
 }

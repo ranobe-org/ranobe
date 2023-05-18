@@ -3,12 +3,10 @@ package org.ranobe.ranobe.sources.en;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.ranobe.ranobe.models.Chapter;
-import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.network.HttpClient;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
@@ -36,8 +34,8 @@ public class Ranobe implements Source {
     }
 
     @Override
-    public List<NovelItem> novels(int page) throws Exception {
-        List<NovelItem> items = new ArrayList<>();
+    public List<Novel> novels(int page) throws Exception {
+        List<Novel> items = new ArrayList<>();
         if (page > 1) {
             throw new Exception("well");
         }
@@ -56,11 +54,9 @@ public class Ranobe implements Source {
 
         return items;
     }
-
     @Override
-    public Novel details(String url) throws IOException {
-        Novel novel = new Novel(url);
-        Element doc = Jsoup.parse(HttpClient.GET(url, new HashMap<>()));
+    public Novel details(Novel novel) throws Exception {
+        Element doc = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>()));
 
         novel.sourceId = sourceId;
         novel.name = doc.select("h1.menu-title").text().trim();
@@ -93,18 +89,18 @@ public class Ranobe implements Source {
     }
 
     @Override
-    public List<ChapterItem> chapters(String url) throws IOException {
-        List<ChapterItem> items = new ArrayList<>();
-        Element doc = Jsoup.parse(HttpClient.GET(url, new HashMap<>()));
+    public List<Chapter> chapters(Novel novel) throws Exception {
+        List<Chapter> items = new ArrayList<>();
+        Element doc = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>()));
 
         for (Element element : doc.select("li.chapter-item")) {
             if (element.select("a").hasClass("active")) {
                 continue;
             }
 
-            ChapterItem item = new ChapterItem(url);
+            Chapter item = new Chapter(novel.url);
 
-            item.url = url.concat("/").concat(element.select("a").attr("href").trim());
+            item.url = novel.url.concat("/").concat(element.select("a").attr("href").trim());
             item.name = substringFromC(element.select("a").text());
             item.id = NumberUtils.toFloat(item.name);
             items.add(item);
@@ -114,16 +110,14 @@ public class Ranobe implements Source {
     }
 
     @Override
-    public Chapter chapter(String novelUrl, String chapterUrl) throws IOException {
-        Chapter chapter = new Chapter(novelUrl);
-        Element doc = Jsoup.parse(HttpClient.GET(chapterUrl, new HashMap<>()));
+    public Chapter chapter(Chapter chapter) throws Exception {
+        Element doc = Jsoup.parse(HttpClient.GET(chapter.url, new HashMap<>()));
         Element main = doc.select("main").first();
 
         if (main == null) {
             return null;
         }
 
-        chapter.url = chapterUrl;
         chapter.content = "";
         main.select("p").append("::");
         main.select("h1").append("::");
@@ -133,7 +127,7 @@ public class Ranobe implements Source {
     }
 
     @Override
-    public List<NovelItem> search(Filter filters, int page) throws Exception {
+    public List<Novel> search(Filter filters, int page) throws Exception {
         throw new Exception("Not Implemented. Has no results!");
     }
 }

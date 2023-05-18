@@ -7,19 +7,19 @@ import static org.ranobe.ranobe.util.ListUtils.sortById;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.ranobe.ranobe.models.ChapterItem;
+import org.ranobe.ranobe.models.Chapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class ListUtilsTest {
-    private final List<ChapterItem> items = new ArrayList<>();
+    private final List<Chapter> items = new ArrayList<>();
 
     @Before
     public void setUp() {
         for (int i = 0; i < 20; i++) {
-            ChapterItem item = new ChapterItem(String.valueOf(i));
+            Chapter item = new Chapter(String.valueOf(i));
             item.id = i;
             item.name = String.format("item_%d", i);
             items.add(item);
@@ -41,7 +41,7 @@ public class ListUtilsTest {
 
     @Test
     public void sortById_ShouldReturnValidResult() {
-        List<ChapterItem> reversed = new ArrayList<>(items);
+        List<Chapter> reversed = new ArrayList<>(items);
         Collections.reverse(reversed);
         assertEquals(items, sortById(reversed));
     }

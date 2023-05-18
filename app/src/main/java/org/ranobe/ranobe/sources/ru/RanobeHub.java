@@ -5,12 +5,10 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.ranobe.ranobe.models.Chapter;
-import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.network.HttpClient;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
@@ -39,9 +37,9 @@ public class RanobeHub implements Source {
     }
 
     @Override
-    public List<NovelItem> novels(int page) throws Exception {
+    public List<Novel> novels(int page) throws Exception {
         String web = baseUrl.concat("api/search?page=").concat(String.valueOf(page)).concat("&take=40");
-        List<NovelItem> items = new ArrayList<>();
+        List<Novel> items = new ArrayList<>();
         String json = HttpClient.GET(web, new HashMap<>());
 
         JSONArray novels = new JSONObject(json).getJSONArray("resource");
@@ -49,7 +47,7 @@ public class RanobeHub implements Source {
             JSONObject novel = novels.getJSONObject(i);
 
             String url = novel.getString("url");
-            NovelItem item = new NovelItem(url);
+            Novel item = new Novel(url);
             item.sourceId = sourceId;
             item.name = novel.getJSONObject("names").getString("rus");
             item.cover = novel.getJSONObject("poster").getString("medium")
@@ -61,9 +59,8 @@ public class RanobeHub implements Source {
     }
 
     @Override
-    public Novel details(String url) throws IOException {
-        Novel novel = new Novel(url);
-        Element doc = Jsoup.parse(HttpClient.GET(url, new HashMap<>()));
+    public Novel details(Novel novel) throws IOException {
+        Element doc = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>()));
 
         novel.sourceId = sourceId;
         novel.name = doc.select("h1.ui.huge.header").text().trim();
@@ -101,9 +98,9 @@ public class RanobeHub implements Source {
     }
 
     @Override
-    public List<ChapterItem> chapters(String url) throws Exception {
-        List<ChapterItem> items = new ArrayList<>();
-        String web = baseUrl.concat("api/ranobe/").concat(getNovelId(url)).concat("/contents");
+    public List<Chapter> chapters(Novel novel) throws Exception {
+        List<Chapter> items = new ArrayList<>();
+        String web = baseUrl.concat("api/ranobe/").concat(getNovelId(novel.url)).concat("/contents");
         String json = HttpClient.GET(web, new HashMap<>());
 
         JSONArray vols = new JSONObject(json).getJSONArray("volumes");
@@ -114,7 +111,7 @@ public class RanobeHub implements Source {
             for (int j = 0; j < chaps.length(); j++) {
                 JSONObject chapter = chaps.getJSONObject(j);
 
-                ChapterItem item = new ChapterItem(url);
+                Chapter item = new Chapter(novel.url);
                 item.url = chapter.getString("url");
                 item.name = chapter.getString("name");
                 item.id = items.size() + 1;
@@ -126,11 +123,8 @@ public class RanobeHub implements Source {
     }
 
     @Override
-    public Chapter chapter(String novelUrl, String chapterUrl) throws IOException {
-        Chapter chapter = new Chapter(novelUrl);
-        Element doc = Jsoup.parse(HttpClient.GET(chapterUrl, new HashMap<>()));
-
-        chapter.url = chapterUrl;
+    public Chapter chapter(Chapter chapter) throws IOException {
+        Element doc = Jsoup.parse(HttpClient.GET(chapter.url, new HashMap<>()));
         chapter.content = "";
 
         for (Element element : doc.select("div.ui.text.container")) {
@@ -146,10 +140,10 @@ public class RanobeHub implements Source {
     }
 
     @Override
-    public List<NovelItem> search(Filter filters, int page) throws Exception {
+    public List<Novel> search(Filter filters, int page) throws Exception {
         if (page > 1) return new ArrayList<>();
 
-        List<NovelItem> items = new ArrayList<>();
+        List<Novel> items = new ArrayList<>();
         if (filters.hashKeyword()) {
             String keyword = filters.getKeyword();
             String web = SourceUtils.buildUrl(baseUrl, "api/fulltext/global?query=", keyword, "&take=100");
@@ -162,7 +156,7 @@ public class RanobeHub implements Source {
                     for (int j = 0; j < novels.length(); j++) {
                         JSONObject novel = novels.getJSONObject(j);
 
-                        NovelItem item = new NovelItem(novel.getString("url"));
+                        Novel item = new Novel(novel.getString("url"));
                         item.sourceId = sourceId;
                         item.name = novel.getJSONObject("names").getString("rus");
                         item.cover = novel.getString("image").replace("small", "big");

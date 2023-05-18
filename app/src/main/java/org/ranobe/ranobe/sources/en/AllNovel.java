@@ -3,12 +3,10 @@ package org.ranobe.ranobe.sources.en;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.ranobe.ranobe.models.Chapter;
-import org.ranobe.ranobe.models.ChapterItem;
 import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.models.NovelItem;
 import org.ranobe.ranobe.network.HttpClient;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
@@ -39,14 +37,14 @@ public class AllNovel implements Source {
 
 
     @Override
-    public List<NovelItem> novels(int page) throws Exception {
+    public List<Novel> novels(int page) throws Exception {
         String web = baseUrl + "/most-popular?page=" + page;
         return parse(HttpClient.GET(web, new HashMap<>()));
     }
 
 
-    private List<NovelItem> parse(String body) throws IOException {
-        List<NovelItem> items = new ArrayList<>();
+    private List<Novel> parse(String body) throws IOException {
+        List<Novel> items = new ArrayList<>();
         Element doc = Jsoup.parse(body).select("div.col-truyen-main.archive").first();
 
         if (doc == null) return items;
@@ -55,7 +53,7 @@ public class AllNovel implements Source {
             String url = element.select("h3.truyen-title > a").attr("href").trim();
 
             if (url.length() > 0) {
-                NovelItem item = new NovelItem(url);
+                Novel item = new Novel(url);
                 item.sourceId = sourceId;
                 item.name = element.select("h3.truyen-title > a").text().trim();
                 Element img = Jsoup.parse(HttpClient.GET(baseUrl + url, new HashMap<>()));
@@ -69,9 +67,8 @@ public class AllNovel implements Source {
     }
 
     @Override
-    public Novel details(String url) throws Exception {
-        Novel novel = new Novel(url);
-        Element doc = Jsoup.parse(HttpClient.GET(baseUrl + url, new HashMap<>()));
+    public Novel details(Novel novel) throws Exception {
+        Element doc = Jsoup.parse(HttpClient.GET(baseUrl + novel.url, new HashMap<>()));
         novel.sourceId = sourceId;
         novel.name = doc.select("div.books h3.title").text().trim();
         novel.cover = baseUrl + doc.select("div.books img").attr("src").trim();
@@ -93,16 +90,16 @@ public class AllNovel implements Source {
     }
 
     @Override
-    public List<ChapterItem> chapters(String url) throws Exception {
-        List<ChapterItem> items = new ArrayList<>();
-        Element novelId = Jsoup.parse(HttpClient.GET(baseUrl + url, new HashMap<>())); // getNovelId
+    public List<Chapter> chapters(Novel novel) throws Exception {
+        List<Chapter> items = new ArrayList<>();
+        Element novelId = Jsoup.parse(HttpClient.GET(baseUrl + novel.url, new HashMap<>())); // getNovelId
         String id = novelId.select("div#rating").attr("data-novel-id");
 
         String base = baseUrl.concat("/ajax-chapter-option?novelId=").concat(id);
         Element doc = Jsoup.parse(HttpClient.GET(base, new HashMap<>()));
 
         for (Element element : doc.select("select option")) {
-            ChapterItem item = new ChapterItem(url);
+            Chapter item = new Chapter(novel.url);
 
             item.url = element.attr("value").trim();
             item.name = element.text().trim();
@@ -113,11 +110,10 @@ public class AllNovel implements Source {
     }
 
     @Override
-    public Chapter chapter(String novelUrl, String chapterUrl) throws Exception {
-        Chapter chapter = new Chapter(novelUrl);
-        Element doc = Jsoup.parse(HttpClient.GET(baseUrl + chapterUrl, new HashMap<>()));
+    public Chapter chapter(Chapter chapter) throws Exception {
+        Element doc = Jsoup.parse(HttpClient.GET(baseUrl + chapter.url, new HashMap<>()));
 
-        chapter.url = baseUrl + chapterUrl;
+        chapter.url = baseUrl + chapter.url;
         chapter.content = "";
 
         doc.select("div.chapter-c").select("p").append("::");
@@ -129,7 +125,7 @@ public class AllNovel implements Source {
     }
 
     @Override
-    public List<NovelItem> search(Filter filters, int page) throws Exception {
+    public List<Novel> search(Filter filters, int page) throws Exception {
         if (filters.hashKeyword()) {
             String keyword = filters.getKeyword();
             String web = SourceUtils.buildUrl(baseUrl, "/search?keyword=", keyword, "&page=", String.valueOf(page));

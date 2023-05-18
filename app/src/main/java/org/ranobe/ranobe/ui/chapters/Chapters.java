@@ -20,7 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentChaptersBinding;
-import org.ranobe.ranobe.models.ChapterItem;
+import org.ranobe.ranobe.models.Chapter;
+import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.ui.chapters.adapter.ChapterAdapter;
 import org.ranobe.ranobe.ui.chapters.viewmodel.ChaptersViewModel;
 import org.ranobe.ranobe.ui.error.Error;
@@ -33,10 +34,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemClickListener, Toolbar.OnMenuItemClickListener {
-    private final List<ChapterItem> originalItems = new ArrayList<>();
+    private final List<Chapter> originalItems = new ArrayList<>();
     private FragmentChaptersBinding binding;
     private ChaptersViewModel viewModel;
-    private String novelUrl;
+    private Novel novel;
     private ChapterAdapter adapter;
 
     public Chapters() {
@@ -47,7 +48,7 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            novelUrl = getArguments().getString(Ranobe.KEY_NOVEL_URL);
+            novel = getArguments().getParcelable(Ranobe.KEY_NOVEL);
         }
         viewModel = new ViewModelProvider(requireActivity()).get(ChaptersViewModel.class);
     }
@@ -68,8 +69,7 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
 
     private void setUpObservers() {
         viewModel.getError().observe(requireActivity(), this::setUpError);
-        viewModel.getChapters(novelUrl).observe(requireActivity(), this::setChapter);
-        viewModel.chapters(novelUrl);
+        viewModel.getChapters(novel).observe(requireActivity(), this::setChapter);
     }
 
     private void setUpUi() {
@@ -90,7 +90,7 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
 
     private void searchResults(String keyword) {
         if (keyword.length() > 0) {
-            List<ChapterItem> filtered = ListUtils.searchByName(keyword.toLowerCase(), originalItems);
+            List<Chapter> filtered = ListUtils.searchByName(keyword.toLowerCase(), originalItems);
             ChapterAdapter searchAdapter = new ChapterAdapter(filtered, this);
             binding.chapterList.setAdapter(searchAdapter);
         } else {
@@ -104,7 +104,7 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void setChapter(List<ChapterItem> chapters) {
+    private void setChapter(List<Chapter> chapters) {
         originalItems.clear();
         originalItems.addAll(chapters);
         adapter.notifyDataSetChanged();
@@ -118,10 +118,10 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     }
 
     @Override
-    public void onChapterItemClick(ChapterItem item) {
+    public void onChapterItemClick(Chapter item) {
         Bundle bundle = new Bundle();
-        bundle.putString(Ranobe.KEY_NOVEL_URL, novelUrl);
-        bundle.putString(Ranobe.KEY_CHAPTER_URL, item.url);
+        bundle.putParcelable(Ranobe.KEY_NOVEL, novel);
+        bundle.putParcelable(Ranobe.KEY_CHAPTER, item);
 
         requireActivity().startActivity(new Intent(requireActivity(), ReaderActivity.class).putExtras(bundle));
     }
