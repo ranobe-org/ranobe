@@ -79,9 +79,8 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
             }
         });
 
-        viewModel.getError().observe(requireActivity(), this::setUpError);
-        viewModel.getNovels(sourceId).observe(requireActivity(), (novels) -> {
-            Log.d(Ranobe.DEBUG, "setting data");
+        viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
+        viewModel.getNovels(sourceId).observe(getViewLifecycleOwner(), (novels) -> {
             binding.progress.hide();
             isLoading = false;
             int old = list.size();

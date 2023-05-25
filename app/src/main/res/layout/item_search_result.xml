@@ -3,6 +3,7 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:visibility="gone"
     android:padding="10dp">
 
     <TextView
@@ -14,7 +15,8 @@
         android:maxLines="2"
         android:padding="2dp"
         android:textColor="?colorOnSurface"
-        android:textSize="@dimen/text_big" />
+        android:textStyle="bold"
+        android:textSize="@dimen/text_head" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_results"

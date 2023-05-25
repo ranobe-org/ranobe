@@ -68,8 +68,8 @@ public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemCl
     }
 
     private void setUpObservers() {
-        viewModel.getError().observe(requireActivity(), this::setUpError);
-        viewModel.getChapters(novel).observe(requireActivity(), this::setChapter);
+        viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
+        viewModel.getChapters(novel).observe(getViewLifecycleOwner(), this::setChapter);
     }
 
     private void setUpUi() {

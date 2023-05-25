@@ -62,7 +62,7 @@ public class Details extends Fragment {
     }
 
     private void setUpObservers() {
-        viewModel.getError().observe(requireActivity(), this::setUpError);
+        viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
         viewModel.details(novel).observe(getViewLifecycleOwner(), this::setUpUi);
     }
 

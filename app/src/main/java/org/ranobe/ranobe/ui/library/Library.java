@@ -56,7 +56,7 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
         binding.novelList.setLayoutManager(new GridLayoutManager(requireActivity(), utils.noOfCols()));
         binding.novelList.addItemDecoration(new SpacingDecorator(utils.spacing()));
 
-        RanobeDatabase.database().novels().list().observe(requireActivity(), this::setNovels);
+        RanobeDatabase.database().novels().list().observe(getViewLifecycleOwner(), this::setNovels);
     }
 
     private void setNovels(List<Novel> novels) {

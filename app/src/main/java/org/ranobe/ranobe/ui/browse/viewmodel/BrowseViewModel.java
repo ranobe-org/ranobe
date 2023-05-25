@@ -24,14 +24,12 @@ public class BrowseViewModel extends ViewModel {
 
     public MutableLiveData<List<Novel>> getNovels(int sourceId) {
         if (currentSourceId != sourceId) {
-            Log.d(Ranobe.DEBUG, "Refreshing data " + sourceId);
             items = new MutableLiveData<>();
             page = 0;
             currentSourceId = sourceId;
         } else {
             page += 1;
         }
-        Log.d(Ranobe.DEBUG, "Getting for source " + sourceId);
         new Repository(sourceId).novels(page, new Repository.Callback<List<Novel>>() {
             @Override
             public void onComplete(List<Novel> result) {
