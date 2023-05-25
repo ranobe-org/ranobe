@@ -62,8 +62,8 @@
 - [x] sources list selection
 - [x] add personal source
 - [x] remembering source selection (only one source at a time, that's the rule)
-- [ ] database
-    - [ ] add to library, only store novel in db
+- [x] database
+    - [x] add to library, only store novel in db
     - [ ] add msg for empty library
     - [ ] download chapters for offline view, save everything to db
     - [ ] saving read state for each item
