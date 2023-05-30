@@ -57,8 +57,8 @@
 - [x] reader text formatting with font size and bg/text color selection
 - [x] continuous vertical scroll for reader
 - [x] add error text/art to denote no results found in search
-- [x] update app when a new source is selected
 - [x] add settings page with theme selection
+- [x] new app update notifier
 - [x] sources list selection
 - [x] add personal source
 - [x] remembering source selection (only one source at a time, that's the rule)

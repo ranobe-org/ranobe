@@ -25,5 +25,7 @@
     <string name="mp_lite_subtitle">an open source music player from same dev</string>
     <string name="add_to_lib_info">Add to library</string>
     <string name="no_novels_error">There are no novels in your library. Go to Explore and find some!</string>
+    <string name="new_version_available">A new version of the app is available</string>
+    <string name="update">Update</string>
 
 </resources>
