@@ -13,9 +13,10 @@ import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
@@ -33,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class Chapters extends Fragment implements ChapterAdapter.OnChapterItemClickListener, Toolbar.OnMenuItemClickListener {
+public class Chapters extends BottomSheetDialogFragment implements ChapterAdapter.OnChapterItemClickListener, Toolbar.OnMenuItemClickListener {
     private final List<Chapter> originalItems = new ArrayList<>();
     private FragmentChaptersBinding binding;
     private ChaptersViewModel viewModel;
