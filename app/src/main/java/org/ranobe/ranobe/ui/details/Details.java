@@ -8,19 +8,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.config.RanobeSettings;
 import org.ranobe.ranobe.database.RanobeDatabase;
 import org.ranobe.ranobe.databinding.FragmentDetailsBinding;
 import org.ranobe.ranobe.models.Novel;
+import org.ranobe.ranobe.ui.chapters.Chapters;
 import org.ranobe.ranobe.ui.details.viewmodel.DetailsViewModel;
 import org.ranobe.ranobe.ui.error.Error;
 
@@ -73,10 +71,11 @@ public class Details extends Fragment {
 
     private void navigateToChapterList() {
         if(novel == null) return;
-        NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Ranobe.KEY_NOVEL, novel);
-        controller.navigate(R.id.details_fragment_to_chapters, bundle);
+        Chapters chapters = new Chapters();
+        chapters.setArguments(bundle);
+        chapters.show(getParentFragmentManager(), "chapters-sheet");
     }
 
     private void setUpUi(Novel novel) {
