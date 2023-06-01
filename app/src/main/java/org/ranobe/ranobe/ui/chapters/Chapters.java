@@ -14,12 +14,16 @@ import android.widget.Toolbar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
+import org.ranobe.ranobe.database.RanobeDatabase;
+import org.ranobe.ranobe.database.models.ReadingList;
 import org.ranobe.ranobe.databinding.FragmentChaptersBinding;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.Novel;
@@ -27,6 +31,7 @@ import org.ranobe.ranobe.ui.chapters.adapter.ChapterAdapter;
 import org.ranobe.ranobe.ui.chapters.viewmodel.ChaptersViewModel;
 import org.ranobe.ranobe.ui.error.Error;
 import org.ranobe.ranobe.ui.reader.ReaderActivity;
+import org.ranobe.ranobe.ui.views.RecyclerSwipeHelper;
 import org.ranobe.ranobe.util.ListUtils;
 
 import java.util.ArrayList;
@@ -71,6 +76,7 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
     private void setUpObservers() {
         viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
         viewModel.getChapters(novel).observe(getViewLifecycleOwner(), this::setChapter);
+        RanobeDatabase.database().readingList().list(novel.url).observe(getViewLifecycleOwner(), readingList -> adapter.setReadingList(readingList));
     }
 
     private void setUpUi() {
@@ -80,6 +86,42 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
         adapter = new ChapterAdapter(originalItems, this);
         binding.chapterList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.chapterList.setAdapter(adapter);
+
+        RecyclerSwipeHelper swipeHelper = new RecyclerSwipeHelper(
+                getResources().getColor(R.color.success),
+                getResources().getColor(R.color.danger),
+                R.drawable.ic_mark_read,
+                R.drawable.ic_mark_unread,
+                requireContext()
+        ) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                if (direction == ItemTouchHelper.LEFT) {
+                    markAsUnRead(originalItems.get(viewHolder.getAdapterPosition()));
+                } else {
+                    markAsRead(originalItems.get(viewHolder.getAdapterPosition()));
+                }
+            }
+        };
+        ItemTouchHelper touchHelper = new ItemTouchHelper(swipeHelper);
+        touchHelper.attachToRecyclerView(binding.chapterList);
+    }
+
+    private void markAsRead(Chapter chapter) {
+        RanobeDatabase.databaseExecutor.execute(() -> {
+            ReadingList existing = RanobeDatabase.database().readingList().get(chapter.novelUrl, chapter.url);
+            if (existing != null) {
+                RanobeDatabase.database().readingList().updateReadCount(chapter.url);
+            } else {
+                ReadingList readingList = new ReadingList(chapter.url, chapter.novelUrl);
+                RanobeDatabase.database().readingList().save(readingList);
+            }
+        });
+    }
+
+    private void markAsUnRead(Chapter chapter) {
+        RanobeDatabase.databaseExecutor.execute(() -> RanobeDatabase.database().readingList().delete(chapter.url));
     }
 
     private void setUpError(String error) {

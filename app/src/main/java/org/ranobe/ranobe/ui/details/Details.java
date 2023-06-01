@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.config.RanobeSettings;
 import org.ranobe.ranobe.database.RanobeDatabase;
@@ -62,6 +63,9 @@ public class Details extends Fragment {
     private void setUpObservers() {
         viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
         viewModel.details(novel).observe(getViewLifecycleOwner(), this::setUpUi);
+        RanobeDatabase.database().readingList().countOfReadForNovel(novel.url).observe(getViewLifecycleOwner(), count -> {
+            if (count > 0) binding.readChapter.setText(R.string.continue_btn);
+        });
     }
 
     private void setUpError(String error) {
