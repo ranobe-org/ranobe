@@ -16,6 +16,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
+import org.ranobe.ranobe.database.RanobeDatabase;
+import org.ranobe.ranobe.database.models.ReadingList;
 import org.ranobe.ranobe.databinding.ActivityReaderBinding;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.Novel;
@@ -62,6 +64,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
                     isLoading = true;
                     currentChapterIndex += 1;
 
+                    markAsReadChapter(currentChapter);
                     if (currentChapterIndex < chapterItems.size()) {
                         binding.progress.show();
                         viewModel.getChapter(chapterItems.get(currentChapterIndex)).observe(ReaderActivity.this, chapter -> setChapter(chapter));
@@ -76,8 +79,8 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
 
     private void setChapters(List<Chapter> items) {
         chapterItems = ListUtils.sortById(items);
-        for(Chapter chapter : items) {
-            if(chapter.url.equals(currentChapter.url)) {
+        for (Chapter chapter : items) {
+            if (chapter.url.equals(currentChapter.url)) {
                 currentChapterIndex = chapterItems.indexOf(chapter);
             }
         }
@@ -99,6 +102,18 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     private void setError(String msg) {
         if (msg.length() == 0) return;
         Snackbar.make(binding.getRoot(), msg, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void markAsReadChapter(Chapter chapter) {
+        RanobeDatabase.databaseExecutor.execute(() -> {
+            ReadingList existing = RanobeDatabase.database().readingList().get(chapter.novelUrl, chapter.url);
+            if (existing != null) {
+                RanobeDatabase.database().readingList().updateReadCount(chapter.url);
+            } else {
+                ReadingList readingList = new ReadingList(chapter.url, chapter.novelUrl);
+                RanobeDatabase.database().readingList().save(readingList);
+            }
+        });
     }
 
     @Override

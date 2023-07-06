@@ -33,6 +33,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="2dp"
+            android:background="?colorSurface"
+            android:text="@string/swipe_tip"
+            android:textColor="?colorOnSurfaceVariant"
+            android:textAlignment="center"
+            android:textSize="@dimen/text_small" />
     </LinearLayout>
 
     <com.google.android.material.progressindicator.LinearProgressIndicator

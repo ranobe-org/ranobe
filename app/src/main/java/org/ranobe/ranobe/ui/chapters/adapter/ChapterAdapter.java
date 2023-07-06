@@ -1,5 +1,6 @@
 package org.ranobe.ranobe.ui.chapters.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -13,11 +14,18 @@ import java.util.List;
 
 public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHolder> {
     private final List<Chapter> items;
+    private List<String> readingList;
     private final OnChapterItemClickListener listener;
 
     public ChapterAdapter(List<Chapter> items, OnChapterItemClickListener listener) {
         this.items = items;
         this.listener = listener;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setReadingList(List<String> readingList) {
+        this.readingList = readingList;
+        this.notifyDataSetChanged();
     }
 
     @NonNull
@@ -30,6 +38,11 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Chapter item = items.get(position);
+        if (readingList.contains(item.url)) {
+            holder.binding.chapterItemLayout.setAlpha(0.5F);
+        } else {
+            holder.binding.chapterItemLayout.setAlpha(1);
+        }
         holder.binding.chapterName.setText(item.name);
         if (item.updated != null && item.updated.length() > 0)
             holder.binding.updated.setText(item.updated);
