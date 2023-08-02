@@ -28,8 +28,6 @@
     <string name="new_version_available">A new version of the app is available</string>
     <string name="update">Update</string>
     <string name="swipe_tip">Tip: Swipe to mark as read/unread</string>
-    <string name="marking_as_read_toast">Marking as read</string>
-    <string name="marking_as_unread_toast">Marking as unread</string>
     <string name="continue_btn">Continue</string>
 
 </resources>

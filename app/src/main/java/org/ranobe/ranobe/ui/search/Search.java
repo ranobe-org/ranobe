@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Search extends Fragment implements NovelAdapter.OnNovelItemClickListener {
     private FragmentSearchBinding binding;
@@ -54,7 +55,7 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
-        binding.submit.setOnClickListener(v -> searchNovels());
+        binding.searchView.setEndIconOnClickListener(v -> searchNovels());
         binding.resultList.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         results = new LinkedHashMap<>();
@@ -107,11 +108,11 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
     }
 
     public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.MyViewHolder> {
-        private final HashMap<DataSource, List<Novel>> results;
+        private final Map<DataSource, List<Novel>> results;
         private final NovelAdapter.OnNovelItemClickListener listener;
         private final SpacingDecorator spacingDecorator = new SpacingDecorator(10);
 
-        public SearchResultAdapter(HashMap<DataSource, List<Novel>> results, Search listener) {
+        public SearchResultAdapter(Map<DataSource, List<Novel>> results, Search listener) {
             this.results = results;
             this.listener = listener;
         }
@@ -130,7 +131,7 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
 
             List<Novel> novels = results.get(source);
             if (novels == null) return;
-            if (novels.size() > 0) {
+            if (!novels.isEmpty()) {
                 holder.binding.rootLayout.setVisibility(View.VISIBLE);
             }
 

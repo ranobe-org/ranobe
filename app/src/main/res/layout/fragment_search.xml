@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="5dp"
+        android:baselineAligned="false"
         android:orientation="horizontal">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -27,6 +28,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            app:boxCornerRadiusTopStart="@dimen/radius"
+            app:boxCornerRadiusTopEnd="@dimen/radius"
+            app:boxCornerRadiusBottomStart="@dimen/radius"
+            app:boxCornerRadiusBottomEnd="@dimen/radius"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_search"
             app:helperText="what are you looking for?"
             app:placeholderText="@string/start_typing">
 
@@ -38,15 +45,6 @@
                 android:inputType="text"
                 android:lines="1" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/submit"
-            style="@style/Widget.Material3.Button.IconButton.Outlined"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            app:cornerRadius="5dp"
-            app:icon="@drawable/ic_search"
-            app:iconGravity="textStart" />
 
     </LinearLayout>
 
