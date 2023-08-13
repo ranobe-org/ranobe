@@ -5,6 +5,10 @@
     <h2><samp>R.A.N.O.B.E</samp></h2>
     <samp>A simple extensible light novel reader</samp>
     <br/><br/>
+    <a href="https://play.google.com/store/apps/details?id=org.ranobe.ranobe">
+     <samp><strong>play store</strong></samp>
+    </a>
+    <br/><br/>
     <a href="https://github.com/ranobe-org/ranobe/releases/download/v0.0.6/ranobe.apk" title="Download">
         <img height='30' src="https://img.shields.io/badge/download-2da44e?style=flat&logo=android&logoColor=white" alt="Download" title="Download">
     </a>
