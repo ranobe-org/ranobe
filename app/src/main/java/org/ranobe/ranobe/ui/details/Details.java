@@ -1,5 +1,6 @@
 package org.ranobe.ranobe.ui.details;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,8 +47,7 @@ public class Details extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDetailsBinding.inflate(inflater, container, false);
         setUpListeners();
         setUpObservers();
@@ -57,7 +57,18 @@ public class Details extends Fragment {
     private void setUpListeners() {
         binding.readChapter.setOnClickListener(v -> navigateToChapterList());
         binding.addToLib.setOnClickListener(v -> addToLibrary(novel));
+        binding.share.setOnClickListener(v -> shareLink());
         binding.progress.show();
+    }
+
+    private void shareLink() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, novel.url);
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
     }
 
     private void setUpObservers() {
@@ -85,6 +96,7 @@ public class Details extends Fragment {
     private void setUpUi(Novel novel) {
         this.novel = novel;
         Glide.with(binding.novelCover.getContext()).load(novel.cover).into(binding.novelCover);
+        Glide.with(binding.novelCover.getContext()).load(novel.cover).into(binding.novelCoverHeader);
         binding.novelName.setText(novel.name);
         binding.rating.setRating(novel.rating);
         binding.summary.setText(novel.summary);
@@ -93,12 +105,6 @@ public class Details extends Fragment {
 
         if (novel.authors != null) {
             binding.authors.setText(String.join(", ", novel.authors));
-        }
-        if (novel.alternateNames != null) {
-            binding.alternativeNames.setText(String.join(", ", novel.alternateNames));
-        }
-        if (novel.year > 0) {
-            binding.year.setText(String.valueOf(novel.year));
         }
 
         binding.progress.hide();
@@ -109,6 +115,7 @@ public class Details extends Fragment {
 
         binding.genresLayout.removeAllViews();
         for (String genre : genres) {
+            if (genre.trim().length() == 0) continue;
             Chip chip = new Chip(binding.genresLayout.getContext());
             chip.setText(genre);
             binding.genresLayout.addView(chip);
