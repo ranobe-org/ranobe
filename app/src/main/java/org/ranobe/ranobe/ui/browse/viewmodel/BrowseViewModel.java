@@ -1,11 +1,8 @@
 package org.ranobe.ranobe.ui.browse.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.repository.Repository;
 

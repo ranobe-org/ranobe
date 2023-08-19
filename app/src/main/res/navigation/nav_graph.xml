@@ -65,7 +65,7 @@
         android:id="@+id/chapters_fragment"
         android:name="org.ranobe.ranobe.ui.chapters.Chapters"
         android:label="fragment_chapters"
-        tools:layout="@layout/fragment_chapters"/>
+        tools:layout="@layout/fragment_chapters" />
 
     <fragment
         android:id="@+id/error_fragment"

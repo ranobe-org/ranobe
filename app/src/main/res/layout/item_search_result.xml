@@ -3,8 +3,8 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="gone"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:visibility="gone">
 
     <TextView
         android:id="@+id/source_name"
@@ -15,15 +15,15 @@
         android:maxLines="2"
         android:padding="2dp"
         android:textColor="?colorOnSurface"
-        android:textStyle="bold"
-        android:textSize="@dimen/text_head" />
+        android:textSize="@dimen/text_head"
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_results"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_below="@id/source_name"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" />
 
 </RelativeLayout>

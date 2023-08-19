@@ -1,4 +1,5 @@
 package org.ranobe.ranobe.ui.settings.viewmodel;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 

@@ -4,6 +4,17 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Chapter implements Parcelable {
+    public static final Creator<Chapter> CREATOR = new Creator<Chapter>() {
+        @Override
+        public Chapter createFromParcel(Parcel in) {
+            return new Chapter(in);
+        }
+
+        @Override
+        public Chapter[] newArray(int size) {
+            return new Chapter[size];
+        }
+    };
     public String url;
     public String novelUrl;
     public String content;
@@ -28,18 +39,6 @@ public class Chapter implements Parcelable {
         updated = in.readString();
         id = in.readFloat();
     }
-
-    public static final Creator<Chapter> CREATOR = new Creator<Chapter>() {
-        @Override
-        public Chapter createFromParcel(Parcel in) {
-            return new Chapter(in);
-        }
-
-        @Override
-        public Chapter[] newArray(int size) {
-            return new Chapter[size];
-        }
-    };
 
     @Override
     public String toString() {

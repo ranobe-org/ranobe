@@ -74,7 +74,7 @@ public class Details extends Fragment {
     }
 
     private void navigateToChapterList() {
-        if(novel == null) return;
+        if (novel == null) return;
         Bundle bundle = new Bundle();
         bundle.putParcelable(Ranobe.KEY_NOVEL, novel);
         Chapters chapters = new Chapters();
@@ -117,7 +117,7 @@ public class Details extends Fragment {
 
     private void addToLibrary(Novel novel) {
         if (novel == null) return;
-        RanobeDatabase.databaseExecutor.execute( () -> RanobeDatabase.database().novels().save(novel));
+        RanobeDatabase.databaseExecutor.execute(() -> RanobeDatabase.database().novels().save(novel));
         Snackbar.make(binding.getRoot(), "Added novel to library", Snackbar.LENGTH_SHORT).show();
     }
 }

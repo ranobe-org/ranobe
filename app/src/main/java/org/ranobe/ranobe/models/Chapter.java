@@ -10,6 +10,17 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class Chapter implements Parcelable {
+    public static final Creator<Chapter> CREATOR = new Creator<Chapter>() {
+        @Override
+        public Chapter createFromParcel(Parcel in) {
+            return new Chapter(in);
+        }
+
+        @Override
+        public Chapter[] newArray(int size) {
+            return new Chapter[size];
+        }
+    };
     @PrimaryKey
     @NonNull
     public String url;
@@ -38,18 +49,6 @@ public class Chapter implements Parcelable {
         updated = in.readString();
         id = in.readFloat();
     }
-
-    public static final Creator<Chapter> CREATOR = new Creator<Chapter>() {
-        @Override
-        public Chapter createFromParcel(Parcel in) {
-            return new Chapter(in);
-        }
-
-        @Override
-        public Chapter[] newArray(int size) {
-            return new Chapter[size];
-        }
-    };
 
     @NonNull
     @Override

@@ -44,16 +44,19 @@ public class Neovel implements Source {
 
     private String getStatus(int completion) {
         switch (completion) {
-            case 1: return "Ongoing";
-            case 3: return "Completed";
-            default: return "N.A.";
+            case 1:
+                return "Ongoing";
+            case 3:
+                return "Completed";
+            default:
+                return "N.A.";
         }
     }
 
     private int getYear(String date) {
         Pattern pattern = Pattern.compile("/\\d{4}/gm");
         Matcher m = pattern.matcher(date);
-        if(m.find()) {
+        if (m.find()) {
             return Integer.parseInt(m.group());
         }
         return 0;
@@ -61,7 +64,7 @@ public class Neovel implements Source {
 
     private List<String> jsonArrayToString(JSONArray arr) throws JSONException {
         List<String> values = new ArrayList<>();
-        for(int i = 0; i < arr.length(); i++) {
+        for (int i = 0; i < arr.length(); i++) {
             values.add(arr.getString(0));
         }
         return values;
@@ -74,7 +77,7 @@ public class Neovel implements Source {
 
     @Override
     public List<Novel> novels(int page) throws Exception {
-        String web = BASE_URL +"/V2/books/search?language=EN&filter=0&name=&sort=6&page=".concat(String.valueOf(page)) + "&onlyOffline=true&genreIds=0&genreCombining=0&tagIds=0&tagCombining=0&minChapterCount=0&maxChapterCount=9999&completion=5&onlyPremium=false&blacklistedTagIds=&onlyMature=false";
+        String web = BASE_URL + "/V2/books/search?language=EN&filter=0&name=&sort=6&page=".concat(String.valueOf(page)) + "&onlyOffline=true&genreIds=0&genreCombining=0&tagIds=0&tagCombining=0&minChapterCount=0&maxChapterCount=9999&completion=5&onlyPremium=false&blacklistedTagIds=&onlyMature=false";
         return parseNovels(web);
     }
 
@@ -82,7 +85,7 @@ public class Neovel implements Source {
         List<Novel> items = new ArrayList<>();
         JSONArray data = new JSONArray(HttpClient.GET(web, new HashMap<>()));
 
-        for(int i = 0; i < data.length(); i++) {
+        for (int i = 0; i < data.length(); i++) {
             JSONObject d = data.getJSONObject(i);
             String url = BASE_URL + "/" + d.getString("id");
 
@@ -122,7 +125,7 @@ public class Neovel implements Source {
         String url = String.format("https://neovel.io/V5/chapters?bookId=%s&language=EN", bookId);
         JSONArray data = new JSONArray(HttpClient.GET(url, new HashMap<>()));
 
-        for(int i = 0; i < data.length(); i++) {
+        for (int i = 0; i < data.length(); i++) {
             JSONObject o = data.getJSONObject(i);
             String u = BASE_URL + "/chapter/" + o.getString("chapterId");
 
@@ -145,7 +148,7 @@ public class Neovel implements Source {
         Element doc = Jsoup.parse(data.getString("chapterContent"));
         List<String> paras = new ArrayList<>();
 
-        for(String bits: doc.wholeText().split("\n")){
+        for (String bits : doc.wholeText().split("\n")) {
             String text = bits.trim();
             if (text.length() > 0) {
                 paras.add(text);
@@ -162,7 +165,7 @@ public class Neovel implements Source {
 
         if (filters.hashKeyword()) {
             String encodedKeyword = encodeKeyword(filters.getKeyword()).trim();
-            String web = BASE_URL +"/V2/books/search?language=EN&filter=0&name=" + encodedKeyword + "&sort=6&page=".concat(String.valueOf(page - 1)) + "&onlyOffline=true&genreIds=0&genreCombining=0&tagIds=0&tagCombining=0&minChapterCount=0&maxChapterCount=9999&completion=5&onlyPremium=false&blacklistedTagIds=&onlyMature=false";
+            String web = BASE_URL + "/V2/books/search?language=EN&filter=0&name=" + encodedKeyword + "&sort=6&page=".concat(String.valueOf(page - 1)) + "&onlyOffline=true&genreIds=0&genreCombining=0&tagIds=0&tagCombining=0&minChapterCount=0&maxChapterCount=9999&completion=5&onlyPremium=false&blacklistedTagIds=&onlyMature=false";
             return parseNovels(web);
         }
 

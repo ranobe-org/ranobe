@@ -12,7 +12,6 @@ import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
 import org.ranobe.ranobe.util.SourceUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -54,6 +53,7 @@ public class Ranobe implements Source {
 
         return items;
     }
+
     @Override
     public Novel details(Novel novel) throws Exception {
         Element doc = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>()));

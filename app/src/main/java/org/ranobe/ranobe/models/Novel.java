@@ -14,13 +14,23 @@ import java.util.List;
 
 @Entity
 public class Novel implements Parcelable {
+    public static final Creator<Novel> CREATOR = new Creator<Novel>() {
+        @Override
+        public Novel createFromParcel(Parcel in) {
+            return new Novel(in);
+        }
+
+        @Override
+        public Novel[] newArray(int size) {
+            return new Novel[size];
+        }
+    };
     @PrimaryKey
     public long id;
     public int sourceId;
     public String name;
     public String cover;
     public String url;
-
     public String status;
     public String summary;
     public List<String> alternateNames;
@@ -48,18 +58,6 @@ public class Novel implements Parcelable {
         rating = in.readFloat();
         year = in.readInt();
     }
-
-    public static final Creator<Novel> CREATOR = new Creator<Novel>() {
-        @Override
-        public Novel createFromParcel(Parcel in) {
-            return new Novel(in);
-        }
-
-        @Override
-        public Novel[] newArray(int size) {
-            return new Novel[size];
-        }
-    };
 
     @NonNull
     @Override

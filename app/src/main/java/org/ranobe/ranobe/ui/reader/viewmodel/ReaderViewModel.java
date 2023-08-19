@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import org.ranobe.ranobe.models.Chapter;
-import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.repository.Repository;
 
