@@ -37,7 +37,7 @@ public abstract class RecyclerSwipeHelper extends SimpleCallback {
     public RecyclerSwipeHelper(@ColorInt int swipeRightColor, @ColorInt int swipeLeftColor,
                                @DrawableRes int swipeRightIconResource,
                                @DrawableRes int swipeLeftIconResource, Context context) {
-        super(0, LEFT|RIGHT);
+        super(0, LEFT | RIGHT);
 
         clearPaint = new Paint();
         clearPaint.setXfermode(new PorterDuffXfermode(CLEAR));
@@ -75,7 +75,7 @@ public abstract class RecyclerSwipeHelper extends SimpleCallback {
             return;
         }
 
-        if(dX < 0) {
+        if (dX < 0) {
             background.setColor(swipeLeftColor);
             background.setBounds((int) (itemView.getRight() + dX), itemView.getTop(), itemView.getRight(), itemView.getBottom());
             background.draw(c);
@@ -86,15 +86,14 @@ public abstract class RecyclerSwipeHelper extends SimpleCallback {
             int itemRight = itemView.getRight() - itemMargin;
             int itemBottom = itemTop + intrinsicHeight;
 
-            int alpha = ((int)((-itemView.getTranslationX()/itemView.getWidth())*510));
-            if(alpha > 255) alpha = 255;
+            int alpha = ((int) ((-itemView.getTranslationX() / itemView.getWidth()) * 510));
+            if (alpha > 255) alpha = 255;
 
             swipeLeftIcon.setAlpha(alpha);
             swipeLeftIcon.setBounds(itemLeft, itemTop, itemRight, itemBottom);
             swipeLeftIcon.draw(c);
 
-        }
-        else {
+        } else {
             background.setColor(swipeRightColor);
             background.setBounds((int) (itemView.getLeft() + dX), itemView.getTop(), itemView.getLeft(), itemView.getBottom());
             background.draw(c);
@@ -105,8 +104,8 @@ public abstract class RecyclerSwipeHelper extends SimpleCallback {
             int itemRight = itemView.getLeft() + itemMargin + intrinsicWidth;
             int itemBottom = itemTop + intrinsicHeight;
 
-            int alpha = ((int)((itemView.getTranslationX()/itemView.getWidth())*510));
-            if(alpha > 255) alpha = 255;
+            int alpha = ((int) ((itemView.getTranslationX() / itemView.getWidth()) * 510));
+            if (alpha > 255) alpha = 255;
 
             swipeRightIcon.setAlpha(alpha);
             swipeRightIcon.setBounds(itemLeft, itemTop, itemRight, itemBottom);
@@ -122,6 +121,6 @@ public abstract class RecyclerSwipeHelper extends SimpleCallback {
     }
 
     private void clearCanvas(Canvas c, float left, float top, float right, float bottom) {
-        if(c != null) c.drawRect(left, top, right, bottom, clearPaint);
+        if (c != null) c.drawRect(left, top, right, bottom, clearPaint);
     }
 }

@@ -14,8 +14,8 @@ import java.util.List;
 
 public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHolder> {
     private final List<Chapter> items;
-    private List<String> readingList;
     private final OnChapterItemClickListener listener;
+    private List<String> readingList;
 
     public ChapterAdapter(List<Chapter> items, OnChapterItemClickListener listener) {
         this.items = items;

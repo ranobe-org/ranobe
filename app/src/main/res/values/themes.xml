@@ -1,6 +1,5 @@
 <resources>
 
-    <style name="BaseTheme" parent="Theme.Material3.DayNight.NoActionBar">
-    </style>
+    <style name="BaseTheme" parent="Theme.Material3.DayNight.NoActionBar"></style>
 
 </resources>

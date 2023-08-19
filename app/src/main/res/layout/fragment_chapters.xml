@@ -37,11 +37,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="2dp"
             android:background="?colorSurface"
+            android:paddingVertical="2dp"
             android:text="@string/swipe_tip"
-            android:textColor="?colorOnSurfaceVariant"
             android:textAlignment="center"
+            android:textColor="?colorOnSurfaceVariant"
             android:textSize="@dimen/text_small" />
     </LinearLayout>
 

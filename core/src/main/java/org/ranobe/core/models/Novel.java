@@ -4,18 +4,27 @@ package org.ranobe.core.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-
 import org.ranobe.core.util.SourceUtils;
 
 import java.util.List;
 
 public class Novel implements Parcelable {
+    public static final Creator<Novel> CREATOR = new Creator<Novel>() {
+        @Override
+        public Novel createFromParcel(Parcel in) {
+            return new Novel(in);
+        }
+
+        @Override
+        public Novel[] newArray(int size) {
+            return new Novel[size];
+        }
+    };
     public long id;
     public int sourceId;
     public String name;
     public String cover;
     public String url;
-
     public String status;
     public String summary;
     public List<String> alternateNames;
@@ -43,18 +52,6 @@ public class Novel implements Parcelable {
         rating = in.readFloat();
         year = in.readInt();
     }
-
-    public static final Creator<Novel> CREATOR = new Creator<Novel>() {
-        @Override
-        public Novel createFromParcel(Parcel in) {
-            return new Novel(in);
-        }
-
-        @Override
-        public Novel[] newArray(int size) {
-            return new Novel[size];
-        }
-    };
 
     @Override
     public String toString() {

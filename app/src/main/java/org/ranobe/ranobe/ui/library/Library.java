@@ -61,7 +61,7 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
 
     private void setNovels(List<Novel> novels) {
         binding.progress.hide();
-        if (novels.size() == 0)  {
+        if (novels.size() == 0) {
             showNoNovels();
             return;
         }

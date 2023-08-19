@@ -123,11 +123,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/summary"
-            android:layout_toStartOf="@id/read_chapter"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_toStartOf="@id/read_chapter"
             android:text="@string/add_to_lib_info" />
 
         <Button

@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import org.ranobe.ranobe.models.Chapter;
-import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.repository.Repository;
 
@@ -12,6 +11,7 @@ import java.util.List;
 
 public class ChaptersViewModel extends ViewModel {
     private MutableLiveData<String> error = new MutableLiveData<>();
+
     public MutableLiveData<String> getError() {
         return error = new MutableLiveData<>();
     }

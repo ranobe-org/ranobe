@@ -1,7 +1,5 @@
 package org.ranobe.ranobe.sources.en;
 
-import android.util.Log;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.ranobe.ranobe.models.Chapter;

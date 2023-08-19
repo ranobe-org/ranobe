@@ -12,9 +12,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class SearchViewModel extends ViewModel {
+    private final MutableLiveData<LinkedHashMap<DataSource, List<Novel>>> results = new MutableLiveData<>();
     private MutableLiveData<String> error = new MutableLiveData<>();
     private Filter filter = new Filter();
-    private final MutableLiveData<LinkedHashMap<DataSource, List<Novel>>> results = new MutableLiveData<>();
 
     public MutableLiveData<String> getError() {
         return error = new MutableLiveData<>();
@@ -30,7 +30,7 @@ public class SearchViewModel extends ViewModel {
         }
 
         this.filter = filter;
-        for(DataSource source: sources) {
+        for (DataSource source : sources) {
             new Repository(source.sourceId).search(filter, page, new Repository.Callback<List<Novel>>() {
                 @Override
                 public void onComplete(List<Novel> result) {
