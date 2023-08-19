@@ -88,6 +88,8 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
 
         Filter filter = new Filter();
         filter.addFilter(Filter.FILTER_KEYWORD, keyword);
+        results.clear();
+        resultAdapter.notifyDataSetChanged();
         viewModel.search(dataSources, filter, 1).observe(getViewLifecycleOwner(), result -> {
             results.clear();
             results.putAll(result);

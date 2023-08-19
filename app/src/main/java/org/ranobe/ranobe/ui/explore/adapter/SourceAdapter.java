@@ -33,7 +33,7 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         DataSource source = sources.get(position);
-        holder.binding.sourceId.setText(String.valueOf(source.sourceId));
+        holder.binding.sourceId.setText(String.format(Locale.getDefault(), "%02d", source.sourceId));
         holder.binding.sourceName.setText(source.name);
         holder.binding.sourceContent.setText(String.format(
                 Locale.getDefault(),

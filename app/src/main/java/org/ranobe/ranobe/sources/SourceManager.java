@@ -2,11 +2,17 @@ package org.ranobe.ranobe.sources;
 
 import org.ranobe.ranobe.sources.en.AllNovel;
 import org.ranobe.ranobe.sources.en.AzyNovel;
+import org.ranobe.ranobe.sources.en.BoxNovel;
 import org.ranobe.ranobe.sources.en.LightNovelBtt;
+import org.ranobe.ranobe.sources.en.LightNovelHeaven;
 import org.ranobe.ranobe.sources.en.LightNovelPub;
+import org.ranobe.ranobe.sources.en.Neovel;
+import org.ranobe.ranobe.sources.en.NewNovel;
 import org.ranobe.ranobe.sources.en.Ranobe;
 import org.ranobe.ranobe.sources.en.ReadLightNovel;
+import org.ranobe.ranobe.sources.en.ReadWebNovels;
 import org.ranobe.ranobe.sources.en.VipNovel;
+import org.ranobe.ranobe.sources.en.WuxiaWorld;
 import org.ranobe.ranobe.sources.ru.RanobeHub;
 
 import java.util.HashMap;
@@ -35,6 +41,12 @@ public class SourceManager {
         sources.put(6, Ranobe.class);
         sources.put(7, AllNovel.class);
         sources.put(8, AzyNovel.class);
+        sources.put(9, LightNovelHeaven.class);
+        sources.put(10, NewNovel.class);
+        sources.put(11, ReadWebNovels.class);
+        sources.put(12, BoxNovel.class);
+        sources.put(13, WuxiaWorld.class);
+        sources.put(14, Neovel.class);
 
         return sources;
     }
