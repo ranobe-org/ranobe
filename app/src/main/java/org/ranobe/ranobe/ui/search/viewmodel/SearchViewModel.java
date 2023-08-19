@@ -34,7 +34,7 @@ public class SearchViewModel extends ViewModel {
             new Repository(source.sourceId).search(filter, page, new Repository.Callback<List<Novel>>() {
                 @Override
                 public void onComplete(List<Novel> result) {
-                    if (result.size() > 0) {
+                    if (!result.isEmpty()) {
                         LinkedHashMap<DataSource, List<Novel>> old = results.getValue();
                         if (old == null)
                             old = new LinkedHashMap<>();
