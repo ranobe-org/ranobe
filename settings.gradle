@@ -10,7 +10,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url 'https://github.com/psiegman/mvn-repo/raw/master/releases'
+        }
     }
 }
 rootProject.name = "ranobe"
 include ':app'
+include ':core'
+include ':downloader'

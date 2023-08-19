@@ -20,7 +20,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         Log.d(Ranobe.DEBUG, "app launched");
         DynamicColors.applyToActivitiesIfAvailable(this);
         App.context = getApplicationContext();
