@@ -6,6 +6,7 @@ import org.ranobe.ranobe.sources.en.BoxNovel;
 import org.ranobe.ranobe.sources.en.LightNovelBtt;
 import org.ranobe.ranobe.sources.en.LightNovelHeaven;
 import org.ranobe.ranobe.sources.en.LightNovelPub;
+import org.ranobe.ranobe.sources.en.LightNovelWorld;
 import org.ranobe.ranobe.sources.en.Neovel;
 import org.ranobe.ranobe.sources.en.NewNovel;
 import org.ranobe.ranobe.sources.en.Ranobe;
@@ -16,8 +17,13 @@ import org.ranobe.ranobe.sources.en.WuxiaWorld;
 import org.ranobe.ranobe.sources.ru.RanobeHub;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class SourceManager {
+    private SourceManager() throws IllegalAccessException {
+        throw new IllegalAccessException("Cannot initialize this class ;)");
+    }
+
     public static Source getSource(int sourceId) {
         try {
             Class<?> klass = getSources().get(sourceId);
@@ -31,7 +37,7 @@ public class SourceManager {
         }
     }
 
-    public static HashMap<Integer, Class<?>> getSources() {
+    public static Map<Integer, Class<?>> getSources() {
         HashMap<Integer, Class<?>> sources = new HashMap<>();
         sources.put(1, ReadLightNovel.class);
         sources.put(2, VipNovel.class);
@@ -47,6 +53,7 @@ public class SourceManager {
         sources.put(12, BoxNovel.class);
         sources.put(13, WuxiaWorld.class);
         sources.put(14, Neovel.class);
+        sources.put(15, LightNovelWorld.class);
 
         return sources;
     }
