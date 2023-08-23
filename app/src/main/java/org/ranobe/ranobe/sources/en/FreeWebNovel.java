@@ -42,7 +42,7 @@ public class FreeWebNovel implements Source {
         List<Novel> items = new ArrayList<>();
         Element doc = Jsoup.parse(response);
 
-        for(Element element: doc.select("div.li-row")) {
+        for (Element element : doc.select("div.li-row")) {
             String url = element.select("div.pic > a").attr("href").trim();
 
             if (url.length() > 0) {
@@ -65,7 +65,7 @@ public class FreeWebNovel implements Source {
         novel.cover = doc.select("div.pic > img").attr("src").trim();
         novel.summary = String.join("\n\n", doc.select("div.inner > p").eachText());
 
-        for(Element element: doc.select("div.txt > div.item")) {
+        for (Element element : doc.select("div.txt > div.item")) {
             String check = element.select("span").attr("title");
             if (check.contains("Status")) {
                 novel.status = element.select("a").text().trim();
@@ -84,10 +84,10 @@ public class FreeWebNovel implements Source {
         List<Chapter> items = new ArrayList<>();
         Element doc = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>()));
 
-        while(true) {
+        while (true) {
             Element next = doc.select("div.page > a:contains(Next)").first();
 
-            for(Element element: doc.select("div.m-newest2 > ul.ul-list5 > li")) {
+            for (Element element : doc.select("div.m-newest2 > ul.ul-list5 > li")) {
                 Chapter item = new Chapter(novel.url);
 
                 item.url = BASE_URL + element.select("a").attr("href").trim();

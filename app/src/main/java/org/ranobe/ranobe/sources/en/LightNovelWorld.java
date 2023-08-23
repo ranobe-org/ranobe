@@ -43,7 +43,7 @@ public class LightNovelWorld implements Source {
         String web = String.format(Locale.getDefault(), "%s/genre-all/sort-new/status-all/all-novel?page=%d", BASE_URL, page);
         Element doc = Jsoup.parse(HttpClient.GET(web, new HashMap<>()));
 
-        for(Element element: doc.select("li.novel-item")) {
+        for (Element element : doc.select("li.novel-item")) {
             String url = element.select("a").attr("href").trim();
 
             if (url.length() > 0) {
@@ -68,7 +68,7 @@ public class LightNovelWorld implements Source {
         novel.authors = Collections.singletonList(doc.select("span[itemprop=author]").text());
         novel.genres = doc.select("div.categories > ul > li").eachText();
 
-        for(Element element: doc.select("div.header-stats > span")) {
+        for (Element element : doc.select("div.header-stats > span")) {
             if (element.select("small").text().contains("Status")) {
                 novel.status = element.select("strong").text().trim();
                 break;
@@ -84,10 +84,10 @@ public class LightNovelWorld implements Source {
         String base = novel.url.concat("/chapters");
         Element doc = Jsoup.parse(HttpClient.GET(base, new HashMap<>()));
 
-        while(true) {
+        while (true) {
             Element next = doc.select("a[rel=next]").first();
 
-            for(Element element: doc.select("ul.chapter-list > li")) {
+            for (Element element : doc.select("ul.chapter-list > li")) {
                 Chapter item = new Chapter(novel.url);
 
                 item.url = element.select("a").attr("href").trim();
@@ -129,7 +129,7 @@ public class LightNovelWorld implements Source {
         String response = HttpClient.GET(web, new HashMap<>());
         Element doc = Jsoup.parse(new JSONObject(response).getString("html"));
 
-        for(Element element: doc.select("li.novel-item")) {
+        for (Element element : doc.select("li.novel-item")) {
             String url = element.select("a").attr("href").trim();
 
             if (url.length() > 0) {
