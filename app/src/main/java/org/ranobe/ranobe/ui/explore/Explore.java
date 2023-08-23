@@ -31,12 +31,6 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected 
         // Required empty public constructor
     }
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,7 +42,7 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected 
     }
 
     private void setSourcesListToUi() {
-        HashMap<Integer, Class<?>> sources = SourceManager.getSources();
+        HashMap<Integer, Class<?>> sources = (HashMap<Integer, Class<?>>) SourceManager.getSources();
         List<DataSource> dataSources = new ArrayList<>();
         for (Integer id : sources.keySet()) {
             Source src = SourceManager.getSource(id);
