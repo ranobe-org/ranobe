@@ -3,6 +3,7 @@ package org.ranobe.ranobe.sources;
 import org.ranobe.ranobe.sources.en.AllNovel;
 import org.ranobe.ranobe.sources.en.AzyNovel;
 import org.ranobe.ranobe.sources.en.BoxNovel;
+import org.ranobe.ranobe.sources.en.FreeWebNovel;
 import org.ranobe.ranobe.sources.en.LightNovelBtt;
 import org.ranobe.ranobe.sources.en.LightNovelHeaven;
 import org.ranobe.ranobe.sources.en.LightNovelPub;
@@ -54,6 +55,7 @@ public class SourceManager {
         sources.put(13, WuxiaWorld.class);
         sources.put(14, Neovel.class);
         sources.put(15, LightNovelWorld.class);
+        sources.put(16, FreeWebNovel.class);
 
         return sources;
     }
