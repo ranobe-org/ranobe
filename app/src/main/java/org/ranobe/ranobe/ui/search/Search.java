@@ -62,7 +62,7 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
         resultAdapter = new SearchResultAdapter(results, this);
         binding.resultList.setAdapter(resultAdapter);
 
-        HashMap<Integer, Class<?>> sources = SourceManager.getSources();
+        HashMap<Integer, Class<?>> sources = (HashMap<Integer, Class<?>>) SourceManager.getSources();
         dataSources = new ArrayList<>();
         for (Integer id : sources.keySet()) {
             Source src = SourceManager.getSource(id);
