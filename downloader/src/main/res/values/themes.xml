@@ -1,0 +1,9 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Ranobe" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="fontFamily">@font/poppins</item>
+        <item name="android:statusBarColor">?colorSurface</item>
+    </style>
+
+    <style name="Theme.Ranobe" parent="Base.Theme.Ranobe" />
+</resources>
