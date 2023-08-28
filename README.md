@@ -5,7 +5,7 @@
     <h2><samp>R.A.N.O.B.E</samp></h2>
     <samp>A simple extensible light novel reader</samp>
     <br/><br/>
-    <a href="https://play.google.com/store/apps/details?id=org.ranobe.ranobe">
+    <a href="https://play.google.com/store/apps/details?id=org.ranobe.downloader">
      <samp><strong>play store</strong></samp>
     </a>
     <br/><br/>
