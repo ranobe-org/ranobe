@@ -1,5 +1,7 @@
 <resources>
 
-    <style name="BaseTheme" parent="Theme.Material3.DayNight.NoActionBar"></style>
+    <style name="BaseTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor">?colorSurface</item>
+    </style>
 
 </resources>

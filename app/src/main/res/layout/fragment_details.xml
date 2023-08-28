@@ -19,129 +19,145 @@
             android:layout_alignParentTop="true"
             android:indeterminate="true" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/header_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/novel_cover_layout"
-                style="@style/Widget.Material3.CardView.Elevated"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="10dp">
-
-                <ImageView
-                    android:id="@+id/novel_cover"
-                    android:layout_width="150dp"
-                    android:layout_height="220dp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/image"
-                    android:scaleType="centerCrop" />
-
-            </com.google.android.material.card.MaterialCardView>
+            <ImageView
+                android:id="@+id/novel_cover_header"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:adjustViewBounds="true"
+                android:alpha="0.4"
+                android:contentDescription="@string/image"
+                android:scaleType="centerCrop" />
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_centerVertical="true"
+                android:orientation="horizontal"
+                android:padding="20dp">
 
-                <TextView
-                    android:id="@+id/novel_name"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/novel_cover_layout"
+                    style="@style/Widget.Material3.CardView.Outlined"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="2dp"
-                    android:textColor="?colorOnSurface"
-                    android:textSize="20sp" />
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="25dp">
 
-                <RatingBar
-                    android:id="@+id/rating"
-                    style="@style/Widget.AppCompat.RatingBar.Small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    <ImageView
+                        android:id="@+id/novel_cover"
+                        android:layout_width="112dp"
+                        android:layout_height="165dp"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/image"
+                        android:scaleType="centerCrop" />
 
-                <TextView
-                    android:id="@+id/alternative_names"
-                    android:layout_width="match_parent"
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textColor="?colorOnSurfaceVariant" />
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/authors"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?colorPrimary" />
+                    <TextView
+                        android:id="@+id/status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="?colorOnSurfaceVariant" />
 
-                <TextView
-                    android:id="@+id/status"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?colorOnSurfaceVariant" />
+                    <TextView
+                        android:id="@+id/novel_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp"
+                        android:textColor="?colorOnSurface"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/year"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?colorOnSurfaceVariant" />
+                    <RatingBar
+                        android:id="@+id/rating"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/authors"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="?colorPrimary"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/genres_layout"
+        <LinearLayout
+            android:id="@+id/buttons_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/header_layout"
-            android:layout_marginHorizontal="10dp"
-            app:chipSpacingHorizontal="5dp"
-            app:chipSpacingVertical="-10dp" />
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/share"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                app:elevation="10dp"
+                app:icon="@drawable/ic_share" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/add_to_lib"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                app:elevation="10dp"
+                app:icon="@drawable/ic_add_to_lib" />
+
+            <Button
+                android:id="@+id/read_chapter"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/read_info" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/genres_layout"
-            android:layout_marginTop="10dp"
+            android:layout_below="@id/buttons_panel"
             android:layout_marginBottom="10dp"
             android:padding="10dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textIsSelectable="true" />
 
-
-        <Button
-            android:id="@+id/add_to_lib"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:layout_width="wrap_content"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/genres_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/summary"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_toStartOf="@id/read_chapter"
-            android:text="@string/add_to_lib_info" />
-
-        <Button
-            android:id="@+id/read_chapter"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/summary"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/read_info" />
+            android:layout_marginHorizontal="10dp"
+            app:chipSpacingHorizontal="5dp"
+            app:chipSpacingVertical="-10dp" />
 
     </RelativeLayout>
 
