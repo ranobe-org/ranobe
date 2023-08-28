@@ -4,9 +4,11 @@ package org.ranobe.core.sources;
 import org.ranobe.core.sources.en.AllNovel;
 import org.ranobe.core.sources.en.AzyNovel;
 import org.ranobe.core.sources.en.BoxNovel;
+import org.ranobe.core.sources.en.FreeWebNovel;
 import org.ranobe.core.sources.en.LightNovelBtt;
 import org.ranobe.core.sources.en.LightNovelHeaven;
 import org.ranobe.core.sources.en.LightNovelPub;
+import org.ranobe.core.sources.en.LightNovelWorld;
 import org.ranobe.core.sources.en.NewNovel;
 import org.ranobe.core.sources.en.ReadLightNovel;
 import org.ranobe.core.sources.en.ReadWebNovels;
@@ -18,6 +20,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SourceManager {
+    private SourceManager() throws IllegalAccessException {
+        throw new IllegalAccessException("Cannot initialize this class ;)");
+    }
+
     public static Source getSource(int sourceId) {
         try {
             Class<?> klass = getSources().get(sourceId);
@@ -58,6 +64,8 @@ public class SourceManager {
         sources.put(11, ReadWebNovels.class);
         sources.put(12, BoxNovel.class);
         sources.put(13, WuxiaWorld.class);
+        sources.put(15, LightNovelWorld.class);
+        sources.put(16, FreeWebNovel.class);
 
         return sources;
     }
@@ -76,6 +84,8 @@ public class SourceManager {
         sources.put("readwebnovels.net", ReadWebNovels.class);
         sources.put("boxnovel.com", BoxNovel.class);
         sources.put("wuxiaworld.site", WuxiaWorld.class);
+        sources.put("lightnovelworld.org", LightNovelWorld.class);
+        sources.put("freewebnovel.com", FreeWebNovel.class);
 
         return sources;
     }
