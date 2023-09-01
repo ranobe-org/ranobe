@@ -113,7 +113,6 @@
                 android:id="@+id/summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/header_layout"
                 android:layout_marginBottom="10dp"
                 android:padding="10dp"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
@@ -139,6 +138,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/save_novel_question"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+
+                    <TextView
+                        android:id="@+id/txt_no_of_chapters"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/save_novel_question"
+                        android:textColor="?colorPrimary"
                         android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
 
                     <com.google.android.material.button.MaterialButton
