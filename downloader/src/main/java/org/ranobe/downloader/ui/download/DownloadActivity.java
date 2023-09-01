@@ -52,6 +52,7 @@ public class DownloadActivity extends AppCompatActivity {
         url = getIntent().getStringExtra(Config.KEY_URL);
         source = SourceManager.getSourceByDomain(Utils.getDomainName(url));
         fetchNovelDetails();
+        fetchChapters();
         initializeLauncher();
 
         binding.btnYesSaveNovel.setOnClickListener(v -> handleSaveNovelClicked());
@@ -88,8 +89,16 @@ public class DownloadActivity extends AppCompatActivity {
     }
 
     private void fetchNovelDetails() {
-        Novel novel = new Novel(url);
-        viewModel.getNovel(source, novel).observe(this, this::setUpUi);
+        viewModel.getNovel(source, new Novel(url)).observe(this, this::setUpUi);
+    }
+
+    private void fetchChapters() {
+        viewModel.getChapters(source, new Novel(url)).observe(this, chapters ->
+                binding.txtNoOfChapters.setText(String.format(
+                        Locale.getDefault(),
+                        "%d chapters will be downloaded",
+                        chapters.size()
+                )));
     }
 
     private void setUpUi(Novel novel) {
