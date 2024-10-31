@@ -14,6 +14,7 @@ import org.ranobe.ranobe.sources.en.Ranobe;
 import org.ranobe.ranobe.sources.en.ReadLightNovel;
 import org.ranobe.ranobe.sources.en.ReadWebNovels;
 import org.ranobe.ranobe.sources.en.VipNovel;
+import org.ranobe.ranobe.sources.en.WordRain69;
 import org.ranobe.ranobe.sources.en.WuxiaWorld;
 import org.ranobe.ranobe.sources.ru.RanobeHub;
 
@@ -56,6 +57,7 @@ public class SourceManager {
         sources.put(14, Neovel.class);
         sources.put(15, LightNovelWorld.class);
         sources.put(16, FreeWebNovel.class);
+        sources.put(17, WordRain69.class);
 
         return sources;
     }
