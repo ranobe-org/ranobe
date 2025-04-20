@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 35
 
     defaultConfig {
         applicationId "org.ranobe.ranobe"
         minSdk 21
-        targetSdk 33
+        targetSdkVersion 36
         versionCode 7
         versionName "v0.0.7"
 
@@ -46,22 +46,23 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
     namespace 'org.ranobe.ranobe'
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.0'
-    implementation 'com.google.android.material:material:1.7.0'
-    implementation 'androidx.navigation:navigation-fragment:2.5.3'
-    implementation 'androidx.navigation:navigation-ui:2.5.3'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.navigation:navigation-fragment:2.8.9'
+    implementation 'androidx.navigation:navigation-ui:2.8.9'
     implementation 'org.jsoup:jsoup:1.15.3'
-    implementation 'com.github.bumptech.glide:glide:4.14.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
-    implementation 'androidx.room:room-runtime:2.5.0'
-    annotationProcessor 'androidx.room:room-compiler:2.5.0'
+    implementation 'androidx.room:room-runtime:2.7.0'
+    annotationProcessor 'androidx.room:room-compiler:2.7.0'
     testImplementation 'junit:junit:4.13.2'
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 }
