@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/source_id"

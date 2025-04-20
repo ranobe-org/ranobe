@@ -7,7 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.snackbar.Snackbar;
 
+import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.databinding.ItemSourceBinding;
 import org.ranobe.ranobe.models.DataSource;
 
@@ -39,9 +41,17 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
                 Locale.getDefault(),
                 "%s • %s", source.lang, source.dev
         ));
-        Glide.with(holder.binding.sourceLogo.getContext())
-                .load(source.logo)
-                .into(holder.binding.sourceLogo);
+
+        if (!source.isActive) {
+            holder.binding.sourceLayout.setAlpha(0.5f);
+            Glide.with(holder.binding.sourceLogo.getContext())
+                    .load(R.drawable.ic_disabled)
+                    .into(holder.binding.sourceLogo);
+        } else {
+            Glide.with(holder.binding.sourceLogo.getContext())
+                    .load(source.logo)
+                    .into(holder.binding.sourceLogo);
+        }
     }
 
     @Override
@@ -60,7 +70,14 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
             super(binding.getRoot());
             this.binding = binding;
 
-            binding.sourceLayout.setOnClickListener(v -> listener.select(sources.get(getAdapterPosition())));
+            binding.sourceLayout.setOnClickListener(v -> {
+                DataSource source = sources.get(getAdapterPosition());
+                if (!source.isActive){
+                    Snackbar.make(v, "This source is no longer active!", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    listener.select(sources.get(getAdapterPosition()));
+                }
+            });
         }
     }
 }
