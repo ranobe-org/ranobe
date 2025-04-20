@@ -33,6 +33,7 @@ public class RanobeHub implements Source {
         source.lang = Lang.ru;
         source.dev = "ap-atul";
         source.logo = "https://ranobehub.org/favicon.png";
+        source.isActive = true;
         return source;
     }
 

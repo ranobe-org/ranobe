@@ -31,6 +31,7 @@ public class AzyNovel implements Source {
         source.lang = Lang.eng;
         source.dev = "punpun";
         source.logo = "https://www.azynovel.com/img/azynovel_icon_64.png";
+        source.isActive = false;
         return source;
     }
 

@@ -35,6 +35,7 @@ public class Neovel implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://neovel.io/favicon-32x32.png";
+        source.isActive = false;
         return source;
     }
 

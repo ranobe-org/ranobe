@@ -34,6 +34,7 @@ public class LightNovelWorld implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://lightnovelworld.org/logo.ico";
+        source.isActive = false;
         return source;
     }
 

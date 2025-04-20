@@ -9,6 +9,7 @@ public class DataSource {
     public String lang;
     public String logo;
     public String dev;
+    public Boolean isActive;
 
     @NonNull
     @Override

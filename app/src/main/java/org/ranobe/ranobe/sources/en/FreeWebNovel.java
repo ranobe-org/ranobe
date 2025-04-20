@@ -1,6 +1,8 @@
 package org.ranobe.ranobe.sources.en;
 
 
+import android.util.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.ranobe.ranobe.models.Chapter;
@@ -29,6 +31,7 @@ public class FreeWebNovel implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://freewebnovel.com/static/freewebnovel/favicon.ico";
+        source.isActive = true;
         return source;
     }
 
@@ -49,7 +52,7 @@ public class FreeWebNovel implements Source {
                 Novel item = new Novel(BASE_URL + url);
                 item.sourceId = SOURCE_ID;
                 item.name = element.select("div.txt > h3.tit > a").text().trim();
-                item.cover = element.select("div.pic > a > img").attr("src");
+                item.cover = BASE_URL.concat(element.select("div.pic > a > img").attr("src"));
                 items.add(item);
             }
         }
@@ -62,7 +65,7 @@ public class FreeWebNovel implements Source {
 
         novel.sourceId = SOURCE_ID;
         novel.name = doc.select("div.m-desc > h1").text().trim();
-        novel.cover = doc.select("div.pic > img").attr("src").trim();
+        novel.cover = BASE_URL.concat(doc.select("div.pic > img").attr("src").trim());
         novel.summary = String.join("\n\n", doc.select("div.inner > p").eachText());
 
         for (Element element : doc.select("div.txt > div.item")) {

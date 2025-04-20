@@ -32,7 +32,7 @@ public class WordRain69 implements Source {
         source.lang = Lang.eng;
         source.dev = "ak-sohag";
         source.logo = "https://wordrain69.com/storage/2024/06/cropped-IMG_20240623_094303-270x270.png";
-
+        source.isActive = true;
         return source;
     }
 

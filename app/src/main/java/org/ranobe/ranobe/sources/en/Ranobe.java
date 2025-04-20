@@ -29,6 +29,7 @@ public class Ranobe implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://ranobe-org.github.io/.github/tiny.png";
+        source.isActive = true;
         return source;
     }
 

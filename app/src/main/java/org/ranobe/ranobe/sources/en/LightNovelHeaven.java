@@ -31,6 +31,7 @@ public class LightNovelHeaven implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://lightnovelheaven.com/wp-content/uploads/2020/07/cropped-mid-2-192x192.png";
+        source.isActive = true;
         return source;
     }
 

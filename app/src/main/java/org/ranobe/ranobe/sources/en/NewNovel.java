@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NewNovel implements Source {
-    private static final String baseUrl = "https://newnovel.org/";
+    private static final String baseUrl = "https://bronovel.com/";
     private static final int sourceId = 10;
 
     private String cleanImg(String cover) {
@@ -31,10 +31,11 @@ public class NewNovel implements Source {
         DataSource source = new DataSource();
         source.sourceId = sourceId;
         source.url = baseUrl;
-        source.name = "New Novel";
+        source.name = "New Novel > Bro Novel";
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://newnovel.org/wp-content/uploads/2022/05/coollogo_com-9657259.png";
+        source.isActive = true;
         return source;
     }
 
