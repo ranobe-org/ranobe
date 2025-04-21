@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import org.ranobe.downloader.databinding.SheetSetLocationBinding;
 import org.ranobe.downloader.databinding.SheetWatchVideoBinding;
 
 public class WatchVideoSheet extends BottomSheetDialogFragment {

@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
@@ -41,18 +40,14 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class DownloadActivity extends AppCompatActivity {
+    private final static String TAG = "DEBUG:ATUL";
     private ActivityDownloadBinding binding;
     private ActivityResultLauncher<Intent> documentLauncher;
-
     private DownloadViewModel viewModel;
     private String url;
     private Source source;
     private Novel novel;
-
     private RewardedAd rewardedAd;
-    private AdView adView;
-    private final static String TAG = "DEBUG:ATUL";
-
     private final FullScreenContentCallback callback = new FullScreenContentCallback() {
 
         @Override
@@ -77,6 +72,7 @@ public class DownloadActivity extends AppCompatActivity {
         }
 
     };
+    private AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

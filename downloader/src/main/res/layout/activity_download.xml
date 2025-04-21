@@ -145,8 +145,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/save_novel_question"
-                        android:textColor="?colorPrimary"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                        android:textColor="?colorPrimary" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_yes_save_novel"
@@ -216,7 +216,7 @@
         android:id="@+id/ad_view_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

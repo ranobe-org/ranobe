@@ -26,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
         new Thread(
                 () -> {
                     // Initialize the Google Mobile Ads SDK on a background thread.
-                    MobileAds.initialize(this, initializationStatus -> {});
+                    MobileAds.initialize(this, initializationStatus -> {
+                    });
                 })
                 .start();
     }

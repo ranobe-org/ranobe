@@ -1,7 +1,5 @@
 package org.ranobe.downloader.config;
 
-import org.ranobe.downloader.App;
-
 public class Config {
     public static final String KEY_URL = "downloader-url";
     public static final String KEY_KEYWORD = "downloader-keyword";
