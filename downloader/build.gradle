@@ -5,7 +5,6 @@ plugins {
 Properties values = new Properties()
 values.load(new FileInputStream(project.rootProject.file('local.properties')))
 
-
 android {
     namespace 'org.ranobe.downloader'
     compileSdk 35
@@ -25,17 +24,6 @@ android {
 
     }
 
-    buildTypes {
-        release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
     buildFeatures {
         viewBinding true
     }
