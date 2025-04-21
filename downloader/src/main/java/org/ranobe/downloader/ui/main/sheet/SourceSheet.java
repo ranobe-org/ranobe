@@ -36,7 +36,9 @@ public class SourceSheet extends BottomSheetDialogFragment {
         List<DataSource> dataSources = new ArrayList<>();
         for (Integer id : sources.keySet()) {
             Source src = SourceManager.getSource(id);
-            dataSources.add(src.metadata());
+            if (src.metadata().isActive) {
+                dataSources.add(src.metadata());
+            }
         }
         binding.rvSources.setAdapter(new SourceAdapter(dataSources));
     }

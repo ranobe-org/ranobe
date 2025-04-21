@@ -35,6 +35,7 @@ public class BoxNovel implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://boxnovel.com/wp-content/uploads/2018/04/box-icon-250x250.png";
+        source.isActive = false;
         return source;
     }
 

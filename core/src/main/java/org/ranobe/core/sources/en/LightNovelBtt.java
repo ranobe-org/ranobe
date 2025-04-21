@@ -31,6 +31,7 @@ public class LightNovelBtt implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://lightnovelbtt.com/Content/images/favicon/android-icon-192x192.png";
+        source.isActive = false;
         return source;
     }
 

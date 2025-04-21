@@ -35,6 +35,7 @@ public class NewNovel implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://newnovel.org/wp-content/uploads/2022/05/coollogo_com-9657259.png";
+        source.isActive = false;
         return source;
     }
 

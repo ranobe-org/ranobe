@@ -35,6 +35,7 @@ public class VipNovel implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://vipnovel.com/wp-content/uploads/2019/02/cropped-51918204_414359882667265_8706934217017131008_n-180x180.png";
+        source.isActive = false;
         return source;
     }
 

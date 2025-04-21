@@ -4,11 +4,11 @@ plugins {
 
 android {
     namespace 'org.ranobe.core'
-    compileSdk 33
+    compileSdk 35
 
     defaultConfig {
         minSdk 21
-        targetSdk 33
+        targetSdk 36
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -28,4 +28,9 @@ android {
 dependencies {
     implementation 'org.jsoup:jsoup:1.15.3'
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }

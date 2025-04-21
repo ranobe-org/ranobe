@@ -37,6 +37,7 @@ public class ReadLightNovel implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://www.readlightnovel.me/assets/images/logo-new-day.png";
+        source.isActive = false;
         return source;
     }
 

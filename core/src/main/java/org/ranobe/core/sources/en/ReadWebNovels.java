@@ -35,6 +35,7 @@ public class ReadWebNovels implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://readwebnovels.net/wp-content/uploads/2020/01/cropped-boo1k-180x180.png";
+        source.isActive = false;
         return source;
     }
 
