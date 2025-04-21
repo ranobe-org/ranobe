@@ -72,7 +72,7 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
 
             binding.sourceLayout.setOnClickListener(v -> {
                 DataSource source = sources.get(getAdapterPosition());
-                if (!source.isActive){
+                if (!source.isActive) {
                     Snackbar.make(v, "This source is no longer active!", Snackbar.LENGTH_SHORT).show();
                 } else {
                     listener.select(sources.get(getAdapterPosition()));
