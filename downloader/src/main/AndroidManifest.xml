@@ -10,6 +10,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Ranobe">
+
+<!--        ads -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/ad_app_id"/>
+
         <activity
             android:name="org.ranobe.downloader.ui.download.DownloadActivity"
             android:exported="false" />

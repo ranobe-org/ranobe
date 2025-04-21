@@ -27,4 +27,6 @@
     <string name="start_typing">start typing…</string>
     <string name="search_novel">search novel</string>
     <string name="search_novel_summary">enter the name of the novel you are looking for</string>
+    <string name="watch_video_title">watch video to continue</string>
+    <string name="watch_video_summary">watch a video ad to continue with the download, this helps the app be free while supporting your purpose. thanks for watching the ad.</string>
 </resources>

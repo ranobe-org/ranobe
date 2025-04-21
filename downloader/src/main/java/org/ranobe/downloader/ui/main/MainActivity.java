@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.gms.ads.MobileAds;
+
 import org.ranobe.downloader.R;
 import org.ranobe.downloader.databinding.ActivityMainBinding;
 
@@ -19,5 +21,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         navController.navigate(R.id.home_fragment);
+
+
+        new Thread(
+                () -> {
+                    // Initialize the Google Mobile Ads SDK on a background thread.
+                    MobileAds.initialize(this, initializationStatus -> {});
+                })
+                .start();
     }
 }
