@@ -38,13 +38,13 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Chapter item = items.get(position);
-        if (readingList.contains(item.url)) {
+        if (readingList != null && readingList.contains(item.url)) {
             holder.binding.chapterItemLayout.setAlpha(0.5F);
         } else {
             holder.binding.chapterItemLayout.setAlpha(1);
         }
         holder.binding.chapterName.setText(item.name);
-        if (item.updated != null && item.updated.length() > 0)
+        if (item.updated != null && !item.updated.isEmpty())
             holder.binding.updated.setText(item.updated);
     }
 

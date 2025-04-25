@@ -69,7 +69,8 @@ public class LightNovelPub implements Source {
         novel.sourceId = sourceId;
         novel.name = doc.select("h3.title").first().text().trim();
         novel.cover = doc.select("div.book").select("img").attr("src").trim();
-        novel.summary = doc.select("div.desc-text").text().trim();
+        doc.select("div.desc-text").select("p").append("::");
+        novel.summary = doc.select("div.desc-text").text().replaceAll("::", "\n\n").trim();
         novel.rating = NumberUtils.toFloat(doc.select("span[itemprop=ratingValue]").text()) / 2;
 
         for (Element element : doc.select("ul.info-meta > li")) {

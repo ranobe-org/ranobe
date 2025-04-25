@@ -132,7 +132,7 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
     }
 
     private void searchResults(String keyword) {
-        if (keyword.length() > 0) {
+        if (!keyword.isEmpty()) {
             List<Chapter> filtered = ListUtils.searchByName(keyword.toLowerCase(), originalItems);
             ChapterAdapter searchAdapter = new ChapterAdapter(filtered, this);
             binding.chapterList.setAdapter(searchAdapter);
