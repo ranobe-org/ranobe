@@ -13,7 +13,7 @@ public class BrowseViewModel extends ViewModel {
     private MutableLiveData<String> error = new MutableLiveData<>();
     private MutableLiveData<List<Novel>> items;
     private int currentSourceId = -1;
-    private int page = 0;
+    private int page = 1;
 
     public MutableLiveData<String> getError() {
         return error = new MutableLiveData<>();
@@ -22,7 +22,7 @@ public class BrowseViewModel extends ViewModel {
     public MutableLiveData<List<Novel>> getNovels(int sourceId) {
         if (currentSourceId != sourceId) {
             items = new MutableLiveData<>();
-            page = 0;
+            page = 1;
             currentSourceId = sourceId;
         } else {
             page += 1;
