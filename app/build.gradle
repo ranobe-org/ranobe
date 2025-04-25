@@ -33,6 +33,17 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildFeatures {
@@ -52,11 +63,12 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     implementation "com.squareup.okhttp3:okhttp:4.12.0"
-    implementation 'androidx.room:room-runtime:2.7.0'
-    annotationProcessor 'androidx.room:room-compiler:2.7.0'
+    implementation 'androidx.room:room-runtime:2.7.1'
+    annotationProcessor 'androidx.room:room-compiler:2.7.1'
     testImplementation 'junit:junit:4.13.2'
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 }
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
