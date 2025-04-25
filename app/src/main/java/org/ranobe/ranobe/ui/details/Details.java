@@ -1,7 +1,6 @@
 package org.ranobe.ranobe.ui.details;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
