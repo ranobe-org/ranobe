@@ -115,7 +115,7 @@ public class Details extends Fragment {
 
         binding.genresLayout.removeAllViews();
         for (String genre : genres) {
-            if (genre.trim().length() == 0) continue;
+            if (genre.trim().isEmpty()) continue;
             Chip chip = new Chip(binding.genresLayout.getContext());
             chip.setText(genre);
             binding.genresLayout.addView(chip);

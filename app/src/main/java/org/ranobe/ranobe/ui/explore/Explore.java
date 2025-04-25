@@ -36,19 +36,28 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected 
                              Bundle savedInstanceState) {
         binding = FragmentExploreBinding.inflate(inflater, container, false);
         binding.sourceList.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        setSourcesListToUi();
+        binding.sourceListInactive.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        binding.btnToggleHiddenSources.setOnClickListener(v -> binding.sourceListInactive.setVisibility(binding.sourceListInactive.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE));
 
+        setSourcesListToUi();
         return binding.getRoot();
     }
 
     private void setSourcesListToUi() {
         HashMap<Integer, Class<?>> sources = (HashMap<Integer, Class<?>>) SourceManager.getSources();
         List<DataSource> dataSources = new ArrayList<>();
+        List<DataSource> dataSourcesInActive = new ArrayList<>();
         for (Integer id : sources.keySet()) {
             Source src = SourceManager.getSource(id);
-            dataSources.add(src.metadata());
+            DataSource dataSource = src.metadata();
+            if (dataSource.isActive) {
+                dataSources.add(src.metadata());
+            } else {
+                dataSourcesInActive.add(src.metadata());
+            }
         }
         binding.sourceList.setAdapter(new SourceAdapter(dataSources, this));
+        binding.sourceListInactive.setAdapter(new SourceAdapter(dataSourcesInActive, this));
     }
 
     @Override
