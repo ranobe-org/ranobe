@@ -1,5 +1,7 @@
 package org.ranobe.ranobe.sources.en;
 
+import android.util.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.ranobe.ranobe.models.Chapter;
@@ -18,30 +20,33 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class LightNovelPub implements Source {
-    private final String baseUrl = "https://light-novelpub.com";
-    private final int sourceId = 4;
+public class NovelBin implements Source {
+
+    private final String baseUrl = "https://novelbin.me";
+    private final int sourceId = 18;
 
     @Override
     public DataSource metadata() {
         DataSource source = new DataSource();
         source.sourceId = sourceId;
         source.url = baseUrl;
-        source.name = "Light Novel Pub";
+        source.name = "Novel Bin";
         source.lang = Lang.eng;
         source.dev = "ap-atul";
-        source.logo = "https://light-novelpub.com/img/favicon.ico";
+        source.logo = "https://novelbin.me/img/logo.png";
         source.isActive = true;
         return source;
     }
 
     @Override
-    public List<Novel> novels(int page) throws IOException {
-        String web = baseUrl.concat("/sort/hot-lightnovelpub-update/?page=").concat(String.valueOf(page));
-        return parse(HttpClient.GET(web, new HashMap<>()));
+    public List<Novel> novels(int page) throws Exception {
+        String web = page == 1
+                ? baseUrl + "/sort/novelbin-popular"
+                : baseUrl + "/sort/novelbin-popular?page=" + page;
+        return parse(HttpClient.GET(web, new HashMap<>()), false);
     }
 
-    private List<Novel> parse(String body) {
+    private List<Novel> parse(String body, boolean fromSearch) {
         List<Novel> items = new ArrayList<>();
         Element doc = Jsoup.parse(body).select("div.list-novel").first();
 
@@ -50,25 +55,26 @@ public class LightNovelPub implements Source {
         for (Element element : doc.select("div.row")) {
             String url = element.select("h3.novel-title > a").attr("href").trim();
 
-            if (url.length() > 0) {
+            if (!url.isEmpty()) {
                 Novel item = new Novel(url);
                 item.sourceId = sourceId;
                 item.name = element.select("h3.novel-title > a").text().trim();
-                item.cover = element.select("img").attr("src").replace("_200_89", "");
+
+                String imageFieldLookup = fromSearch ? "src" : "data-src";
+                item.cover = element.select("img").attr(imageFieldLookup).replace("_200_89", "");
                 items.add(item);
             }
         }
 
         return items;
     }
-
     @Override
     public Novel details(Novel novel) throws Exception {
         Element doc = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>()));
 
         novel.sourceId = sourceId;
-        novel.name = doc.select("h3.title").first().text().trim();
-        novel.cover = doc.select("div.book").select("img").attr("src").trim();
+        novel.name = doc.select("h3.title").text().trim();
+        novel.cover = doc.select("div.book").select("img").attr("data-src").trim();
         novel.summary = doc.select("div.desc-text").text().trim();
         novel.rating = NumberUtils.toFloat(doc.select("span[itemprop=ratingValue]").text()) / 2;
 
@@ -120,8 +126,9 @@ public class LightNovelPub implements Source {
 
         chapter.content = "";
         doc.select("div.chr-c").select("p").append("::");
+        doc.select("div.unlock-buttons").remove();
         chapter.content = SourceUtils.cleanContent(
-                doc.select("div.chr-c").text().replaceAll("::", "\n\n").trim()
+                doc.select("div.chr-c").text().replaceAll("::", "\n\n\n").trim()
         );
 
         return chapter;
@@ -132,7 +139,7 @@ public class LightNovelPub implements Source {
         if (filters.hashKeyword()) {
             String keyword = filters.getKeyword();
             String web = SourceUtils.buildUrl(baseUrl, "/search?keyword=", keyword, "&page=", String.valueOf(page));
-            return parse(HttpClient.GET(web, new HashMap<>()));
+            return parse(HttpClient.GET(web, new HashMap<>()), true);
         }
         return new ArrayList<>();
     }
