@@ -18,27 +18,27 @@
 
     <Button
         android:id="@+id/btn_toggle_hidden_sources"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_below="@id/source_info"
         android:layout_marginHorizontal="10dp"
-        android:text="@string/btn_toggle_sources"
-        android:layout_below="@id/source_info"/>
+        android:text="@string/btn_toggle_sources" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/source_list_inactive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_toggle_hidden_sources"
-        android:visibility="gone"
-        android:clipToPadding="false" />
+        android:clipToPadding="false"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/source_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
         android:layout_below="@+id/source_list_inactive"
+        android:layout_marginTop="10dp"
         android:clipToPadding="false"
         android:paddingBottom="200dp" />
 

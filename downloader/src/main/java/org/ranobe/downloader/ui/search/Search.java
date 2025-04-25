@@ -107,7 +107,6 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
 
     @Override
     public void onNovelItemClick(Novel item) {
-        Log.d("DEBUG_DB", item.url);
         startActivity(new Intent(requireActivity(), DownloadActivity.class)
                 .putExtra(Config.KEY_URL, item.url));
     }

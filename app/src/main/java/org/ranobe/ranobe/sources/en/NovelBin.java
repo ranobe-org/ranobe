@@ -1,7 +1,5 @@
 package org.ranobe.ranobe.sources.en;
 
-import android.util.Log;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.ranobe.ranobe.models.Chapter;
@@ -68,6 +66,7 @@ public class NovelBin implements Source {
 
         return items;
     }
+
     @Override
     public Novel details(Novel novel) throws Exception {
         Element doc = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>()));
