@@ -1,6 +1,7 @@
 package org.ranobe.ranobe.ui.details;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import org.ranobe.ranobe.ui.details.viewmodel.DetailsViewModel;
 import org.ranobe.ranobe.ui.error.Error;
 
 import java.util.List;
+import java.util.Locale;
 
 public class Details extends Fragment {
     private FragmentDetailsBinding binding;
@@ -64,6 +66,7 @@ public class Details extends Fragment {
     private void shareLink() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TITLE, String.format(Locale.getDefault(), "Read %s light novel for free on Ranobe %s or visit %s", novel.name, Ranobe.RANOBE_GITHUB_LINK, novel.url));
         sendIntent.putExtra(Intent.EXTRA_TEXT, novel.url);
         sendIntent.setType("text/plain");
 
