@@ -74,7 +74,6 @@
     - [x] add msg for empty library
     - [ ] download chapters for offline view, save everything to db
     - [x] saving read state for each item
-- [ ] more sources (currently has 8)
 
 #### could have
 
