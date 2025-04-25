@@ -24,10 +24,6 @@ public class NewNovel implements Source {
     private static final String baseUrl = "https://novlove.com";
     private static final int sourceId = 10;
 
-    private String cleanImg(String cover) {
-        return cover.replaceAll("/-\\d+x\\d+.\\w{3}/gm", ".jpg");
-    }
-
     @Override
     public DataSource metadata() {
         DataSource source = new DataSource();
