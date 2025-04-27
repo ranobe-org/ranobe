@@ -32,6 +32,7 @@ public class AllNovel implements Source {
         source.lang = Lang.eng;
         source.dev = "punpun";
         source.logo = "https://allnovel.org/uploads/thumbs/logo23232-21abb9ad59-98b3a84b69aa4c92e8b001282e110775.png";
+        source.isActive = true;
         return source;
     }
 

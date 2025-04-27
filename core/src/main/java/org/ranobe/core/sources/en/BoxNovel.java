@@ -31,7 +31,7 @@ public class BoxNovel implements Source {
         DataSource source = new DataSource();
         source.sourceId = sourceId;
         source.url = baseUrl;
-        source.name = "Box Novel";
+        source.name = "Box Novel > Nov Love (Moved)";
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://boxnovel.com/wp-content/uploads/2018/04/box-icon-250x250.png";

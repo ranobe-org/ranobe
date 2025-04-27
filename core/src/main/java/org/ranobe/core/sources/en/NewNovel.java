@@ -1,5 +1,7 @@
 package org.ranobe.core.sources.en;
 
+import android.util.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.ranobe.core.models.Chapter;
@@ -19,40 +21,47 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NewNovel implements Source {
-    private static final String baseUrl = "https://newnovel.org/";
+    private static final String baseUrl = "https://novlove.com";
     private static final int sourceId = 10;
-
-    private String cleanImg(String cover) {
-        return cover.replaceAll("/-\\d+x\\d+.\\w{3}/gm", ".jpg");
-    }
 
     @Override
     public DataSource metadata() {
         DataSource source = new DataSource();
         source.sourceId = sourceId;
         source.url = baseUrl;
-        source.name = "New Novel";
+        source.name = "New Novel > Nov Love";
         source.lang = Lang.eng;
         source.dev = "ap-atul";
-        source.logo = "https://newnovel.org/wp-content/uploads/2022/05/coollogo_com-9657259.png";
-        source.isActive = false;
+        source.logo = "https://novlove.com/img/logo.png";
+        source.isActive = true;
         return source;
     }
 
     @Override
-    public List<Novel> novels(int page) throws IOException {
+    public List<Novel> novels(int page) throws Exception {
+        Log.d("AP_ATUL", "getting page " + page);
+        String web = page <= 2
+                ? baseUrl + "/sort/nov-love-hot"
+                : baseUrl + "/sort/nov-love-hot?page=" + page;
+        return parse(HttpClient.GET(web, new HashMap<>()), false);
+    }
+
+    private List<Novel> parse(String body, boolean fromSearch) {
         List<Novel> items = new ArrayList<>();
-        String web = baseUrl.concat("/page/").concat(String.valueOf(page));
-        Element doc = Jsoup.parse(HttpClient.GET(web, new HashMap<>()));
+        Element doc = Jsoup.parse(body).select("div.list-novel").first();
 
-        for (Element element : doc.select(".page-item-detail")) {
-            String url = element.select(".h5 > a").attr("href").trim();
+        if (doc == null) return items;
 
-            if (url.length() > 0) {
+        for (Element element : doc.select("div.row")) {
+            String url = element.select("h3.novel-title > a").attr("href").trim();
+
+            if (!url.isEmpty()) {
                 Novel item = new Novel(url);
                 item.sourceId = sourceId;
-                item.name = element.select(".h5 > a").text().trim();
-                item.cover = cleanImg(element.select("img").attr("src").trim());
+                item.name = element.select("h3.novel-title > a").text().trim();
+
+                String imageFieldLookup = fromSearch ? "src" : "data-src";
+                item.cover = element.select("img").attr(imageFieldLookup).replace("_200_89", "");
                 items.add(item);
             }
         }
@@ -61,52 +70,53 @@ public class NewNovel implements Source {
     }
 
     @Override
-    public Novel details(Novel novel) throws IOException {
+    public Novel details(Novel novel) throws Exception {
         Element doc = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>()));
 
         novel.sourceId = sourceId;
-        novel.name = doc.select(".post-title > h1").text().trim();
-        novel.cover = cleanImg(doc.select(".summary_image > a > img").attr("Src").trim());
-        doc.select(".j_synopsis").select("br").append("::");
-        novel.summary = doc.select("div.summary__content > div.mb48").text().replaceAll("::", "\n\n").trim();
-        novel.rating = NumberUtils.toFloat(doc.select(".total_votes").text().trim());
-        novel.authors = Arrays.asList(doc.select(".author-content > a").text().split(","));
+        novel.name = doc.select("h3.title").first().text().trim();
+        novel.cover = doc.select("div.book").select("img").attr("data-src").trim();
 
-        List<String> genres = new ArrayList<>();
-        for (Element element : doc.select(".genres-content > a")) {
-            genres.add(element.text().trim());
-        }
-        novel.genres = genres;
+        doc.select("div.desc-text").select("p").append("::");
+        novel.summary = doc.select("div.desc-text").text().replaceAll("::", "\n\n").trim();
+        novel.rating = NumberUtils.toFloat(doc.select("span[itemprop=ratingValue]").text()) / 2;
 
-        for (Element element : doc.select(".post-content_item")) {
-            String header = element.select(".summary-heading > h5").text().trim();
-            String content = element.select(".summary-content").text().trim();
+        for (Element element : doc.select("ul.info-meta > li")) {
+            String header = element.select("h3").text();
 
-            if (header.equalsIgnoreCase("Status")) {
-                novel.status = content;
-            } else if (header.equalsIgnoreCase("Alternative")) {
-                novel.alternateNames = Arrays.asList(content.split(","));
-            } else if (header.equalsIgnoreCase("Release")) {
-                novel.year = NumberUtils.toInt(content);
+            if (header.equalsIgnoreCase("Author:")) {
+                novel.authors = Arrays.asList(element.select("a").text().split(","));
+            } else if (header.equalsIgnoreCase("Genre:")) {
+                List<String> genres = new ArrayList<>();
+                for (Element a : element.select("a")) genres.add(a.text());
+                novel.genres = genres;
+            } else if (header.equalsIgnoreCase("Alternative names:")) {
+                novel.alternateNames = Arrays.asList(element.select("a").text().split(","));
+            } else if (header.equalsIgnoreCase("Status:")) {
+                novel.status = element.select("a").text().trim();
             }
         }
 
         return novel;
     }
 
-    @Override
-    public List<Chapter> chapters(Novel novel) throws IOException {
-        List<Chapter> items = new ArrayList<>();
-        String web = novel.url.concat("ajax/chapters");
-        Element doc = Jsoup.parse(HttpClient.POST(web, new HashMap<>(), new HashMap<>()));
+    private String getNovelId(String url) {
+        String[] parts = url.split("/");
+        return parts[parts.length - 1];
+    }
 
-        for (Element element : doc.select(".wp-manga-chapter")) {
+    @Override
+    public List<Chapter> chapters(Novel novel) throws Exception {
+        List<Chapter> items = new ArrayList<>();
+        String base = baseUrl.concat("/ajax/chapter-archive?novelId=").concat(getNovelId(novel.url));
+        Element doc = Jsoup.parse(HttpClient.GET(base, new HashMap<>()));
+
+        for (Element element : doc.select("a")) {
             Chapter item = new Chapter(novel.url);
 
-            item.url = element.select("a").attr("href").trim();
-            item.name = element.select("a").text().trim();
+            item.url = element.attr("href").trim();
+            item.name = element.attr("title").trim();
             item.id = NumberUtils.toFloat(item.name);
-            item.updated = element.select("span.chapter-release-date").text().trim();
             items.add(item);
         }
 
@@ -114,41 +124,26 @@ public class NewNovel implements Source {
     }
 
     @Override
-    public Chapter chapter(Chapter chapter) throws IOException {
+    public Chapter chapter(Chapter chapter) throws Exception {
         Element doc = Jsoup.parse(HttpClient.GET(chapter.url, new HashMap<>()));
-        Element main = doc.select(".reading-content").first();
-
-        if (main == null) {
-            return null;
-        }
 
         chapter.content = "";
-        chapter.content = String.join("\n\n", main.select("p").eachText());
+        doc.select("div.chr-c").select("p").append("::");
+        doc.select("div.unlock-buttons").remove();
+        chapter.content = SourceUtils.cleanContent(
+                doc.select("div.chr-c").text().replaceAll("::", "\n\n\n").trim()
+        );
+
         return chapter;
     }
 
     @Override
     public List<Novel> search(Filter filters, int page) throws IOException {
-        List<Novel> items = new ArrayList<>();
-
         if (filters.hashKeyword()) {
-            String web = SourceUtils.buildUrl(baseUrl, "/page/", String.valueOf(page), "/?s=", filters.getKeyword(), "&post_type=wp-manga");
-            Element doc = Jsoup.parse(HttpClient.GET(web, new HashMap<>()));
-            for (Element element : doc.select(".c-tabs-item__content")) {
-                String url = element.select(".tab-thumb  > a").attr("href").trim();
-
-                if (url.length() > 0) {
-                    Novel item = new Novel(url);
-                    item.sourceId = sourceId;
-                    item.url = url;
-                    item.name = element.select(".post-title > h3 > a").text().trim();
-                    item.cover = cleanImg(element.select("img.img-responsive").attr("src").trim());
-
-                    items.add(item);
-                }
-            }
+            String keyword = filters.getKeyword();
+            String web = SourceUtils.buildUrl(baseUrl, "/search?keyword=", keyword, "&page=", String.valueOf(page));
+            return parse(HttpClient.GET(web, new HashMap<>()), true);
         }
-
-        return items;
+        return new ArrayList<>();
     }
 }

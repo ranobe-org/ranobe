@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ReadWebNovels implements Source {
-    private static final String baseUrl = "https://readwebnovels.net";
+    private static final String baseUrl = "https://readwebnovels.net/";
     private static final int sourceId = 11;
 
     private String cleanImg(String cover) {

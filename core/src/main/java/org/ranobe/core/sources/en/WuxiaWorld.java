@@ -35,6 +35,7 @@ public class WuxiaWorld implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://wuxiaworld.site/wp-content/uploads/2019/04/favicon-1.ico";
+        source.isActive = true;
         return source;
     }
 

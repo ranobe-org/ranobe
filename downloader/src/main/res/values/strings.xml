@@ -13,7 +13,7 @@
     <string name="select_destination_title">select destination</string>
     <string name="select_dir_summary">select the directory to save the exported novel to, make sure you have enough storage space. please allow permission to save this novel.</string>
     <string name="continue_text">continue</string>
-    <string name="time_consuming_text">depending on the number of chapters this could take a while</string>
+    <string name="time_consuming_text">depending on the number of chapters this could take a while \n\ndo not close the app while the downloading is in progress. thanks!</string>
     <string name="open">open</string>
     <string name="see_available_sources">see available sources</string>
     <string name="working_title">how does it work?</string>

@@ -224,7 +224,7 @@ public class DownloadActivity extends AppCompatActivity {
         });
         exporter.listenToComplete().observe(this, isDone -> {
             if (isDone) {
-                Snackbar.make(binding.getRoot(), "novel written successfully", BaseTransientBottomBar.LENGTH_LONG).show();
+                Snackbar.make(binding.getRoot(), "novel downloaded successfully", BaseTransientBottomBar.LENGTH_LONG).show();
             }
         });
         exporter.writeNovel(novel);

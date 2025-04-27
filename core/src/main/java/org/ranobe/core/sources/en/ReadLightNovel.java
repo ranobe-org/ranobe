@@ -1,6 +1,5 @@
 package org.ranobe.core.sources.en;
 
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
 
 public class ReadLightNovel implements Source {
     public final String baseUrl = "https://www.readlightnovel.me";
