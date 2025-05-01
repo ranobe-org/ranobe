@@ -17,7 +17,7 @@ public class SpacingDecorator extends RecyclerView.ItemDecoration {
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         outRect.left = spacing;
         outRect.right = spacing;
-        outRect.bottom = spacing;
+        outRect.bottom = spacing - 100;
         outRect.top = spacing;
     }
 }

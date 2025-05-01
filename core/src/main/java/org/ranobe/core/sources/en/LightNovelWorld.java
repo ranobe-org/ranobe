@@ -47,7 +47,7 @@ public class LightNovelWorld implements Source {
         for (Element element : doc.select("li.novel-item")) {
             String url = element.select("a").attr("href").trim();
 
-            if (url.length() > 0) {
+            if (!url.isEmpty()) {
                 Novel item = new Novel(url);
                 item.sourceId = SOURCE_ID;
                 item.name = element.select("a > h4").text().trim();

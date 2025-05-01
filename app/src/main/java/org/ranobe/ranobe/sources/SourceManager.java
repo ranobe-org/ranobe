@@ -8,6 +8,7 @@ import org.ranobe.ranobe.sources.en.LightNovelBtt;
 import org.ranobe.ranobe.sources.en.LightNovelHeaven;
 import org.ranobe.ranobe.sources.en.LightNovelPub;
 import org.ranobe.ranobe.sources.en.LightNovelWorld;
+import org.ranobe.ranobe.sources.en.MyDramaNovel;
 import org.ranobe.ranobe.sources.en.Neovel;
 import org.ranobe.ranobe.sources.en.NewNovel;
 import org.ranobe.ranobe.sources.en.NovelBin;
@@ -60,6 +61,7 @@ public class SourceManager {
         sources.put(16, FreeWebNovel.class);
         sources.put(17, WordRain69.class);
         sources.put(18, NovelBin.class);
+        sources.put(19, MyDramaNovel.class);
 
         return sources;
     }
