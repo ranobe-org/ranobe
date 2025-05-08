@@ -84,7 +84,7 @@ public class SourceManager {
         sources.put("allnovel.org", AllNovel.class);
         sources.put("azynovel.com", AzyNovel.class);
         sources.put("lightnovelheaven.com", LightNovelHeaven.class);
-        sources.put("newnovel.org", NewNovel.class);
+        sources.put("novlove.com", NewNovel.class);
         sources.put("readwebnovels.net", ReadWebNovels.class);
         sources.put("boxnovel.com", BoxNovel.class);
         sources.put("wuxiaworld.site", WuxiaWorld.class);
