@@ -1,25 +1,22 @@
-package org.ranobe.ranobe.sources.en;
-
-import android.util.Log;
+package org.ranobe.core.sources.en;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.ranobe.ranobe.models.Chapter;
-import org.ranobe.ranobe.models.DataSource;
-import org.ranobe.ranobe.models.Filter;
-import org.ranobe.ranobe.models.Lang;
-import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.network.HttpClient;
-import org.ranobe.ranobe.sources.Source;
-import org.ranobe.ranobe.util.NumberUtils;
-import org.ranobe.ranobe.util.SourceUtils;
+import org.ranobe.core.models.Chapter;
+import org.ranobe.core.models.DataSource;
+import org.ranobe.core.models.Filter;
+import org.ranobe.core.models.Lang;
+import org.ranobe.core.models.Novel;
+import org.ranobe.core.network.HttpClient;
+import org.ranobe.core.sources.Source;
+import org.ranobe.core.util.NumberUtils;
+import org.ranobe.core.util.SourceUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -63,6 +60,7 @@ public class RoyalRoad implements Source {
                 Novel item = new Novel(baseUrl + url);
                 item.sourceId = sourceId;
                 item.name = element.select("h2.fiction-title > a").text().trim();
+
                 item.cover = element.select("img[data-type=\"cover\"]").attr("src");
                 items.add(item);
             }
