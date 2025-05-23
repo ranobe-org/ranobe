@@ -14,6 +14,7 @@ import org.ranobe.core.sources.en.NewNovel;
 import org.ranobe.core.sources.en.NovelBin;
 import org.ranobe.core.sources.en.ReadLightNovel;
 import org.ranobe.core.sources.en.ReadWebNovels;
+import org.ranobe.core.sources.en.RoyalRoad;
 import org.ranobe.core.sources.en.VipNovel;
 import org.ranobe.core.sources.en.WordRain69;
 import org.ranobe.core.sources.en.WuxiaWorld;
@@ -70,6 +71,7 @@ public class SourceManager {
         sources.put(17, WordRain69.class);
         sources.put(18, NovelBin.class);
         sources.put(19, MyDramaNovel.class);
+        sources.put(20, RoyalRoad.class);
 
         return sources;
     }
@@ -93,6 +95,7 @@ public class SourceManager {
         sources.put("wordrain69.com", WordRain69.class);
         sources.put("novelbin.me", NovelBin.class);
         sources.put("mydramanovel.com", MyDramaNovel.class);
+        sources.put("royalroad.com", RoyalRoad.class);
 
         return sources;
     }
