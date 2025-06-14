@@ -6,7 +6,7 @@
     <samp>A simple extensible light novel reader</samp>
     <br/><br/>
     <a href="https://play.google.com/store/apps/details?id=org.ranobe.downloader">
-     <samp><strong>play store</strong></samp>
+     <img height='80' src="https://github.com/ranobe-org/ranobe/blob/main/assets/google-play.png?raw=true" alt="play store">
     </a>
     <br/><br/>
     <a href="https://github.com/ranobe-org/ranobe/releases/latest" title="Download">
