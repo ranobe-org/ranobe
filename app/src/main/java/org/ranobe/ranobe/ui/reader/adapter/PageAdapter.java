@@ -28,6 +28,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
     );
     private ReaderTheme theme;
     private float fontSize;
+    private boolean isBionicReading;
 
     public PageAdapter(List<Chapter> chapters) {
         this.chapters = chapters;
@@ -41,6 +42,9 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
 
     public void setFontSize(float fontSize) {
         this.fontSize = fontSize;
+    }
+    public void setBionicReading(boolean isBionicReading){
+        this.isBionicReading = isBionicReading;
     }
 
     @NonNull
@@ -71,6 +75,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
         holder.binding.content.setText(chapter.content);
         holder.binding.pageLayout.setLayoutParams(params);
         holder.binding.content.setLayoutParams(params);
+        holder.binding.content.setBionicReading(isBionicReading);
     }
 
     private int getThemeColor(View view, int attr) {

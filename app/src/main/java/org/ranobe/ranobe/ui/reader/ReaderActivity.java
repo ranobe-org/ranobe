@@ -132,6 +132,20 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     }
 
     @Override
+    public void setBionicReading(boolean isBionicReading) {
+        adapter.setBionicReading(isBionicReading);
+        LinearLayoutManager layoutManager = (LinearLayoutManager) binding.pageList.getLayoutManager();
+        if (layoutManager == null) return;
+
+        int firstVisible = layoutManager.findFirstVisibleItemPosition();
+        int lastVisible = layoutManager.findLastVisibleItemPosition();
+
+        for (int i = firstVisible; i <= lastVisible; i++) {
+            adapter.notifyItemChanged(i);
+        }
+    }
+
+    @Override
     public boolean onMenuItemClick(MenuItem item) {
         int id = item.getItemId();
 

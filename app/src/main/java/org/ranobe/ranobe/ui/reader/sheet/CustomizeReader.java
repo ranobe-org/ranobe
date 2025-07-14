@@ -33,6 +33,7 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
 
         binding.readerThemeList.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.readerThemeList.setAdapter(new ReaderThemeAdapter(this));
+        binding.bionicReadingToggle.setOnCheckedChangeListener((cb,b)->listener.setBionicReading(b));
         return binding.getRoot();
     }
 
@@ -45,5 +46,6 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
         void setFontSize(float size);
 
         void setReaderTheme(String themeName);
+        void setBionicReading(boolean isBionicReading);
     }
 }
