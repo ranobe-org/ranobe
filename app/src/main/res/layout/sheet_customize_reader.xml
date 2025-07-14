@@ -27,6 +27,29 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="20dp"
             android:drawablePadding="10dp"
+            android:text="@string/bionic_reading"
+            android:textColor="?colorOnSurface"
+            android:textSize="@dimen/text_med" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/bionic_reading_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="20dp"
+            android:drawablePadding="10dp"
             android:text="@string/set_the_font_size"
             android:textColor="?colorOnSurface"
             android:textSize="@dimen/text_med" />

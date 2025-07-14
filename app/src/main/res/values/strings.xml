@@ -30,5 +30,6 @@
     <string name="swipe_tip">Tip: Swipe to mark as read/unread</string>
     <string name="continue_btn">Continue</string>
     <string name="btn_toggle_sources">Toggle Hidden Sources</string>
+    <string name="bionic_reading">Bionic Reading</string>
 
 </resources>
