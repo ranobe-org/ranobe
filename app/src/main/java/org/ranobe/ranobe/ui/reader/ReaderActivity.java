@@ -2,6 +2,7 @@ package org.ranobe.ranobe.ui.reader;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
@@ -16,12 +17,14 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
-import org.ranobe.ranobe.database.RanobeDatabase;
-import org.ranobe.ranobe.database.models.ReadingList;
+import org.ranobe.ranobe.config.RanobeSettings;
 import org.ranobe.ranobe.databinding.ActivityReaderBinding;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.Novel;
+import org.ranobe.ranobe.models.ReadHistory;
 import org.ranobe.ranobe.models.ReaderTheme;
+import org.ranobe.ranobe.ui.chapters.viewmodel.ChaptersViewModel;
+import org.ranobe.ranobe.ui.history.viewmodel.HistoryViewModel;
 import org.ranobe.ranobe.ui.reader.adapter.PageAdapter;
 import org.ranobe.ranobe.ui.reader.sheet.CustomizeReader;
 import org.ranobe.ranobe.ui.reader.viewmodel.ReaderViewModel;
@@ -34,11 +37,14 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     private final List<Chapter> chapters = new ArrayList<>();
     private ActivityReaderBinding binding;
     private PageAdapter adapter;
-    private ReaderViewModel viewModel;
+    private ReaderViewModel readerViewModel;
+    private HistoryViewModel historyViewModel;
     private List<Chapter> chapterItems = new ArrayList<>();
     private Chapter currentChapter;
+    private ReadHistory readHistory;
     private boolean isLoading = false;
     private int currentChapterIndex;
+    private LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +57,11 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
 
         Novel currentNovel = getIntent().getParcelableExtra(Ranobe.KEY_NOVEL);
         currentChapter = getIntent().getParcelableExtra(Ranobe.KEY_CHAPTER);
-        viewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
+        readHistory = getIntent().getParcelableExtra(Ranobe.KEY_READ_HISTORY);
+        readerViewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
+        historyViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
+        ChaptersViewModel chaptersViewModel = new ViewModelProvider(this).get(ChaptersViewModel.class);
+        if(readHistory!=null) RanobeSettings.get().setCurrentSource(readHistory.sourceId).save();
 
         adapter = new PageAdapter(chapters);
         binding.pageList.setLayoutManager(new LinearLayoutManager(this));
@@ -63,18 +73,17 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
                 if (!recyclerView.canScrollVertically(1) && !isLoading) {
                     isLoading = true;
                     currentChapterIndex += 1;
-
-                    markAsReadChapter(currentChapter);
                     if (currentChapterIndex < chapterItems.size()) {
                         binding.progress.show();
-                        viewModel.getChapter(chapterItems.get(currentChapterIndex)).observe(ReaderActivity.this, chapter -> setChapter(chapter));
+                        readerViewModel.getChapter(chapterItems.get(currentChapterIndex)).observe(ReaderActivity.this, chapter -> setChapter(chapter));
                     }
                 }
             }
         });
+        layoutManager = (LinearLayoutManager) binding.pageList.getLayoutManager();
 
-        viewModel.getChapters(currentNovel).observe(this, this::setChapters);
-        viewModel.getError().observe(this, this::setError);
+        chaptersViewModel.getChapters(currentNovel).observe(this, this::setChapters);
+        chaptersViewModel.getError().observe(this, this::setError);
     }
 
     private void setChapters(List<Chapter> items) {
@@ -84,7 +93,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
                 currentChapterIndex = chapterItems.indexOf(chapter);
             }
         }
-        viewModel.getChapter(currentChapter).observe(ReaderActivity.this, this::setChapter);
+        readerViewModel.getChapter(currentChapter).observe(ReaderActivity.this, this::setChapter);
     }
 
     private void setUpCustomizeReader() {
@@ -96,24 +105,29 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         isLoading = false;
         binding.progress.hide();
         chapters.add(chapter);
+        currentChapter = chapter;
+
+        if (layoutManager == null) return;
+        int scrollPosition = layoutManager.findFirstVisibleItemPosition();
+        View firstVisibleView = layoutManager.findViewByPosition(scrollPosition);
+        int scrollOffset = (firstVisibleView != null) ? firstVisibleView.getTop() : 0;
+
         adapter.notifyItemInserted(chapters.size() - 1);
+
+        if (readHistory != null && binding.pageList.getAdapter() != null) {
+            binding.pageList.post(() -> {
+                if (binding.pageList.getAdapter().getItemCount() == 1)
+                    layoutManager.scrollToPositionWithOffset(0, readHistory.readerOffset);
+                else layoutManager.scrollToPositionWithOffset(scrollPosition, scrollOffset);
+            });
+        }
+
+        historyViewModel.markAsRead(currentChapter);
     }
 
     private void setError(String msg) {
-        if (msg.length() == 0) return;
+        if (msg.isEmpty()) return;
         Snackbar.make(binding.getRoot(), msg, Snackbar.LENGTH_LONG).show();
-    }
-
-    private void markAsReadChapter(Chapter chapter) {
-        RanobeDatabase.databaseExecutor.execute(() -> {
-            ReadingList existing = RanobeDatabase.database().readingList().get(chapter.novelUrl, chapter.url);
-            if (existing != null) {
-                RanobeDatabase.database().readingList().updateReadCount(chapter.url);
-            } else {
-                ReadingList readingList = new ReadingList(chapter.url, chapter.novelUrl);
-                RanobeDatabase.database().readingList().save(readingList);
-            }
-        });
     }
 
     @Override
@@ -133,16 +147,15 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
 
     @Override
     public void setBionicReading(boolean isBionicReading) {
+        Ranobe.setBionicReader(this,isBionicReading);
         adapter.setBionicReading(isBionicReading);
-        LinearLayoutManager layoutManager = (LinearLayoutManager) binding.pageList.getLayoutManager();
         if (layoutManager == null) return;
 
-        int firstVisible = layoutManager.findFirstVisibleItemPosition();
-        int lastVisible = layoutManager.findLastVisibleItemPosition();
-
-        for (int i = firstVisible; i <= lastVisible; i++) {
-            adapter.notifyItemChanged(i);
-        }
+        int scrollPosition = layoutManager.findFirstVisibleItemPosition();
+        View firstVisibleView = layoutManager.findViewByPosition(scrollPosition);
+        int scrollOffset = (firstVisibleView != null) ? firstVisibleView.getTop() : 0;
+        adapter.notifyItemChanged(scrollPosition);
+        binding.pageList.post(() -> layoutManager.scrollToPositionWithOffset(scrollPosition, scrollOffset));
     }
 
     @Override
@@ -155,5 +168,17 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         }
 
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (layoutManager != null && currentChapter != null) {
+            int position = layoutManager.findFirstVisibleItemPosition();
+            View view = layoutManager.findViewByPosition(position);
+            int offset = (view != null) ? view.getTop() : 0;
+            historyViewModel.updateReadHistoryPosition(position, offset, currentChapter.url);
+        }
+        super.onDestroy();
+
     }
 }

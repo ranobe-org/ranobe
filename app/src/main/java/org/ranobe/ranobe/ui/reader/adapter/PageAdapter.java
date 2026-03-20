@@ -34,6 +34,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
         this.chapters = chapters;
         this.theme = Ranobe.themes.get(Ranobe.getReaderTheme(App.getContext()));
         this.fontSize = Ranobe.getReaderFont(App.getContext());
+        this.isBionicReading = Ranobe.getBionicReader();
     }
 
     public void setTheme(ReaderTheme theme) {

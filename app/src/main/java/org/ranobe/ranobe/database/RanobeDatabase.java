@@ -10,17 +10,23 @@ import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.database.converters.DateConverter;
 import org.ranobe.ranobe.database.converters.ListConverter;
 import org.ranobe.ranobe.database.dao.ChapterDao;
+import org.ranobe.ranobe.database.dao.ChapterMetadataDao;
 import org.ranobe.ranobe.database.dao.NovelDao;
+import org.ranobe.ranobe.database.dao.NovelMetadataDao;
+import org.ranobe.ranobe.database.dao.ReadHistoryDao;
 import org.ranobe.ranobe.database.dao.ReadingListDao;
 import org.ranobe.ranobe.database.models.ReadingList;
 import org.ranobe.ranobe.models.Chapter;
+import org.ranobe.ranobe.models.ChapterMetadata;
 import org.ranobe.ranobe.models.Novel;
+import org.ranobe.ranobe.models.NovelMetadata;
+import org.ranobe.ranobe.models.ReadHistory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(
-        entities = {Novel.class, Chapter.class, ReadingList.class},
+        entities = {Novel.class, Chapter.class, ReadingList.class, NovelMetadata.class, ChapterMetadata.class, ReadHistory.class},
         version = Ranobe.DATABASE_VERSION
 )
 @TypeConverters({ListConverter.class, DateConverter.class})
@@ -45,8 +51,10 @@ public abstract class RanobeDatabase extends RoomDatabase {
 
     // tables
     public abstract NovelDao novels();
-
     public abstract ChapterDao chapters();
-
     public abstract ReadingListDao readingList();
+    public abstract NovelMetadataDao novelMetadata();
+    public abstract ChapterMetadataDao chapterMetadata();
+    public abstract ReadHistoryDao readHistory();
+
 }

@@ -86,11 +86,11 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
 
     @Override
     public void onNovelLongClick(Novel novel) {
-        new MaterialAlertDialogBuilder(requireContext())
-                .setMessage("Are you sure you want to remove novel from the library?")
-                .setPositiveButton("Yes", (dialog, i) -> removeFromLib(novel))
-                .setNegativeButton("Cancel", (dialog, i) -> dialog.dismiss())
-                .show();
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setMessage("Are you sure you want to remove novel from the library?")
+                    .setPositiveButton("Yes", (dialog, i) -> removeFromLib(novel))
+                    .setNegativeButton("Cancel", (dialog, i) -> dialog.dismiss())
+                    .show();
     }
 
     private void removeFromLib(Novel novel) {

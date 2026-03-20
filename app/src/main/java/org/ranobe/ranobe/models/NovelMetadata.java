@@ -1,29 +1,35 @@
 package org.ranobe.ranobe.models;
 
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import org.ranobe.ranobe.util.SourceUtils;
 
 import java.util.List;
 
-@Entity
-public class Novel implements Parcelable {
-    public static final Creator<Novel> CREATOR = new Creator<Novel>() {
+@Entity(
+        indices = {
+                @Index(value = "name"),
+                @Index(value = "sourceId"),
+                @Index(value = {"name", "sourceId"}),
+                @Index(value = "url")
+        }
+)
+public class NovelMetadata implements Parcelable {
+    public static final Creator<NovelMetadata> CREATOR = new Creator<NovelMetadata>() {
         @Override
-        public Novel createFromParcel(Parcel in) {
-            return new Novel(in);
+        public NovelMetadata createFromParcel(Parcel in) {
+            return new NovelMetadata(in);
         }
 
         @Override
-        public Novel[] newArray(int size) {
-            return new Novel[size];
+        public NovelMetadata[] newArray(int size) {
+            return new NovelMetadata[size];
         }
     };
     @PrimaryKey
@@ -39,19 +45,14 @@ public class Novel implements Parcelable {
     public List<String> genres;
     public float rating;
     public int year;
+    public long cachedDate;
 
-    public Novel(String url) {
+    public NovelMetadata(String url) {
         this.id = SourceUtils.generateId(url);
         this.url = url;
     }
-    @Ignore
-    public Novel(String url,int sourceId) {
-        this.id = SourceUtils.generateId(url);
-        this.url = url;
-        this.sourceId = sourceId;
-    }
 
-    protected Novel(Parcel in) {
+    protected NovelMetadata(Parcel in) {
         id = in.readLong();
         sourceId = in.readInt();
         name = in.readString();
@@ -64,12 +65,13 @@ public class Novel implements Parcelable {
         genres = in.createStringArrayList();
         rating = in.readFloat();
         year = in.readInt();
+        cachedDate = in.readLong();
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "Novel{" +
+        return "NovelMetadata{" +
                 "id=" + id +
                 ", sourceId=" + sourceId +
                 ", name='" + name + '\'' +
@@ -82,6 +84,7 @@ public class Novel implements Parcelable {
                 ", genres=" + genres +
                 ", rating=" + rating +
                 ", year=" + year +
+                ", cachedDate=" + cachedDate +
                 '}';
     }
 
@@ -104,5 +107,6 @@ public class Novel implements Parcelable {
         parcel.writeStringList(genres);
         parcel.writeFloat(rating);
         parcel.writeInt(year);
+        parcel.writeLong(cachedDate);
     }
 }

@@ -2,6 +2,7 @@ package org.ranobe.ranobe.sources.en;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.models.Filter;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AllNovel implements Source {
 
@@ -39,7 +42,7 @@ public class AllNovel implements Source {
 
     @Override
     public List<Novel> novels(int page) throws Exception {
-        String web = baseUrl + "/most-popular?page=" + page;
+        String web = baseUrl + "/latest-release-novel?page=" + page;
         return parse(HttpClient.GET(web, new HashMap<>()));
     }
 
@@ -53,8 +56,8 @@ public class AllNovel implements Source {
         for (Element element : doc.select("div.row")) {
             String url = element.select("h3.truyen-title > a").attr("href").trim();
 
-            if (url.length() > 0) {
-                Novel item = new Novel(url);
+            if (!url.isEmpty()) {
+                Novel item = new Novel(baseUrl+url);
                 item.sourceId = sourceId;
                 item.name = element.select("h3.truyen-title > a").text().trim();
                 Element img = Jsoup.parse(HttpClient.GET(baseUrl + url, new HashMap<>()));
@@ -69,7 +72,7 @@ public class AllNovel implements Source {
 
     @Override
     public Novel details(Novel novel) throws Exception {
-        Element doc = Jsoup.parse(HttpClient.GET(baseUrl + novel.url, new HashMap<>()));
+        Element doc = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>()));
         novel.sourceId = sourceId;
         novel.name = doc.select("div.books h3.title").text().trim();
         novel.cover = baseUrl + doc.select("div.books img").attr("src").trim();
@@ -93,7 +96,7 @@ public class AllNovel implements Source {
     @Override
     public List<Chapter> chapters(Novel novel) throws Exception {
         List<Chapter> items = new ArrayList<>();
-        Element novelId = Jsoup.parse(HttpClient.GET(baseUrl + novel.url, new HashMap<>())); // getNovelId
+        Element novelId = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>())); // getNovelId
         String id = novelId.select("div#rating").attr("data-novel-id");
 
         String base = baseUrl.concat("/ajax-chapter-option?novelId=").concat(id);
@@ -102,7 +105,7 @@ public class AllNovel implements Source {
         for (Element element : doc.select("select option")) {
             Chapter item = new Chapter(novel.url);
 
-            item.url = element.attr("value").trim();
+            item.url = baseUrl+element.attr("value").trim();
             item.name = element.text().trim();
             item.id = NumberUtils.toFloat(item.name);
             items.add(item);
@@ -112,16 +115,21 @@ public class AllNovel implements Source {
 
     @Override
     public Chapter chapter(Chapter chapter) throws Exception {
-        Element doc = Jsoup.parse(HttpClient.GET(baseUrl + chapter.url, new HashMap<>()));
+        Element doc = Jsoup.parse(HttpClient.GET(chapter.url, new HashMap<>()));
 
-        chapter.url = baseUrl + chapter.url;
-        chapter.content = "";
+        Elements paragraphs = doc.select("div.chapter-c").select("p");
+        StringBuilder contentBuilder = new StringBuilder();
 
-        doc.select("div.chapter-c").select("p").append("::");
-        chapter.content = SourceUtils.cleanContent(
-                doc.select("div.chapter-c").text().replaceAll("::", "\n\n").trim()
-        );
+        for (Element p : paragraphs) {
+            String paragraph = p.text().trim();
+            if (!paragraph.isEmpty()) {
+                // Split paragraph into dialogues and narration
+                String formattedParagraph = splitDialoguesFromNarration(paragraph);
+                contentBuilder.append(formattedParagraph).append("\n\n"); // Keep paragraph spacing
+            }
+        }
 
+        chapter.content = contentBuilder.toString().trim();
         return chapter;
     }
 
@@ -133,5 +141,42 @@ public class AllNovel implements Source {
             return parse(HttpClient.GET(web, new HashMap<>()));
         }
         return new ArrayList<>();
+    }
+
+    private static String splitDialoguesFromNarration(String text) {
+        StringBuilder result = new StringBuilder();
+        Pattern pattern = Pattern.compile("\"[^\"]*\"|[^\"']+");
+        Matcher matcher = pattern.matcher(text);
+
+        while (matcher.find()) {
+            String part = matcher.group().trim();
+            if (part.startsWith("\"") && part.endsWith("\"")) {
+                // Dialogue: put on its own line
+                result.append(part).append("\n");
+            } else {
+                // Narration: optionally add spacing every 5 sentences
+                result.append(addSpacingEveryNSentences(part, 5, 1)).append("\n");
+            }
+        }
+
+        return result.toString().trim();
+    }
+
+    private static String addSpacingEveryNSentences(String text, int n, int lineBreaks) {
+        String[] sentences = text.split("(?<=[.!?])\\s+"); // Split on sentence-ending punctuation
+        StringBuilder result = new StringBuilder();
+        int count = 0;
+
+        for (String sentence : sentences) {
+            result.append(sentence.trim()).append(" ");
+            count++;
+            if (count % n == 0) {
+                for (int i = 0; i < lineBreaks; i++) {
+                    result.append("\n");
+                }
+            }
+        }
+
+        return result.toString().trim();
     }
 }

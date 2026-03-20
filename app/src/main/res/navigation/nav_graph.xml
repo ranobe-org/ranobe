@@ -72,5 +72,14 @@
         android:name="org.ranobe.ranobe.ui.error.Error"
         android:label="fragment_error"
         tools:layout="@layout/fragment_error" />
+    <fragment
+        android:id="@+id/history_fragment"
+        android:name="org.ranobe.ranobe.ui.history.History"
+        android:label="History"
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/history_fragment_to_details"
+            app:destination="@id/details_fragment" />
+    </fragment>
 
 </navigation>

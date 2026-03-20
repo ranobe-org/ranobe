@@ -23,6 +23,7 @@ import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.ui.chapters.Chapters;
 import org.ranobe.ranobe.ui.details.viewmodel.DetailsViewModel;
 import org.ranobe.ranobe.ui.error.Error;
+import org.ranobe.ranobe.ui.history.viewmodel.HistoryViewModel;
 
 import java.util.List;
 import java.util.Locale;
@@ -30,6 +31,7 @@ import java.util.Locale;
 public class Details extends Fragment {
     private FragmentDetailsBinding binding;
     private DetailsViewModel viewModel;
+    private HistoryViewModel historyViewModel;
 
     private Novel novel;
 
@@ -45,6 +47,7 @@ public class Details extends Fragment {
             RanobeSettings.get().setCurrentSource(novel.sourceId).save();
         }
         viewModel = new ViewModelProvider(requireActivity()).get(DetailsViewModel.class);
+        historyViewModel = new ViewModelProvider(requireActivity()).get(HistoryViewModel.class);
     }
 
     @Override
@@ -75,9 +78,10 @@ public class Details extends Fragment {
 
     private void setUpObservers() {
         viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
-        viewModel.details(novel).observe(getViewLifecycleOwner(), this::setUpUi);
-        RanobeDatabase.database().readingList().countOfReadForNovel(novel.url).observe(getViewLifecycleOwner(), count -> {
-            if (count > 0) binding.readChapter.setText(R.string.continue_btn);
+        viewModel.getDetails(novel).observe(getViewLifecycleOwner(), this::setUpUi);
+        historyViewModel.getLastReadByNovel(novel.url).observe(getViewLifecycleOwner(), readHistory -> {
+            if (readHistory != null)
+                binding.readChapter.setText(R.string.continue_btn);
         });
     }
 

@@ -12,6 +12,11 @@
         android:title="@string/nav_library" />
 
     <item
+        android:id="@+id/history_fragment"
+        android:icon="@drawable/ic_history"
+        android:title="@string/read_history" />
+
+    <item
         android:id="@+id/search_fragment"
         android:icon="@drawable/ic_search"
         android:title="@string/search" />

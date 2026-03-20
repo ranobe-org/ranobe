@@ -22,14 +22,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
-import org.ranobe.ranobe.database.RanobeDatabase;
-import org.ranobe.ranobe.database.models.ReadingList;
 import org.ranobe.ranobe.databinding.FragmentChaptersBinding;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.Novel;
+import org.ranobe.ranobe.models.ReadHistory;
 import org.ranobe.ranobe.ui.chapters.adapter.ChapterAdapter;
 import org.ranobe.ranobe.ui.chapters.viewmodel.ChaptersViewModel;
 import org.ranobe.ranobe.ui.error.Error;
+import org.ranobe.ranobe.ui.history.viewmodel.HistoryViewModel;
 import org.ranobe.ranobe.ui.reader.ReaderActivity;
 import org.ranobe.ranobe.ui.views.RecyclerSwipeHelper;
 import org.ranobe.ranobe.util.ListUtils;
@@ -41,8 +41,10 @@ import java.util.Locale;
 
 public class Chapters extends BottomSheetDialogFragment implements ChapterAdapter.OnChapterItemClickListener, Toolbar.OnMenuItemClickListener {
     private final List<Chapter> originalItems = new ArrayList<>();
+    private final List<ReadHistory> readHistoryList = new ArrayList<>();
     private FragmentChaptersBinding binding;
     private ChaptersViewModel viewModel;
+    private HistoryViewModel historyViewModel;
     private Novel novel;
     private ChapterAdapter adapter;
 
@@ -57,6 +59,7 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
             novel = getArguments().getParcelable(Ranobe.KEY_NOVEL);
         }
         viewModel = new ViewModelProvider(requireActivity()).get(ChaptersViewModel.class);
+        historyViewModel = new ViewModelProvider(requireActivity()).get(HistoryViewModel.class);
     }
 
     @Override
@@ -73,17 +76,22 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
         setUpObservers();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void setUpObservers() {
         viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
         viewModel.getChapters(novel).observe(getViewLifecycleOwner(), this::setChapter);
-        RanobeDatabase.database().readingList().list(novel.url).observe(getViewLifecycleOwner(), readingList -> adapter.setReadingList(readingList));
+        historyViewModel.getReadHistoriesByNovel(novel.url).observe(getViewLifecycleOwner(),readHistories -> {
+            readHistoryList.clear();
+            readHistoryList.addAll(readHistories);
+            adapter.notifyDataSetChanged();
+        });
     }
 
     private void setUpUi() {
         binding.toolbar.setOnMenuItemClickListener(this::onMenuItemClick);
         binding.searchField.addTextChangedListener(new SearchBarTextWatcher());
 
-        adapter = new ChapterAdapter(originalItems, this);
+        adapter = new ChapterAdapter(originalItems, readHistoryList,this);
         binding.chapterList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.chapterList.setAdapter(adapter);
 
@@ -98,30 +106,14 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 adapter.notifyItemChanged(viewHolder.getAdapterPosition());
                 if (direction == ItemTouchHelper.LEFT) {
-                    markAsUnRead(originalItems.get(viewHolder.getAdapterPosition()));
+                    historyViewModel.markAsUnread(originalItems.get(viewHolder.getAdapterPosition()));
                 } else {
-                    markAsRead(originalItems.get(viewHolder.getAdapterPosition()));
+                    historyViewModel.markAsRead(originalItems.get(viewHolder.getAdapterPosition()));
                 }
             }
         };
         ItemTouchHelper touchHelper = new ItemTouchHelper(swipeHelper);
         touchHelper.attachToRecyclerView(binding.chapterList);
-    }
-
-    private void markAsRead(Chapter chapter) {
-        RanobeDatabase.databaseExecutor.execute(() -> {
-            ReadingList existing = RanobeDatabase.database().readingList().get(chapter.novelUrl, chapter.url);
-            if (existing != null) {
-                RanobeDatabase.database().readingList().updateReadCount(chapter.url);
-            } else {
-                ReadingList readingList = new ReadingList(chapter.url, chapter.novelUrl);
-                RanobeDatabase.database().readingList().save(readingList);
-            }
-        });
-    }
-
-    private void markAsUnRead(Chapter chapter) {
-        RanobeDatabase.databaseExecutor.execute(() -> RanobeDatabase.database().readingList().delete(chapter.url));
     }
 
     private void setUpError(String error) {
