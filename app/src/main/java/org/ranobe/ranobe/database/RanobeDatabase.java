@@ -43,7 +43,7 @@ public abstract class RanobeDatabase extends RoomDatabase {
                         App.getContext().getApplicationContext(),
                         RanobeDatabase.class,
                         Ranobe.DATABASE_NAME
-                ).addMigrations(Migrations.MIGRATION_1_2).build();
+                ).addMigrations(Migrations.MIGRATION_1_2, Migrations.MIGRATION_2_3).build();
             }
         }
         return INSTANCE;

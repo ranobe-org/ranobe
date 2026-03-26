@@ -22,12 +22,12 @@
         android:scrollbarThumbVertical="?colorSecondaryContainer"
         android:scrollbars="vertical" />
 
-    <com.google.android.material.bottomappbar.BottomAppBar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/customize"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:layout_gravity="bottom"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        app:layout_behavior="com.google.android.material.behavior.HideViewOnScrollBehavior"
         app:menu="@menu/menu_reader_options"
         app:menuAlignmentMode="auto" />
 
