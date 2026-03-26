@@ -44,7 +44,8 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
     public void setFontSize(float fontSize) {
         this.fontSize = fontSize;
     }
-    public void setBionicReading(boolean isBionicReading){
+
+    public void setBionicReading(boolean isBionicReading) {
         this.isBionicReading = isBionicReading;
     }
 

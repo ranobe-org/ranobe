@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -60,7 +61,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.reader_view), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
             return insets;
         });
 
@@ -72,7 +73,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         readerViewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
         historyViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
         ChaptersViewModel chaptersViewModel = new ViewModelProvider(this).get(ChaptersViewModel.class);
-        if(readHistory!=null) RanobeSettings.get().setCurrentSource(readHistory.sourceId).save();
+        if (readHistory != null) RanobeSettings.get().setCurrentSource(readHistory.sourceId).save();
 
         adapter = new PageAdapter(chapters);
         binding.pageList.setLayoutManager(new LinearLayoutManager(this));
@@ -86,6 +87,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
                     currentChapterIndex += 1;
                     if (currentChapterIndex < chapterItems.size()) {
                         binding.progress.show();
+                        Toast.makeText(ReaderActivity.this, "Loading next chapter", Toast.LENGTH_SHORT).show();
                         readerViewModel.getChapter(chapterItems.get(currentChapterIndex)).observe(ReaderActivity.this, chapter -> setChapter(chapter));
                     }
                 }
@@ -158,7 +160,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
 
     @Override
     public void setBionicReading(boolean isBionicReading) {
-        Ranobe.setBionicReader(this,isBionicReading);
+        Ranobe.setBionicReader(this, isBionicReading);
         adapter.setBionicReading(isBionicReading);
         if (layoutManager == null) return;
 

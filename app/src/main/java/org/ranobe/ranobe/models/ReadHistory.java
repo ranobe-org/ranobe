@@ -64,8 +64,8 @@ public class ReadHistory implements Parcelable {
         position = in.readInt();
         readerOffset = in.readInt();
         timestamp = in.readLong();
-        cover   = in.readString();
-        novelName   = in.readString();
+        cover = in.readString();
+        novelName = in.readString();
         sourceId = in.readInt();
     }
 

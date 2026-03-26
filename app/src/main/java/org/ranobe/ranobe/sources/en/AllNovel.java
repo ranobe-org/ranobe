@@ -26,6 +26,43 @@ public class AllNovel implements Source {
     private final String baseUrl = "https://allnovel.org";
     private final int sourceId = 7;
 
+    private static String splitDialoguesFromNarration(String text) {
+        StringBuilder result = new StringBuilder();
+        Pattern pattern = Pattern.compile("\"[^\"]*\"|[^\"']+");
+        Matcher matcher = pattern.matcher(text);
+
+        while (matcher.find()) {
+            String part = matcher.group().trim();
+            if (part.startsWith("\"") && part.endsWith("\"")) {
+                // Dialogue: put on its own line
+                result.append(part).append("\n");
+            } else {
+                // Narration: optionally add spacing every 5 sentences
+                result.append(addSpacingEveryNSentences(part, 5, 1)).append("\n");
+            }
+        }
+
+        return result.toString().trim();
+    }
+
+    private static String addSpacingEveryNSentences(String text, int n, int lineBreaks) {
+        String[] sentences = text.split("(?<=[.!?])\\s+"); // Split on sentence-ending punctuation
+        StringBuilder result = new StringBuilder();
+        int count = 0;
+
+        for (String sentence : sentences) {
+            result.append(sentence.trim()).append(" ");
+            count++;
+            if (count % n == 0) {
+                for (int i = 0; i < lineBreaks; i++) {
+                    result.append("\n");
+                }
+            }
+        }
+
+        return result.toString().trim();
+    }
+
     @Override
     public DataSource metadata() {
         DataSource source = new DataSource();
@@ -39,13 +76,11 @@ public class AllNovel implements Source {
         return source;
     }
 
-
     @Override
     public List<Novel> novels(int page) throws Exception {
         String web = baseUrl + "/latest-release-novel?page=" + page;
         return parse(HttpClient.GET(web, new HashMap<>()));
     }
-
 
     private List<Novel> parse(String body) throws IOException {
         List<Novel> items = new ArrayList<>();
@@ -57,7 +92,7 @@ public class AllNovel implements Source {
             String url = element.select("h3.truyen-title > a").attr("href").trim();
 
             if (!url.isEmpty()) {
-                Novel item = new Novel(baseUrl+url);
+                Novel item = new Novel(baseUrl + url);
                 item.sourceId = sourceId;
                 item.name = element.select("h3.truyen-title > a").text().trim();
                 Element img = Jsoup.parse(HttpClient.GET(baseUrl + url, new HashMap<>()));
@@ -105,7 +140,7 @@ public class AllNovel implements Source {
         for (Element element : doc.select("select option")) {
             Chapter item = new Chapter(novel.url);
 
-            item.url = baseUrl+element.attr("value").trim();
+            item.url = baseUrl + element.attr("value").trim();
             item.name = element.text().trim();
             item.id = NumberUtils.toFloat(item.name);
             items.add(item);
@@ -141,42 +176,5 @@ public class AllNovel implements Source {
             return parse(HttpClient.GET(web, new HashMap<>()));
         }
         return new ArrayList<>();
-    }
-
-    private static String splitDialoguesFromNarration(String text) {
-        StringBuilder result = new StringBuilder();
-        Pattern pattern = Pattern.compile("\"[^\"]*\"|[^\"']+");
-        Matcher matcher = pattern.matcher(text);
-
-        while (matcher.find()) {
-            String part = matcher.group().trim();
-            if (part.startsWith("\"") && part.endsWith("\"")) {
-                // Dialogue: put on its own line
-                result.append(part).append("\n");
-            } else {
-                // Narration: optionally add spacing every 5 sentences
-                result.append(addSpacingEveryNSentences(part, 5, 1)).append("\n");
-            }
-        }
-
-        return result.toString().trim();
-    }
-
-    private static String addSpacingEveryNSentences(String text, int n, int lineBreaks) {
-        String[] sentences = text.split("(?<=[.!?])\\s+"); // Split on sentence-ending punctuation
-        StringBuilder result = new StringBuilder();
-        int count = 0;
-
-        for (String sentence : sentences) {
-            result.append(sentence.trim()).append(" ");
-            count++;
-            if (count % n == 0) {
-                for (int i = 0; i < lineBreaks; i++) {
-                    result.append("\n");
-                }
-            }
-        }
-
-        return result.toString().trim();
     }
 }

@@ -11,13 +11,12 @@ import org.ranobe.ranobe.models.NovelMetadata;
 import org.ranobe.ranobe.network.repository.Repository;
 
 public class DetailsViewModel extends ViewModel {
+    private static final long CACHE_EXPIRY_HOURS = 24;
     private MutableLiveData<String> error = new MutableLiveData<>();
 
     public MutableLiveData<String> getError() {
         return error = new MutableLiveData<>();
     }
-
-    private static final long CACHE_EXPIRY_HOURS = 24;
 
     public LiveData<Novel> getDetails(Novel novel) {
         MutableLiveData<Novel> details = new MutableLiveData<>();

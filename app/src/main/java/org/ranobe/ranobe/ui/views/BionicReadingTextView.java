@@ -6,6 +6,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
+
 import androidx.appcompat.widget.AppCompatTextView;
 
 import java.util.regex.Matcher;

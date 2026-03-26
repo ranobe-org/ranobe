@@ -9,6 +9,7 @@ import androidx.room.Query;
 import org.ranobe.ranobe.models.ReadHistory;
 
 import java.util.List;
+
 @Dao
 public interface ReadHistoryDao {
 
@@ -34,5 +35,5 @@ public interface ReadHistoryDao {
     int deleteHistoryByNovel(String novelUrl);
 
     @Query("UPDATE readhistory SET position = :position, readerOffset=:offset WHERE url = :chapterUrl")
-    int updateReadHistoryPosition(int position,int offset, String chapterUrl);
+    int updateReadHistoryPosition(int position, int offset, String chapterUrl);
 }

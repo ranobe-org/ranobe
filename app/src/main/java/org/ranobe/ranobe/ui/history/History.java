@@ -26,6 +26,7 @@ import org.ranobe.ranobe.models.ReadHistory;
 import org.ranobe.ranobe.ui.history.adapter.HistoryAdapter;
 import org.ranobe.ranobe.ui.history.viewmodel.HistoryViewModel;
 import org.ranobe.ranobe.ui.reader.ReaderActivity;
+import org.ranobe.ranobe.util.NumberUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -58,10 +59,12 @@ public class History extends Fragment implements OnItemClickListener<Map<String,
     }
 
     private void getReadHistory(List<ReadHistory> list) {
+        if (list.isEmpty()) {
+            showNoHistory();
+        }
         HistoryAdapter adapter = new HistoryAdapter(list, this);
         binding.historyRecyclerView.setAdapter(adapter);
         binding.historyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
     }
 
 
@@ -76,9 +79,9 @@ public class History extends Fragment implements OnItemClickListener<Map<String,
         if (isDetail) {
             NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
             bundle.clear();
-            bundle.putParcelable(Ranobe.KEY_NOVEL, new Novel(history.novelUrl,history.sourceId));
+            bundle.putParcelable(Ranobe.KEY_NOVEL, new Novel(history.novelUrl, history.sourceId));
             controller.navigate(R.id.history_fragment_to_details, bundle);
-        }else if (isDelete) {
+        } else if (isDelete) {
             new MaterialAlertDialogBuilder(requireContext())
                     .setMessage("Are you sure you want to remove read history for this novel?")
                     .setPositiveButton("Yes", (dialog, i) -> viewModel.deleteNovelReadHistory(history.novelUrl))
@@ -86,10 +89,15 @@ public class History extends Fragment implements OnItemClickListener<Map<String,
                     .show();
         } else {
             bundle.clear();
-            bundle.putParcelable(Ranobe.KEY_NOVEL, new Novel(history.novelUrl,history.sourceId));
+            bundle.putParcelable(Ranobe.KEY_NOVEL, new Novel(history.novelUrl, history.sourceId));
             bundle.putParcelable(Ranobe.KEY_CHAPTER, ChapterMapper.ToChapter(history));
             bundle.putParcelable(Ranobe.KEY_READ_HISTORY, history);
             requireActivity().startActivity(new Intent(requireActivity(), ReaderActivity.class).putExtras(bundle).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
+    }
+
+    private void showNoHistory() {
+        binding.error.setText(R.string.no_novels_error);
+        binding.emoji.setText(Ranobe.SILLY_EMOJI[NumberUtils.getRandom(Ranobe.SILLY_EMOJI.length)]);
     }
 }

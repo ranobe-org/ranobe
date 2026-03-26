@@ -51,10 +51,15 @@ public abstract class RanobeDatabase extends RoomDatabase {
 
     // tables
     public abstract NovelDao novels();
+
     public abstract ChapterDao chapters();
+
     public abstract ReadingListDao readingList();
+
     public abstract NovelMetadataDao novelMetadata();
+
     public abstract ChapterMetadataDao chapterMetadata();
+
     public abstract ReadHistoryDao readHistory();
 
 }

@@ -6,7 +6,6 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-
 import org.ranobe.ranobe.models.ChapterMetadata;
 
 import java.util.List;

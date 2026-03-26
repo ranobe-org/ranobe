@@ -44,8 +44,9 @@ public class Novel implements Parcelable {
         this.id = SourceUtils.generateId(url);
         this.url = url;
     }
+
     @Ignore
-    public Novel(String url,int sourceId) {
+    public Novel(String url, int sourceId) {
         this.id = SourceUtils.generateId(url);
         this.url = url;
         this.sourceId = sourceId;

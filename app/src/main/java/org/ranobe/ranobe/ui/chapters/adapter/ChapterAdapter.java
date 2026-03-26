@@ -24,13 +24,13 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
         this.listener = listener;
     }
 
-    public ChapterAdapter(List<Chapter> items,List<ReadHistory> historyList, OnChapterItemClickListener listener) {
+    public ChapterAdapter(List<Chapter> items, List<ReadHistory> historyList, OnChapterItemClickListener listener) {
         this.historyList = historyList;
         this.listener = listener;
         this.items = items;
     }
 
-    private Map<String,ReadHistory> getHistoryMap(){
+    private Map<String, ReadHistory> getHistoryMap() {
         Map<String, ReadHistory> historyMap = new HashMap<>();
         if (historyList != null && !historyList.isEmpty()) {
             for (ReadHistory history : historyList) {

@@ -80,7 +80,7 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
     private void setUpObservers() {
         viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
         viewModel.getChapters(novel).observe(getViewLifecycleOwner(), this::setChapter);
-        historyViewModel.getReadHistoriesByNovel(novel.url).observe(getViewLifecycleOwner(),readHistories -> {
+        historyViewModel.getReadHistoriesByNovel(novel.url).observe(getViewLifecycleOwner(), readHistories -> {
             readHistoryList.clear();
             readHistoryList.addAll(readHistories);
             adapter.notifyDataSetChanged();
@@ -91,7 +91,7 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
         binding.toolbar.setOnMenuItemClickListener(this::onMenuItemClick);
         binding.searchField.addTextChangedListener(new SearchBarTextWatcher());
 
-        adapter = new ChapterAdapter(originalItems, readHistoryList,this);
+        adapter = new ChapterAdapter(originalItems, readHistoryList, this);
         binding.chapterList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.chapterList.setAdapter(adapter);
 

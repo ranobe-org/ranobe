@@ -35,7 +35,7 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
         binding.readerThemeList.setAdapter(new ReaderThemeAdapter(this));
 
         binding.bionicReadingToggle.setChecked(Ranobe.getBionicReader());
-        binding.bionicReadingToggle.setOnCheckedChangeListener((cb,b)->listener.setBionicReading(b));
+        binding.bionicReadingToggle.setOnCheckedChangeListener((cb, b) -> listener.setBionicReading(b));
         return binding.getRoot();
     }
 
@@ -48,6 +48,7 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
         void setFontSize(float size);
 
         void setReaderTheme(String themeName);
+
         void setBionicReading(boolean isBionicReading);
     }
 }

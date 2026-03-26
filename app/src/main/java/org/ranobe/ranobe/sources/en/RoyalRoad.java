@@ -1,7 +1,5 @@
 package org.ranobe.ranobe.sources.en;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -19,7 +17,6 @@ import org.ranobe.ranobe.util.SourceUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

@@ -13,19 +13,18 @@ import org.ranobe.ranobe.network.repository.Repository;
 import java.util.List;
 
 public class ChaptersViewModel extends ViewModel {
+    private static final long CACHE_EXPIRY_HOURS = 24;
     private MutableLiveData<String> error = new MutableLiveData<>();
 
     public MutableLiveData<String> getError() {
         return error = new MutableLiveData<>();
     }
 
-    private static final long CACHE_EXPIRY_HOURS = 24;
-
     public MutableLiveData<List<Chapter>> getChapters(Novel novel) {
 
         MutableLiveData<List<Chapter>> chapters = new MutableLiveData<>();
 
-        RanobeDatabase.databaseExecutor.execute(()->{
+        RanobeDatabase.databaseExecutor.execute(() -> {
 
             List<ChapterMetadata> cachedMetadata = RanobeDatabase.database().chapterMetadata().listByUrl(novel.url);
             boolean hasCache = cachedMetadata != null && !cachedMetadata.isEmpty();
@@ -58,7 +57,8 @@ public class ChaptersViewModel extends ViewModel {
                         RanobeDatabase.database().chapterMetadata().deleteByNovel(novel.url);
                     }
                     List<ChapterMetadata> list = ChapterMapper.ToChapterMetadataList(result);
-                    for(int i = 0;i<list.size();i++) list.get(i).cachedDate = System.currentTimeMillis();
+                    for (int i = 0; i < list.size(); i++)
+                        list.get(i).cachedDate = System.currentTimeMillis();
                     RanobeDatabase.database().chapterMetadata().saveAll(list);
                     chapters.postValue(result);
                 }
