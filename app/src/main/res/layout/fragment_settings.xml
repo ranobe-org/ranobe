@@ -135,6 +135,15 @@
             app:settingSubtitle="@string/mp_lite_subtitle"
             app:settingTitle="Music Player Lite" />
 
+        <org.ranobe.ranobe.ui.views.SettingOptionView
+            android:id="@+id/ranobem_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingIcon="@drawable/ic_android"
+            app:settingSubtitle="@string/ranobem_subtitle"
+            app:settingTitle="RanobeM" />
+
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

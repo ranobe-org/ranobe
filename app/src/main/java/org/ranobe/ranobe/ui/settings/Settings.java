@@ -45,6 +45,7 @@ public class Settings extends Fragment {
         binding.projectLink.setOnClickListener(v -> openLink(Ranobe.RANOBE_GITHUB_LINK));
         binding.musicPlayerLink.setOnClickListener(v -> openLink(Ranobe.MP_LITE_GITHUB_LINK));
         binding.discordLink.setOnClickListener(v -> openLink(Ranobe.DISCORD_INVITE_LINK));
+        binding.ranobemLink.setOnClickListener( v -> openLink(Ranobe.RANOBE_M_LINK));
 
         setCurrentThemeMode();
 
