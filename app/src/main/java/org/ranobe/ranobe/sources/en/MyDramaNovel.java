@@ -33,7 +33,7 @@ public class MyDramaNovel implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://mydramanovel.com/wp-content/uploads/2025/01/Icon-300x300.webp";
-        source.isActive = true;
+        source.isActive = false;
         return source;
     }
 

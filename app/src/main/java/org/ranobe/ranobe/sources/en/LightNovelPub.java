@@ -31,7 +31,7 @@ public class LightNovelPub implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://light-novelpub.com/img/favicon.ico";
-        source.isActive = true;
+        source.isActive = false;
         return source;
     }
 

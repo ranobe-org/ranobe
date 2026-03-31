@@ -1,27 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/chapter_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="10dp">
 
-    <TextView
-        android:id="@+id/chapter_name"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="?colorOnSurface"
-        android:textSize="15sp" />
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/updated"
-        android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/chapter_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="?colorOnSurface"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/updated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="?colorOnSurfaceVariant"
+            android:visibility="gone"
+            android:textSize="11sp" />
+
+    </LinearLayout>
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/download_progress"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:textColor="?colorOnSurfaceVariant"
-        android:textSize="11sp" />
+        app:indicatorSize="20dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="4dp"
+        android:indeterminate="true"
+        android:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/download_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/download"
+        android:padding="8dp"
+        android:src="@drawable/ic_download"
+        app:tint="?colorOnSurface" />
 
 </LinearLayout>
