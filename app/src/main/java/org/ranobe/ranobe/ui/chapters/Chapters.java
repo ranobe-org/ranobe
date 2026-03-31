@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
@@ -259,12 +260,19 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
     }
 
     private void downloadAll() {
-        if (hasNotifPermission()) {
-            doDownloadAll();
-        } else {
-            pendingDownloadAll = true;
-            notifPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-        }
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.download_all)
+                .setMessage(R.string.downloading_all_chapters_confirmation)
+                .setPositiveButton(android.R.string.ok, (dialog, i) -> {
+                    if (hasNotifPermission()) {
+                        doDownloadAll();
+                    } else {
+                        pendingDownloadAll = true;
+                        notifPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, (dialog, i) -> dialog.dismiss())
+                .show();
     }
 
     @SuppressLint("NotifyDataSetChanged")

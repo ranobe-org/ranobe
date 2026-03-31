@@ -34,5 +34,6 @@
     <string name="read_history">History</string>
     <string name="download">Download</string>
     <string name="download_all">Download All</string>
+    <string name="downloading_all_chapters_confirmation">This will download all chapters. Do you want to continue?</string>
 
 </resources>
