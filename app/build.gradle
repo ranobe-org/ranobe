@@ -9,8 +9,8 @@ android {
         applicationId "org.ranobe.ranobe"
         minSdk 23
         targetSdkVersion 36
-        versionCode 12
-        versionName "v0.0.12"
+        versionCode 13
+        versionName "v0.0.13"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -24,13 +24,13 @@ android {
         downloader {
             dimension "version"
             applicationId "org.ranobe.downloader"
-            versionName "v0.012-downloader"
+            versionName "v0.0.13-downloader"
         }
 
         ranobe {
             dimension "version"
             applicationId "org.ranobe.ranobe"
-            versionName "v0.012"
+            versionName "v0.0.13"
         }
     }
 
