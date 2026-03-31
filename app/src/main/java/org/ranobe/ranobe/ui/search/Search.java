@@ -2,6 +2,7 @@ package org.ranobe.ranobe.ui.search;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,13 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
                              Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         binding.searchView.setEndIconOnClickListener(v -> searchNovels());
+        binding.searchView.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                searchNovels();
+                return true;
+            }
+            return false;
+        });
         binding.resultList.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         results = new LinkedHashMap<>();
@@ -65,8 +73,12 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
         HashMap<Integer, Class<?>> sources = (HashMap<Integer, Class<?>>) SourceManager.getSources();
         dataSources = new ArrayList<>();
         for (Integer id : sources.keySet()) {
+            if (!Ranobe.isSourceEnabled(id)) continue;
             Source src = SourceManager.getSource(id);
-            dataSources.add(src.metadata());
+            DataSource dataSource = src.metadata();
+            if (dataSource.isActive) {
+                dataSources.add(dataSource);
+            }
         }
 
         runSearch(viewModel.getFilter().getKeyword());
@@ -75,7 +87,7 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
 
     private void searchNovels() {
         binding.searchField.clearFocus();
-        if (binding.searchField.getText() != null && binding.searchField.getText().toString().length() > 0) {
+        if (binding.searchField.getText() != null && !binding.searchField.getText().toString().isEmpty()) {
             String keyword = binding.searchField.getText().toString();
             runSearch(keyword);
         }
@@ -83,7 +95,7 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
 
     @SuppressLint("NotifyDataSetChanged")
     private void runSearch(String keyword) {
-        if (keyword == null || keyword.length() == 0) return;
+        if (keyword == null || keyword.isEmpty()) return;
         binding.progress.show();
 
         Filter filter = new Filter();

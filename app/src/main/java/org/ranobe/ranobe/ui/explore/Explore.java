@@ -1,6 +1,7 @@
 package org.ranobe.ranobe.ui.explore;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Explore extends Fragment implements SourceAdapter.OnSourceSelected {
+public class Explore extends Fragment implements SourceAdapter.OnSourceSelected, SourceAdapter.OnSourceToggled {
     private FragmentExploreBinding binding;
 
     public Explore() {
@@ -36,8 +37,6 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected 
                              Bundle savedInstanceState) {
         binding = FragmentExploreBinding.inflate(inflater, container, false);
         binding.sourceList.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        binding.sourceListInactive.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        binding.btnToggleHiddenSources.setOnClickListener(v -> binding.sourceListInactive.setVisibility(binding.sourceListInactive.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE));
 
         setSourcesListToUi();
         return binding.getRoot();
@@ -46,24 +45,25 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected 
     private void setSourcesListToUi() {
         HashMap<Integer, Class<?>> sources = (HashMap<Integer, Class<?>>) SourceManager.getSources();
         List<DataSource> dataSources = new ArrayList<>();
-        List<DataSource> dataSourcesInActive = new ArrayList<>();
         for (Integer id : sources.keySet()) {
             Source src = SourceManager.getSource(id);
             DataSource dataSource = src.metadata();
             if (dataSource.isActive) {
                 dataSources.add(src.metadata());
-            } else {
-                dataSourcesInActive.add(src.metadata());
             }
         }
-        binding.sourceList.setAdapter(new SourceAdapter(dataSources, this));
-        binding.sourceListInactive.setAdapter(new SourceAdapter(dataSourcesInActive, this));
+        binding.sourceList.setAdapter(new SourceAdapter(dataSources, this, this));
     }
 
     @Override
     public void select(DataSource source) {
         RanobeSettings.get().setCurrentSource(source.sourceId).save();
         navigateToBrowse(source.sourceId);
+    }
+
+    @Override
+    public void toggle(DataSource source, boolean enabled) {
+        Ranobe.setSourceEnabled(source.sourceId, enabled);
     }
 
     private void navigateToBrowse(int sourceId) {

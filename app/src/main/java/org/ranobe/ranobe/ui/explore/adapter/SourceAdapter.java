@@ -1,6 +1,7 @@
 package org.ranobe.ranobe.ui.explore.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.ranobe.ranobe.R;
+import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.ItemSourceBinding;
 import org.ranobe.ranobe.models.DataSource;
 
@@ -19,10 +21,16 @@ import java.util.Locale;
 public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHolder> {
     private final List<DataSource> sources;
     private final OnSourceSelected listener;
+    private final OnSourceToggled toggleListener;
 
     public SourceAdapter(List<DataSource> sources, OnSourceSelected listener) {
+        this(sources, listener, null);
+    }
+
+    public SourceAdapter(List<DataSource> sources, OnSourceSelected listener, OnSourceToggled toggleListener) {
         this.sources = sources;
         this.listener = listener;
+        this.toggleListener = toggleListener;
     }
 
     @NonNull
@@ -44,13 +52,27 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
 
         if (!source.isActive) {
             holder.binding.sourceLayout.setAlpha(0.5f);
+            holder.binding.sourceToggle.setVisibility(View.GONE);
             Glide.with(holder.binding.sourceLogo.getContext())
                     .load(R.drawable.ic_disabled)
                     .into(holder.binding.sourceLogo);
         } else {
+            holder.binding.sourceLayout.setAlpha(1.0f);
             Glide.with(holder.binding.sourceLogo.getContext())
                     .load(source.logo)
                     .into(holder.binding.sourceLogo);
+
+            if (toggleListener != null) {
+                holder.binding.sourceToggle.setVisibility(View.VISIBLE);
+                // Set state without triggering listener
+                holder.binding.sourceToggle.setOnCheckedChangeListener(null);
+                holder.binding.sourceToggle.setChecked(Ranobe.isSourceEnabled(source.sourceId));
+                holder.binding.sourceToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    toggleListener.toggle(source, isChecked);
+                });
+            } else {
+                holder.binding.sourceToggle.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -61,6 +83,10 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
 
     public interface OnSourceSelected {
         void select(DataSource source);
+    }
+
+    public interface OnSourceToggled {
+        void toggle(DataSource source, boolean enabled);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -74,6 +100,8 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
                 DataSource source = sources.get(getAdapterPosition());
                 if (!source.isActive) {
                     Snackbar.make(v, "This source is no longer active!", Snackbar.LENGTH_SHORT).show();
+                } else if (!Ranobe.isSourceEnabled(source.sourceId)) {
+                    Snackbar.make(v, "This source is disabled. Enable it from the toggle.", Snackbar.LENGTH_SHORT).show();
                 } else {
                     listener.select(sources.get(getAdapterPosition()));
                 }

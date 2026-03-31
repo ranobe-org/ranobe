@@ -8,8 +8,10 @@ import androidx.appcompat.app.AppCompatDelegate;
 import org.ranobe.ranobe.App;
 import org.ranobe.ranobe.models.ReaderTheme;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings({
         "squid:S3599", "squid:S2386", "squid:S1171", "squid:S1118"
@@ -22,6 +24,7 @@ public class Ranobe {
     public static final String SETTINGS_READER_FONT = "shared_pref_reader_font";
     public static final String SETTINGS_READER_BIONIC = "shared_pref_reader_bionic";
     public static final String SETTING_SELECTED_SOURCE = "shared_pref_selected_source";
+    public static final String SETTING_DISABLED_SOURCES = "shared_pref_disabled_sources";
 
     public static final String KEY_SOURCE_ID = "key_source_id";
     public static final String KEY_NOVEL = "key_novel";
@@ -97,6 +100,24 @@ public class Ranobe {
 
     public static int getCurrentSource() {
         return getSharedPref(App.getContext()).getInt(Ranobe.SETTING_SELECTED_SOURCE, 3);
+    }
+
+    public static void setSourceEnabled(int sourceId, boolean enabled) {
+        Set<String> disabled = new HashSet<>(getDisabledSources());
+        if (enabled) {
+            disabled.remove(String.valueOf(sourceId));
+        } else {
+            disabled.add(String.valueOf(sourceId));
+        }
+        getEditor(App.getContext()).putStringSet(SETTING_DISABLED_SOURCES, disabled).apply();
+    }
+
+    public static boolean isSourceEnabled(int sourceId) {
+        return !getDisabledSources().contains(String.valueOf(sourceId));
+    }
+
+    private static Set<String> getDisabledSources() {
+        return getSharedPref(App.getContext()).getStringSet(SETTING_DISABLED_SOURCES, new HashSet<>());
     }
 
     public static void setBionicReader(Context context, boolean isBionicRead) {

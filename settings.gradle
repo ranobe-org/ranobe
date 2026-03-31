@@ -20,5 +20,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ranobe"
 include ':app'
-include ':core'
 include ':downloader'
