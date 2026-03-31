@@ -24,4 +24,10 @@ public interface ChapterDao {
 
     @Query("SELECT * FROM chapter WHERE url=:chapterUrl")
     LiveData<Chapter> get(String chapterUrl);
+
+    @Query("SELECT * FROM chapter WHERE url=:chapterUrl")
+    Chapter getSync(String chapterUrl);
+
+    @Query("SELECT url FROM chapter WHERE novelUrl=:novelUrl AND content IS NOT NULL AND content != ''")
+    List<String> getDownloadedUrls(String novelUrl);
 }

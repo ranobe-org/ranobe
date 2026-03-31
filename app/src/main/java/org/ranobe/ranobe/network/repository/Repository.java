@@ -69,6 +69,11 @@ public class Repository {
         });
     }
 
+    // Synchronous version for use on background threads (e.g. DownloadService)
+    public Chapter chapterSync(Chapter chapter) throws Exception {
+        return source.chapter(chapter);
+    }
+
     public void search(Filter filter, int page, Callback<List<Novel>> callback) {
         executor.execute(() -> {
             try {

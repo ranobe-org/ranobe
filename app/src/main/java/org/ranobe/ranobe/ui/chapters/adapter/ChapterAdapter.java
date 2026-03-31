@@ -1,23 +1,30 @@
 package org.ranobe.ranobe.ui.chapters.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.databinding.ItemChapterBinding;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ReadHistory;
+import org.ranobe.ranobe.service.DownloadService;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHolder> {
     private final List<Chapter> items;
     private final OnChapterItemClickListener listener;
     private List<ReadHistory> historyList;
+    private Set<String> downloadedUrls = new HashSet<>();
+    private OnChapterDownloadClickListener downloadListener;
 
     public ChapterAdapter(List<Chapter> items, OnChapterItemClickListener listener) {
         this.items = items;
@@ -28,6 +35,15 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
         this.historyList = historyList;
         this.listener = listener;
         this.items = items;
+    }
+
+    public void setDownloadedUrls(Set<String> urls) {
+        this.downloadedUrls = urls;
+        notifyItemRangeChanged(0, items.size());
+    }
+
+    public void setDownloadListener(OnChapterDownloadClickListener listener) {
+        this.downloadListener = listener;
     }
 
     private Map<String, ReadHistory> getHistoryMap() {
@@ -56,8 +72,28 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
         boolean isRead = (history != null);
         holder.binding.chapterItemLayout.setAlpha(isRead ? 0.5F : 1.0F);
         holder.binding.chapterName.setText(item.name);
-        if (item.updated != null && !item.updated.isEmpty())
+        if (item.updated != null && !item.updated.isEmpty()) {
             holder.binding.updated.setText(item.updated);
+            holder.binding.updated.setVisibility(View.VISIBLE);
+        }
+
+        boolean isPending = DownloadService.isPending(item.url);
+        boolean isDownloaded = downloadedUrls.contains(item.url);
+
+        if (isPending) {
+            holder.binding.downloadProgress.show();
+            holder.binding.downloadBtn.setVisibility(View.GONE);
+        } else if (isDownloaded) {
+            holder.binding.downloadProgress.hide();
+            holder.binding.downloadBtn.setVisibility(View.VISIBLE);
+            holder.binding.downloadBtn.setImageResource(R.drawable.ic_downloaded);
+            holder.binding.downloadBtn.setEnabled(false);
+        } else {
+            holder.binding.downloadProgress.hide();
+            holder.binding.downloadBtn.setVisibility(View.VISIBLE);
+            holder.binding.downloadBtn.setImageResource(R.drawable.ic_download);
+            holder.binding.downloadBtn.setEnabled(true);
+        }
     }
 
     @Override
@@ -69,6 +105,10 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
         void onChapterItemClick(Chapter item);
     }
 
+    public interface OnChapterDownloadClickListener {
+        void onDownloadClick(Chapter chapter);
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private final ItemChapterBinding binding;
 
@@ -78,6 +118,12 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
 
             binding.chapterItemLayout.setOnClickListener(v ->
                     listener.onChapterItemClick(items.get(getAdapterPosition())));
+
+            binding.downloadBtn.setOnClickListener(v -> {
+                if (downloadListener != null) {
+                    downloadListener.onDownloadClick(items.get(getAdapterPosition()));
+                }
+            });
         }
     }
 }

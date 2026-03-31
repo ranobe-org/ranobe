@@ -3,6 +3,7 @@ package org.ranobe.ranobe.ui.reader.viewmodel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import org.ranobe.ranobe.database.RanobeDatabase;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.repository.Repository;
@@ -18,15 +19,22 @@ public class ReaderViewModel extends ViewModel {
 
     public MutableLiveData<Chapter> getChapter(Chapter chap) {
         MutableLiveData<Chapter> chapter = new MutableLiveData<>();
-        new Repository().chapter(chap, new Repository.Callback<Chapter>() {
-            @Override
-            public void onComplete(Chapter result) {
-                chapter.postValue(result);
-            }
+        RanobeDatabase.databaseExecutor.execute(() -> {
+            Chapter saved = RanobeDatabase.database().chapters().getSync(chap.url);
+            if (saved != null && saved.content != null && !saved.content.isEmpty()) {
+                chapter.postValue(saved);
+            } else {
+                new Repository().chapter(chap, new Repository.Callback<Chapter>() {
+                    @Override
+                    public void onComplete(Chapter result) {
+                        chapter.postValue(result);
+                    }
 
-            @Override
-            public void onError(Exception e) {
-                error.postValue(e.getLocalizedMessage());
+                    @Override
+                    public void onError(Exception e) {
+                        if (error != null) error.postValue(e.getLocalizedMessage());
+                    }
+                });
             }
         });
         return chapter;
@@ -42,7 +50,7 @@ public class ReaderViewModel extends ViewModel {
 
             @Override
             public void onError(Exception e) {
-                error.postValue(e.getLocalizedMessage());
+                if (error != null) error.postValue(e.getLocalizedMessage());
             }
         });
         return chapters;
