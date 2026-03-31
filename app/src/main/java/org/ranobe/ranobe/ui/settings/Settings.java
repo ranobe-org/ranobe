@@ -58,7 +58,7 @@ public class Settings extends Fragment {
     private void release(GithubRepo.GithubRelease release) {
         if (release.updateAvailable) {
             binding.updateCard.setVisibility(View.VISIBLE);
-            binding.versionString.setText(release.newReleaseVersion);
+            binding.versionString.setText(String.format("A new version of the app is available %s", release.newReleaseVersion));
             binding.getUpdate.setOnClickListener(v -> openLink(release.newReleaseUrl));
         }
     }
