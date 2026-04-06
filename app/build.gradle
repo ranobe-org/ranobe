@@ -27,6 +27,12 @@ android {
             versionName "v0.0.13-downloader"
         }
 
+        pro {
+            dimension "version"
+            applicationId "org.ranobe.downloader.pro"
+            versionName "v0.0.13-downloader-pro"
+        }
+
         ranobe {
             dimension "version"
             applicationId "org.ranobe.ranobe"
@@ -35,20 +41,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            applicationIdSuffix ".debug"
-            versionNameSuffix "-debug"
-            debuggable true
-        }
-
-        beta {
-            applicationIdSuffix ".beta"
-            versionNameSuffix "-beta"
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-
         release {
             shrinkResources true
             minifyEnabled true
