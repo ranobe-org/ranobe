@@ -19,6 +19,7 @@
     <string name="search">Search</string>
     <string name="sort">Sort</string>
     <string name="sources">Sources</string>
+    <string name="continue_reading_info">Continue Reading</string>
     <string name="no_results_err">we didn\'t find anything for you!</string>
     <string name="retry">Retry</string>
     <string name="info">INFO</string>
@@ -34,6 +35,7 @@
     <string name="read_history">History</string>
     <string name="download">Download</string>
     <string name="download_all">Download All</string>
+    <string name="synopsis">Synopsis</string>
     <string name="downloading_all_chapters_confirmation">This will download all chapters. Do you want to continue?</string>
 
 </resources>

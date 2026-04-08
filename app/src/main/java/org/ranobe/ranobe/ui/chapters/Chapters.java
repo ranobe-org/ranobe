@@ -62,24 +62,6 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
     private HistoryViewModel historyViewModel;
     private Novel novel;
     private ChapterAdapter adapter;
-
-    // Pending chapter/action to start after permission is granted
-    private Chapter pendingDownloadChapter = null;
-    private boolean pendingDownloadAll = false;
-
-    private final ActivityResultLauncher<String> notifPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
-                if (granted) {
-                    if (pendingDownloadAll) {
-                        doDownloadAll();
-                    } else if (pendingDownloadChapter != null) {
-                        doEnqueue(pendingDownloadChapter);
-                    }
-                }
-                pendingDownloadChapter = null;
-                pendingDownloadAll = false;
-            });
-
     private final BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -93,6 +75,21 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
             }
         }
     };
+    // Pending chapter/action to start after permission is granted
+    private Chapter pendingDownloadChapter = null;
+    private boolean pendingDownloadAll = false;
+    private final ActivityResultLauncher<String> notifPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
+                if (granted) {
+                    if (pendingDownloadAll) {
+                        doDownloadAll();
+                    } else if (pendingDownloadChapter != null) {
+                        doEnqueue(pendingDownloadChapter);
+                    }
+                }
+                pendingDownloadChapter = null;
+                pendingDownloadAll = false;
+            });
 
     public Chapters() {
         // Required empty public constructor

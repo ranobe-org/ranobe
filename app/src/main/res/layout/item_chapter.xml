@@ -30,8 +30,8 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:textColor="?colorOnSurfaceVariant"
-            android:visibility="gone"
-            android:textSize="11sp" />
+            android:textSize="11sp"
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -39,11 +39,11 @@
         android:id="@+id/download_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:indicatorSize="20dp"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="4dp"
         android:indeterminate="true"
-        android:visibility="visible" />
+        android:visibility="visible"
+        app:indicatorSize="20dp" />
 
     <ImageButton
         android:id="@+id/download_btn"
