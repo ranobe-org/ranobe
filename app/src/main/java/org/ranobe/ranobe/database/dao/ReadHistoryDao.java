@@ -28,7 +28,7 @@ public interface ReadHistoryDao {
     @Query("SELECT * FROM readhistory WHERE timestamp IN (SELECT MAX(timestamp) FROM ReadHistory GROUP BY novelUrl) ORDER BY timestamp DESC LIMIT 100")
     LiveData<List<ReadHistory>> getLatestReadPerNovel();
 
-    @Query("SELECT * FROM readhistory ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT r.* FROM readhistory r INNER JOIN novel n ON r.novelUrl = n.url ORDER BY timestamp DESC LIMIT 1")
     LiveData<ReadHistory> getLastReadHistory();
 
     @Query("DELETE FROM readhistory WHERE url=:chapterUrl")

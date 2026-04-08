@@ -92,7 +92,7 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
     private void setUpError(String error) {
         binding.progress.hide();
         // error on the first call
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             Error.navigateToErrorFragment(requireActivity(), error);
         }
     }

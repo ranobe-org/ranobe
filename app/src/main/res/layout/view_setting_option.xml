@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
     android:background="?selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="14dp">
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/image"
         app:tint="?colorOnSurfaceVariant" />
@@ -22,23 +22,24 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="16dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="?colorOnSurface"
-            android:textSize="@dimen/text_big" />
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:textColor="?colorOnSurface" />
 
         <TextView
             android:id="@+id/subtitle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="?colorOnSurfaceVariant"
-            android:textSize="@dimen/text_small" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:textColor="?colorOnSurfaceVariant" />
 
     </LinearLayout>
 

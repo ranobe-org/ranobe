@@ -30,7 +30,7 @@
             android:orientation="horizontal"
             android:paddingHorizontal="5dp"
             android:paddingVertical="10dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/novel_cover_layout"
