@@ -4,16 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="20dp"
-    >
+    android:padding="20dp">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:contentDescription="@string/ranobe_pro"
-        android:src="@mipmap/ic_launcher"
-        />
+        android:src="@mipmap/ic_launcher" />
 
     <TextView
         style="@style/TextAppearance.Material3.TitleLarge"
@@ -35,27 +33,26 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardBackgroundColor="?colorSurfaceContainer"
         android:layout_marginTop="10dp"
+        app:cardBackgroundColor="?colorSurfaceContainer"
         app:cardCornerRadius="10dp">
 
         <ListView
             android:id="@+id/features_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:background="?colorSurfaceContainer" />
+            android:background="?colorSurfaceContainer"
+            android:padding="20dp" />
 
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/get_pro_button"
+        style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
-        style="@style/Widget.Material3.Button"
-        android:text="@string/get_pro"
-        />
+        android:layout_marginTop="10dp"
+        android:text="@string/get_pro" />
 
 </LinearLayout>

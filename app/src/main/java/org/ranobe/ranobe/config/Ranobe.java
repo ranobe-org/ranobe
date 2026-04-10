@@ -74,17 +74,16 @@ public class Ranobe {
             "(づ￣ ³￣)づ",   // Kiss/Hug
             "(V) (°,,,,°) (V)" // Zoidberg
     };
-
-    public static boolean isPro () {
-        return BuildConfig.APPLICATION_ID.contains("pro");
-    }
-
     public static final Map<String, ReaderTheme> themes = new LinkedHashMap<String, ReaderTheme>() {{
         put("default", null);
         put("light", new ReaderTheme("#202124", "#FFFFFF"));
         put("dark", new ReaderTheme("#E8EAED", "#202124"));
         put("warm", new ReaderTheme("#6E4D2E", "#F7DFC6"));
     }};
+
+    public static boolean isPro() {
+        return BuildConfig.APPLICATION_ID.contains("pro");
+    }
 
     private static SharedPreferences.Editor getEditor(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
@@ -157,19 +156,19 @@ public class Ranobe {
         return getSharedPref(App.getContext()).getBoolean(Ranobe.SETTINGS_READER_BIONIC, false);
     }
 
-    public static void setNewChapterUpdatesEnabled(boolean enabled) {
-        getEditor(App.getContext()).putBoolean(SETTING_NEW_CHAPTER_UPDATES, enabled).apply();
-    }
-
     public static boolean isNewChapterUpdatesEnabled() {
         return getSharedPref(App.getContext()).getBoolean(SETTING_NEW_CHAPTER_UPDATES, false);
     }
 
-    public static void setChapterUpdateBannerShown(boolean shown) {
-        getEditor(App.getContext()).putBoolean(SETTING_CHAPTER_UPDATE_BANNER_SHOWN, shown).apply();
+    public static void setNewChapterUpdatesEnabled(boolean enabled) {
+        getEditor(App.getContext()).putBoolean(SETTING_NEW_CHAPTER_UPDATES, enabled).apply();
     }
 
     public static boolean isChapterUpdateBannerShown() {
         return getSharedPref(App.getContext()).getBoolean(SETTING_CHAPTER_UPDATE_BANNER_SHOWN, false);
+    }
+
+    public static void setChapterUpdateBannerShown(boolean shown) {
+        getEditor(App.getContext()).putBoolean(SETTING_CHAPTER_UPDATE_BANNER_SHOWN, shown).apply();
     }
 }

@@ -181,9 +181,9 @@
                     android:id="@+id/pro_app"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     app:settingIcon="@drawable/ic_android"
                     app:settingSubtitle="Try the pro and enjoy premium features"
-                    android:visibility="gone"
                     app:settingTitle="Ranobe PRO!" />
 
                 <com.google.android.material.divider.MaterialDivider

@@ -24,7 +24,7 @@ public class ChapterUpdateScheduler {
         wm.cancelAllWorkByTag(WORK_NAME);
         wm.cancelAllWorkByTag(NewChapterWorker.TAG);
         wm.enqueue(new OneTimeWorkRequest.Builder(NewChapterWorker.class)
-                        .setInitialDelay(10, TimeUnit.SECONDS)
+                .setInitialDelay(10, TimeUnit.SECONDS)
                 .addTag(NewChapterWorker.TAG)
                 .build());
 
