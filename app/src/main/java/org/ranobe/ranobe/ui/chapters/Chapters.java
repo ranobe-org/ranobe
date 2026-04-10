@@ -138,7 +138,11 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
         RanobeDatabase.databaseExecutor.execute(() -> {
             List<String> urls = RanobeDatabase.database().chapters().getDownloadedUrls(novel.url);
             downloadedUrls.addAll(urls);
-            requireActivity().runOnUiThread(() -> adapter.setDownloadedUrls(new HashSet<>(downloadedUrls)));
+            if (!isAdded()) return;
+            requireActivity().runOnUiThread(() -> {
+                if (!isAdded()) return;
+                adapter.setDownloadedUrls(new HashSet<>(downloadedUrls));
+            });
         });
     }
 
