@@ -1,7 +1,10 @@
 package org.ranobe.ranobe.ui.library;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,6 +15,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -26,10 +30,19 @@ import org.ranobe.ranobe.ui.views.SpacingDecorator;
 import org.ranobe.ranobe.util.DisplayUtils;
 import org.ranobe.ranobe.util.NumberUtils;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
-public class Library extends Fragment implements NovelAdapter.OnNovelItemClickListener, NovelAdapter.OnNovelLongClickListener {
+public class Library extends Fragment implements NovelAdapter.OnNovelItemClickListener, NovelAdapter.OnNovelLongClickListener, MaterialToolbar.OnMenuItemClickListener {
+    private static final int SORT_DEFAULT = 0;
+    private static final int SORT_AZ = 1;
+    private static final int SORT_ZA = 2;
+
     private FragmentLibraryBinding binding;
+    private List<Novel> allNovels = new ArrayList<>();
+    private int currentSort = SORT_DEFAULT;
 
     public Library() {
         // Required empty public constructor
@@ -52,20 +65,95 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
         super.onViewCreated(view, savedInstanceState);
         binding = FragmentLibraryBinding.bind(view);
 
+        binding.toolbar.setOnMenuItemClickListener(this);
+
+        binding.searchInput.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                applyFilterAndSort(s.toString());
+            }
+        });
+
         DisplayUtils utils = new DisplayUtils(requireContext(), R.layout.item_novel);
         binding.novelList.setLayoutManager(new GridLayoutManager(requireActivity(), utils.noOfCols()));
         binding.novelList.addItemDecoration(new SpacingDecorator(utils.spacing()));
 
-        RanobeDatabase.database().novels().list().observe(getViewLifecycleOwner(), this::setNovels);
+        RanobeDatabase.database().novels().list().observe(getViewLifecycleOwner(), novels -> {
+            allNovels = novels;
+            applyFilterAndSort(getCurrentQuery());
+        });
     }
 
-    private void setNovels(List<Novel> novels) {
-        binding.progress.hide();
-        if (novels.isEmpty()) {
-            showNoNovels();
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.search) {
+            toggleSearchView();
+            return true;
+        } else if (id == R.id.sort) {
+            showSortDialog();
+            return true;
         }
-        NovelAdapter adapter = new NovelAdapter(novels, this, this);
+        return false;
+    }
+
+    private void toggleSearchView() {
+        int visibility = binding.searchView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE;
+        binding.searchView.setVisibility(visibility);
+        if (visibility == View.GONE) {
+            binding.searchInput.setText(null);
+        }
+    }
+
+    private String getCurrentQuery() {
+        Editable text = binding.searchInput.getText();
+        return text != null ? text.toString() : "";
+    }
+
+    private void applyFilterAndSort(String query) {
+        binding.progress.hide();
+        List<Novel> filtered = new ArrayList<>();
+        String lowerQuery = query.toLowerCase(Locale.getDefault()).trim();
+
+        for (Novel novel : allNovels) {
+            if (lowerQuery.isEmpty() || (novel.name != null && novel.name.toLowerCase(Locale.getDefault()).contains(lowerQuery))) {
+                filtered.add(novel);
+            }
+        }
+
+        if (currentSort == SORT_AZ) {
+            filtered.sort(Comparator.comparing(n -> n.name != null ? n.name.toLowerCase(Locale.getDefault()) : ""));
+        } else if (currentSort == SORT_ZA) {
+            filtered.sort((a, b) -> {
+                String nameA = a.name != null ? a.name.toLowerCase(Locale.getDefault()) : "";
+                String nameB = b.name != null ? b.name.toLowerCase(Locale.getDefault()) : "";
+                return nameB.compareTo(nameA);
+            });
+        }
+
+        if (filtered.isEmpty() && allNovels.isEmpty()) {
+            showNoNovels();
+        } else {
+            binding.emoji.setText(null);
+            binding.error.setText(null);
+        }
+
+        NovelAdapter adapter = new NovelAdapter(filtered, this, this);
         binding.novelList.setAdapter(adapter);
+    }
+
+    private void showSortDialog() {
+        String[] options = {"Default", "A → Z", "Z → A"};
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.sort)
+                .setSingleChoiceItems(options, currentSort, (dialog, which) -> {
+                    currentSort = which;
+                    applyFilterAndSort(getCurrentQuery());
+                    dialog.dismiss();
+                })
+                .show();
     }
 
     private void showNoNovels() {

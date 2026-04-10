@@ -11,10 +11,10 @@ import org.ranobe.ranobe.network.repository.Repository;
 import java.util.List;
 
 public class ReaderViewModel extends ViewModel {
-    private MutableLiveData<String> error;
+    private final MutableLiveData<String> error = new MutableLiveData<>();
 
     public MutableLiveData<String> getError() {
-        return error = new MutableLiveData<>();
+        return error;
     }
 
     public MutableLiveData<Chapter> getChapter(Chapter chap) {
@@ -32,7 +32,7 @@ public class ReaderViewModel extends ViewModel {
 
                     @Override
                     public void onError(Exception e) {
-                        if (error != null) error.postValue(e.getLocalizedMessage());
+                        error.postValue(e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName());
                     }
                 });
             }
@@ -50,7 +50,7 @@ public class ReaderViewModel extends ViewModel {
 
             @Override
             public void onError(Exception e) {
-                if (error != null) error.postValue(e.getLocalizedMessage());
+                error.postValue(e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName());
             }
         });
         return chapters;

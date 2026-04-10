@@ -11,7 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorSurfaceVariant"
+        android:background="?colorSurface"
         app:menu="@menu/menu_chapter_toolbar" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -41,12 +41,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorSurfaceVariant"
+        android:background="?colorSurface"
         android:paddingVertical="6dp"
         android:text="@string/swipe_tip"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-        android:textColor="?colorOnSurfaceVariant" />
+        android:textColor="?colorPrimarySurface" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chapter_list"
