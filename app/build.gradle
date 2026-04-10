@@ -74,6 +74,9 @@ dependencies {
     annotationProcessor 'androidx.room:room-compiler:2.7.1'
     testImplementation 'junit:junit:4.13.2'
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+
+
+    proImplementation "androidx.work:work-runtime:2.11.2"
 }
 
 java {

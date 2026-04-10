@@ -39,6 +39,7 @@ public class Novel implements Parcelable {
     public List<String> genres;
     public float rating;
     public int year;
+    public int lastKnownChapterCount;
 
     public Novel(String url) {
         this.id = SourceUtils.generateId(url);

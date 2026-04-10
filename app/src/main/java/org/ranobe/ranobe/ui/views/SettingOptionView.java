@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
@@ -39,5 +40,10 @@ public class SettingOptionView extends LinearLayout {
 
     public void setIcon(int resource) {
         binding.icon.setImageResource(resource);
+    }
+
+    public void setChecked(boolean checked) {
+        binding.toggle.setVisibility(View.VISIBLE);
+        binding.toggle.setChecked(checked);
     }
 }

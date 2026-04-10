@@ -36,5 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupWithNavController(binding.navbar, navController);
+
+        if (getIntent().getBooleanExtra(Ranobe.EXTRA_NAVIGATE_TO_LIBRARY, false)) {
+            binding.navbar.setSelectedItemId(R.id.library_fragment);
+        }
     }
 }

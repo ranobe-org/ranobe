@@ -35,5 +35,11 @@
     <string name="download_all">Download All</string>
     <string name="synopsis">Synopsis</string>
     <string name="downloading_all_chapters_confirmation">This will download all chapters. Do you want to continue?</string>
+    <string name="new_chapter_updates">New Chapter Updates</string>
+    <string name="enjoy_premium_features_and_faster_updates_with_pro">Enjoy premium features and faster updates with Pro.</string>
+    <string name="ranobe_pro">Ranobe Pro</string>
+    <string name="get_pro">get pro - play store</string>
+    <string name="enable_new_chapter_update_notifications_for_your_library">Enable new chapter update notifications for your library</string>
+    <string name="enable">Enable</string>
 
 </resources>

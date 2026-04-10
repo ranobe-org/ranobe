@@ -1,5 +1,8 @@
 package org.ranobe.ranobe.ui.library;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -8,8 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -26,12 +32,14 @@ import org.ranobe.ranobe.database.RanobeDatabase;
 import org.ranobe.ranobe.databinding.FragmentLibraryBinding;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
+import org.ranobe.ranobe.ui.views.GetPro;
 import org.ranobe.ranobe.ui.views.SpacingDecorator;
 import org.ranobe.ranobe.util.DisplayUtils;
+import org.ranobe.ranobe.util.ListUtils;
 import org.ranobe.ranobe.util.NumberUtils;
+import org.ranobe.ranobe.worker.ChapterUpdateScheduler;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,6 +51,7 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
     private FragmentLibraryBinding binding;
     private List<Novel> allNovels = new ArrayList<>();
     private int currentSort = SORT_DEFAULT;
+    private ActivityResultLauncher<String> notificationPermissionLauncher;
 
     public Library() {
         // Required empty public constructor
@@ -51,6 +60,19 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        notificationPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                granted -> {
+                    if (granted) {
+                        enableNewChapterUpdates();
+                    } else {
+                        View root = getView();
+                        if (root != null) {
+                            Snackbar.make(root, "Notification permission denied", Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+        );
     }
 
     @Override
@@ -66,16 +88,12 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
         binding = FragmentLibraryBinding.bind(view);
 
         binding.toolbar.setOnMenuItemClickListener(this);
+        syncNewChaptersIcon();
+        maybeShowChapterUpdatesBanner();
 
         binding.searchInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
                 applyFilterAndSort(s.toString());
@@ -101,8 +119,82 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
         } else if (id == R.id.sort) {
             showSortDialog();
             return true;
+        } else if (id == R.id.new_chapters) {
+            handleNewChaptersToggle();
+            return true;
         }
         return false;
+    }
+
+    private void handleNewChaptersToggle() {
+        if (!Ranobe.isPro()) {
+            GetPro pro = new GetPro();
+            pro.show(getParentFragmentManager(), GetPro.TAG);
+            return;
+        }
+
+        boolean enabled = Ranobe.isNewChapterUpdatesEnabled();
+        if (enabled) {
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Disable Notifications")
+                    .setMessage("Disable new chapter notifications?")
+                    .setPositiveButton("Disable", (dialog, i) -> disableNewChapterUpdates())
+                    .setNegativeButton("Cancel", (dialog, i) -> dialog.dismiss())
+                    .show();
+        } else {
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Enable Notifications")
+                    .setMessage("Get notified when new chapters are available for novels in your library?")
+                    .setPositiveButton("Enable", (dialog, i) -> requestNotificationPermissionAndEnable())
+                    .setNegativeButton("Cancel", (dialog, i) -> dialog.dismiss())
+                    .show();
+        }
+    }
+
+    private void requestNotificationPermissionAndEnable() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
+                    == PackageManager.PERMISSION_GRANTED) {
+                enableNewChapterUpdates();
+            } else {
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        } else {
+            enableNewChapterUpdates();
+        }
+    }
+
+    private void enableNewChapterUpdates() {
+        Ranobe.setNewChapterUpdatesEnabled(true);
+        ChapterUpdateScheduler.schedule(requireContext());
+        Snackbar.make(binding.getRoot(), "New chapter notifications enabled", Snackbar.LENGTH_SHORT).show();
+        syncNewChaptersIcon();
+    }
+
+    private void disableNewChapterUpdates() {
+        Ranobe.setNewChapterUpdatesEnabled(false);
+        ChapterUpdateScheduler.cancel(requireContext());
+        Snackbar.make(binding.getRoot(), "New chapter notifications disabled", Snackbar.LENGTH_SHORT).show();
+        syncNewChaptersIcon();
+    }
+
+    private void maybeShowChapterUpdatesBanner() {
+        if (!Ranobe.isPro() || Ranobe.isChapterUpdateBannerShown() || Ranobe.isNewChapterUpdatesEnabled()) {
+            return;
+        }
+        binding.chapterUpdatesBanner.setVisibility(View.VISIBLE);
+        binding.enableUpdatesButton.setOnClickListener(v -> {
+            Ranobe.setChapterUpdateBannerShown(true);
+            binding.chapterUpdatesBanner.setVisibility(View.GONE);
+            handleNewChaptersToggle();
+        });
+    }
+
+    private void syncNewChaptersIcon() {
+        MenuItem item = binding.toolbar.getMenu().findItem(R.id.new_chapters);
+        if (item == null) return;
+        boolean enabled = Ranobe.isPro() && Ranobe.isNewChapterUpdatesEnabled();
+        item.setIcon(enabled ? R.drawable.ic_notifications_active : R.drawable.ic_disabled);
     }
 
     private void toggleSearchView() {
@@ -130,13 +222,9 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
         }
 
         if (currentSort == SORT_AZ) {
-            filtered.sort(Comparator.comparing(n -> n.name != null ? n.name.toLowerCase(Locale.getDefault()) : ""));
+            filtered = ListUtils.sortByName(filtered, true);
         } else if (currentSort == SORT_ZA) {
-            filtered.sort((a, b) -> {
-                String nameA = a.name != null ? a.name.toLowerCase(Locale.getDefault()) : "";
-                String nameB = b.name != null ? b.name.toLowerCase(Locale.getDefault()) : "";
-                return nameB.compareTo(nameA);
-            });
+            filtered = ListUtils.sortByName(filtered, false);
         }
 
         if (filtered.isEmpty() && allNovels.isEmpty()) {

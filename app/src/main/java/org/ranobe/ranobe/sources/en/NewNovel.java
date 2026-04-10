@@ -40,9 +40,7 @@ public class NewNovel implements Source {
     @Override
     public List<Novel> novels(int page) throws Exception {
         Log.d("AP_ATUL", "getting page " + page);
-        String web = page <= 2
-                ? baseUrl + "/sort/nov-love-hot"
-                : baseUrl + "/sort/nov-love-hot?page=" + page;
+        String web = baseUrl + "/sort/nov-love-hot?page=" + page;
         return parse(HttpClient.GET(web, new HashMap<>()), false);
     }
 

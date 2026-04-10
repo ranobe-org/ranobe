@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import org.ranobe.ranobe.App;
+import org.ranobe.ranobe.BuildConfig;
 import org.ranobe.ranobe.models.ReaderTheme;
 
 import java.util.HashSet;
@@ -32,23 +33,51 @@ public class Ranobe {
     public static final String KEY_READ_HISTORY = "key_history";
 
     public static final String NOTIF_DOWNLOAD_CHANNEL_NAME = "download_notification";
+    public static final String NOTIF_CHAPTER_UPDATE_CHANNEL_ID = "chapter_update_notification";
+    public static final String NOTIF_CHAPTER_UPDATE_CHANNEL_NAME = "New Chapter Updates";
+    public static final String SETTING_NEW_CHAPTER_UPDATES = "new_chapter_updates_enabled";
+    public static final String SETTING_CHAPTER_UPDATE_BANNER_SHOWN = "chapter_update_banner_shown";
+    public static final String EXTRA_NAVIGATE_TO_LIBRARY = "navigate_to_library";
 
     public static final String RANOBE_GITHUB_LINK = "https://github.com/ranobe-org/ranobe";
     public static final String MP_LITE_GITHUB_LINK = "https://github.com/AP-Atul/music_player_lite";
     public static final String DISCORD_INVITE_LINK = "https://discord.gg/6CQ6u64dca";
     public static final String RANOBE_M_LINK = "https://play.google.com/store/apps/details?id=in.atulpatare.ranobem.pro";
+    public static final String RANOBE_PRO_APP_LINK = "https://play.google.com/store/apps/details?id=org.ranobe.downloader.pro";
+
+    public static final String[] PRO_APP_FEATURES = {
+            "- ZERO ADS Ever!",
+            "- Buy once and own forever",
+            "- Quick bug fixes and updates",
+            "- First in line for new features",
+            "- New Chapter notification updates",
+            "- New features coming soon..."
+    };
 
     // database configs
     public static final String DATABASE_NAME = "ranobe_database";
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
 
     public static final String[] SILLY_EMOJI = new String[]{
             "( ╥﹏╥) ノシ",
             "༼ つ ◕_◕ ༽つ",
             "(❍ᴥ❍ʋ)",
             "(⊙＿⊙')",
-            "(=____=)"
+            "(=____=)",
+            "ᕦ(ò_óˇ)ᕤ",    // Flexing/Tough
+            "(╯°□°)╯︵ ┻━┻", // Table flip
+            "ヘ( ^o^)ノ＼(^_^ )", // High five
+            " ( ͡° ͜ʖ ͡°)",      // Lenny face
+            "┌( ಠ_ಠ)┘",      // Running away
+            "¯\\_(ツ)_/¯",    // Shrug
+            "ʕ•ᴥ•ʔ",         // Bear
+            "(づ￣ ³￣)づ",   // Kiss/Hug
+            "(V) (°,,,,°) (V)" // Zoidberg
     };
+
+    public static boolean isPro () {
+        return BuildConfig.APPLICATION_ID.contains("pro");
+    }
 
     public static final Map<String, ReaderTheme> themes = new LinkedHashMap<String, ReaderTheme>() {{
         put("default", null);
@@ -126,5 +155,21 @@ public class Ranobe {
 
     public static boolean getBionicReader() {
         return getSharedPref(App.getContext()).getBoolean(Ranobe.SETTINGS_READER_BIONIC, false);
+    }
+
+    public static void setNewChapterUpdatesEnabled(boolean enabled) {
+        getEditor(App.getContext()).putBoolean(SETTING_NEW_CHAPTER_UPDATES, enabled).apply();
+    }
+
+    public static boolean isNewChapterUpdatesEnabled() {
+        return getSharedPref(App.getContext()).getBoolean(SETTING_NEW_CHAPTER_UPDATES, false);
+    }
+
+    public static void setChapterUpdateBannerShown(boolean shown) {
+        getEditor(App.getContext()).putBoolean(SETTING_CHAPTER_UPDATE_BANNER_SHOWN, shown).apply();
+    }
+
+    public static boolean isChapterUpdateBannerShown() {
+        return getSharedPref(App.getContext()).getBoolean(SETTING_CHAPTER_UPDATE_BANNER_SHOWN, false);
     }
 }
