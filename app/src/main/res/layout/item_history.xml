@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:padding="10dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="10dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/novel_cover_layout"
@@ -21,63 +21,65 @@
 
         <ImageView
             android:id="@+id/novel_cover"
-            android:layout_width="70dp"
-            android:layout_height="90dp"
+            android:layout_width="75dp"
+            android:layout_height="100dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/image"
             android:scaleType="centerCrop" />
 
     </com.google.android.material.card.MaterialCardView>
 
-    <View
+    <LinearLayout
         android:id="@+id/readChapter"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:focusable="true"
-        android:clickable="true"
         android:background="?attr/selectableItemBackground"
-        app:layout_constraintTop_toTopOf="@id/novel_cover_layout"
-        app:layout_constraintStart_toEndOf="@id/novel_cover_layout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/novel_cover_layout"/>
-
-    <TextView
-        android:id="@+id/novelTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5sp"
-        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:maxLines="1"
-        android:ellipsize="end"
-        app:layout_constraintBottom_toTopOf="@id/lastReadChapter"
-        app:layout_constraintStart_toEndOf="@id/novel_cover_layout"
-        app:layout_constraintTop_toTopOf="@+id/novel_cover_layout" />
-
-    <TextView
-        android:id="@+id/lastReadChapter"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5sp"
-        android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-        app:layout_constraintBottom_toTopOf="@+id/lastReadTimestamp"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@id/novel_cover_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/novel_cover_layout"
-        app:layout_constraintTop_toBottomOf="@id/novelTitle" />
+        app:layout_constraintTop_toTopOf="@id/novel_cover_layout">
 
-    <TextView
-        android:id="@+id/lastReadTimestamp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-        app:layout_constraintBottom_toBottomOf="@+id/novel_cover_layout"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textAlignment="textEnd"
-        app:layout_constraintStart_toEndOf="@id/novel_cover_layout"
-        app:layout_constraintTop_toBottomOf="@id/lastReadChapter" />
 
+        <TextView
+            android:id="@+id/lastReadChapter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5sp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+            app:layout_constraintBottom_toTopOf="@id/novelTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/novel_cover_layout"
+            app:layout_constraintTop_toTopOf="@+id/novel_cover_layout" />
+
+        <TextView
+            android:id="@+id/novelTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5sp"
+            android:maxLines="2"
+            android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+            app:layout_constraintBottom_toTopOf="@+id/lastReadTimestamp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/novel_cover_layout"
+            app:layout_constraintTop_toBottomOf="@id/lastReadChapter" />
+
+        <TextView
+            android:id="@+id/lastReadTimestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+            app:layout_constraintBottom_toBottomOf="@+id/novel_cover_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/novel_cover_layout"
+            app:layout_constraintTop_toBottomOf="@id/lastReadChapter" />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

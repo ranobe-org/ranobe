@@ -1,64 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.chapters.Chapters">
 
-    <LinearLayout
-        android:id="@+id/header_layout"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?colorSurfaceVariant"
-            app:menu="@menu/menu_chapter_toolbar" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/search_view"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="2dp"
-            android:hint="@string/start_typing"
-            android:visibility="gone">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?colorSurface"
-            android:paddingVertical="2dp"
-            android:text="@string/swipe_tip"
-            android:textAlignment="center"
-            android:textColor="?colorOnSurfaceVariant"
-            android:textSize="@dimen/text_small" />
-    </LinearLayout>
+        android:background="?colorSurface"
+        app:menu="@menu/menu_chapter_toolbar" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:indeterminate="true" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_view"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        android:hint="@string/start_typing"
+        android:visibility="gone">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/search_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?colorSurface"
+        android:paddingVertical="6dp"
+        android:text="@string/swipe_tip"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+        android:textColor="?colorPrimarySurface" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chapter_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/header_layout"
-        android:layout_marginTop="5dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingBottom="200dp" />
 
-</RelativeLayout>
+</LinearLayout>

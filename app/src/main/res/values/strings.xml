@@ -19,21 +19,21 @@
     <string name="search">Search</string>
     <string name="sort">Sort</string>
     <string name="sources">Sources</string>
+    <string name="continue_reading_info">Continue Reading</string>
     <string name="no_results_err">we didn\'t find anything for you!</string>
     <string name="retry">Retry</string>
     <string name="info">INFO</string>
     <string name="mp_lite_subtitle">an open source music player from same dev</string>
     <string name="ranobem_subtitle">manga reader for android</string>
     <string name="no_novels_error">There are no novels in your library. Go to Explore and find some!</string>
-    <string name="new_version_available">A new version of the app is available</string>
     <string name="update">Update</string>
     <string name="swipe_tip">Tip: Swipe to mark as read/unread</string>
     <string name="continue_btn">Continue</string>
-    <string name="btn_toggle_sources">Toggle Hidden Sources</string>
     <string name="bionic_reading">Bionic Reading</string>
     <string name="read_history">History</string>
     <string name="download">Download</string>
     <string name="download_all">Download All</string>
+    <string name="synopsis">Synopsis</string>
     <string name="downloading_all_chapters_confirmation">This will download all chapters. Do you want to continue?</string>
 
 </resources>
