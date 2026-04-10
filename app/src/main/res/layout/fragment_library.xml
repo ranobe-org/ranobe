@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?colorSurface"
-        app:title="@string/nav_library"
-        app:menu="@menu/menu_library_toolbar" />
+        app:menu="@menu/menu_library_toolbar"
+        app:title="@string/nav_library" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress"
@@ -36,9 +36,9 @@
             android:id="@+id/search_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionSearch"
             android:inputType="text"
-            android:maxLines="1"
-            android:imeOptions="actionSearch" />
+            android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
