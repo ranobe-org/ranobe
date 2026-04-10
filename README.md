@@ -35,7 +35,7 @@
 - Read Novels
 - No Ads, No Paywall
 - Unlimited novel browsing
-- Multi-lingual sources
+- Multi-lingual sources (enable - disable)
   - English
   - Russian
 - Searching with keywords
@@ -43,8 +43,11 @@
 - Continuous Vertical Reading
 - Light and Dark modes
 - Customize reading experience
-- Change font size
-- Change background and font color
+  - Change font size
+  - Change background and font color
+  - Bionic Reading
+- Offline reading & Library
+- Reading history
 
 ----------------
 
@@ -69,7 +72,7 @@
 - [x] database
     - [x] add to library, only store novel in db
     - [x] add msg for empty library
-    - [ ] download chapters for offline view, save everything to db
+    - [x] download chapters for offline view, save everything to db
     - [x] saving read state for each item
 
 #### could have
