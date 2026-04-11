@@ -26,7 +26,12 @@ public class ListUtils {
 
     public static List<Novel> sortByName(List<Novel> items, boolean asc) {
         List<Novel> sorted = new ArrayList<>(items);
-        Collections.sort(sorted, (a, b) -> asc ? a.name.compareToIgnoreCase(b.name) : b.name.compareToIgnoreCase(a.name));
+        Collections.sort(sorted, (a, b) -> {
+            if (a.name == null && b.name == null) return 0;
+            if (a.name == null) return asc ? 1 : -1;
+            if (b.name == null) return asc ? -1 : 1;
+            return asc ? a.name.compareToIgnoreCase(b.name) : b.name.compareToIgnoreCase(a.name);
+        });
         return sorted;
     }
 }

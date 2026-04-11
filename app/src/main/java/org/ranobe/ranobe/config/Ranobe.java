@@ -82,7 +82,7 @@ public class Ranobe {
     }};
 
     public static boolean isPro() {
-        return BuildConfig.APPLICATION_ID.contains("pro");
+        return "pro".equals(BuildConfig.FLAVOR);
     }
 
     private static SharedPreferences.Editor getEditor(Context context) {

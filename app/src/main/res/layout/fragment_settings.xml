@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".ui.settings.Settings">
 
     <LinearLayout
@@ -127,7 +126,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
-            android:text="FEATURES"
+            android:text="@string/features"
             android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
             android:textColor="?colorPrimary"
             tools:ignore="TextContrastCheck" />

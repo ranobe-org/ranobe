@@ -66,7 +66,7 @@ public class Novel implements Parcelable {
         genres = in.createStringArrayList();
         rating = in.readFloat();
         year = in.readInt();
-        lastKnownChapterCount = 0;
+        lastKnownChapterCount = in.readInt();
     }
 
     @NonNull
