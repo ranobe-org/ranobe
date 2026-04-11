@@ -1,6 +1,7 @@
 package org.ranobe.ranobe.util;
 
 import org.ranobe.ranobe.models.Chapter;
+import org.ranobe.ranobe.models.Novel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +21,17 @@ public class ListUtils {
     public static List<Chapter> sortById(List<Chapter> items) {
         List<Chapter> sorted = new ArrayList<>(items);
         Collections.sort(sorted, (a, b) -> Float.compare(a.id, b.id));
+        return sorted;
+    }
+
+    public static List<Novel> sortByName(List<Novel> items, boolean asc) {
+        List<Novel> sorted = new ArrayList<>(items);
+        Collections.sort(sorted, (a, b) -> {
+            if (a.name == null && b.name == null) return 0;
+            if (a.name == null) return asc ? 1 : -1;
+            if (b.name == null) return asc ? -1 : 1;
+            return asc ? a.name.compareToIgnoreCase(b.name) : b.name.compareToIgnoreCase(a.name);
+        });
         return sorted;
     }
 }

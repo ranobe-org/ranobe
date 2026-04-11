@@ -40,4 +40,11 @@ public class Migrations {
             database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_ReadHistory_url` ON `ReadHistory` (`url`)");
         }
     };
+
+    public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE `Novel` ADD COLUMN `lastKnownChapterCount` INTEGER NOT NULL DEFAULT 0");
+        }
+    };
 }

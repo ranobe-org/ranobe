@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
         android:paddingTop="12dp"
-        android:paddingBottom="40dp">
+        android:paddingBottom="200dp">
 
         <!-- Update banner -->
         <com.google.android.material.card.MaterialCardView
@@ -119,6 +119,41 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Features section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/features"
+            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+            android:textColor="?colorPrimary"
+            tools:ignore="TextContrastCheck" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:contentPadding="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <org.ranobe.ranobe.ui.views.SettingOptionView
+                    android:id="@+id/chapter_updates_option"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:settingIcon="@drawable/ic_notifications_active"
+                    app:settingSubtitle="Get notified when new chapters are available"
+                    app:settingTitle="@string/new_chapter_updates" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- Info section -->
         <TextView
             android:layout_width="match_parent"
@@ -141,6 +176,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <org.ranobe.ranobe.ui.views.SettingOptionView
+                    android:id="@+id/pro_app"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:settingIcon="@drawable/ic_android"
+                    app:settingSubtitle="Try the pro and enjoy premium features"
+                    app:settingTitle="Ranobe PRO!" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="56dp" />
 
                 <org.ranobe.ranobe.ui.views.SettingOptionView
                     android:id="@+id/project_link"

@@ -216,6 +216,10 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
         adapter.notifyDataSetChanged();
         binding.toolbar.setTitle(String.format(Locale.getDefault(), "%d Chapters", chapters.size()));
         binding.progress.hide();
+
+        if (!chapters.isEmpty() && novel.url != null) {
+            RanobeDatabase.databaseExecutor.execute(() -> RanobeDatabase.database().novels().updateLastKnownChapterCount(chapters.size(), novel.url));
+        }
     }
 
     private void sort() {

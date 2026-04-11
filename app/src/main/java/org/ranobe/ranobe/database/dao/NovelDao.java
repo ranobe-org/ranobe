@@ -27,4 +27,10 @@ public interface NovelDao {
 
     @Query("SELECT * FROM novel WHERE url=:novelUrl")
     LiveData<Novel> getByUrl(String novelUrl);
+
+    @Query("SELECT * FROM novel")
+    List<Novel> listSync();
+
+    @Query("UPDATE novel SET lastKnownChapterCount = :count WHERE url = :novelUrl")
+    void updateLastKnownChapterCount(int count, String novelUrl);
 }

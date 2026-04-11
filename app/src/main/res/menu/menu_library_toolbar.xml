@@ -14,4 +14,10 @@
         android:title="@string/sort"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/new_chapters"
+        android:icon="@drawable/ic_notifications_active"
+        android:title="@string/new_chapter_updates"
+        app:showAsAction="ifRoom" />
+
 </menu>

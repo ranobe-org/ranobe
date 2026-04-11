@@ -39,6 +39,7 @@ public class Novel implements Parcelable {
     public List<String> genres;
     public float rating;
     public int year;
+    public int lastKnownChapterCount;
 
     public Novel(String url) {
         this.id = SourceUtils.generateId(url);
@@ -65,6 +66,7 @@ public class Novel implements Parcelable {
         genres = in.createStringArrayList();
         rating = in.readFloat();
         year = in.readInt();
+        lastKnownChapterCount = in.readInt();
     }
 
     @NonNull
@@ -105,5 +107,6 @@ public class Novel implements Parcelable {
         parcel.writeStringList(genres);
         parcel.writeFloat(rating);
         parcel.writeInt(year);
+        parcel.writeInt(lastKnownChapterCount);
     }
 }
