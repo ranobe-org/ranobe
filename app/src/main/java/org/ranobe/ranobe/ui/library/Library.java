@@ -185,7 +185,7 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
     }
 
     private void maybeShowChapterUpdatesBanner() {
-        if (!Ranobe.isPro() || Ranobe.isChapterUpdateBannerShown() || Ranobe.isNewChapterUpdatesEnabled()) {
+        if (Ranobe.isChapterUpdateBannerShown() || Ranobe.isNewChapterUpdatesEnabled()) {
             return;
         }
         binding.chapterUpdatesBanner.setVisibility(View.VISIBLE);
