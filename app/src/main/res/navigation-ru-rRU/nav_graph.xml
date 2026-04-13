@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    android:id="@id/nav_graph"
+    app:startDestination="@id/explore_fragment"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <fragment
+        android:label="fragment_explore"
+        android:name="org.ranobe.ranobe.ui.explore.Explore"
+        android:id="@id/explore_fragment">
+        <action
+            android:id="@id/explore_fragment_to_browse"
+            app:destination="@id/browse_fragment" />
+        <action
+            android:id="@id/explore_fragment_to_details"
+            app:destination="@id/details_fragment" />
+    </fragment>
+    <fragment
+        android:label="fragment_library"
+        android:name="org.ranobe.ranobe.ui.library.Library"
+        android:id="@id/library_fragment">
+        <action
+            android:id="@id/library_fragment_to_details"
+            app:destination="@id/details_fragment" />
+    </fragment>
+    <fragment
+        android:label="fragment_search"
+        android:name="org.ranobe.ranobe.ui.search.Search"
+        android:id="@id/search_fragment">
+        <action
+            android:id="@id/search_fragment_to_details"
+            app:destination="@id/details_fragment" />
+    </fragment>
+    <fragment
+        android:label="fragment_settings"
+        android:name="org.ranobe.ranobe.ui.settings.Settings"
+        android:id="@id/settings_fragment" />
+    <fragment
+        android:label="fragment_browse"
+        android:name="org.ranobe.ranobe.ui.browse.Browse"
+        android:id="@id/browse_fragment">
+        <action
+            android:id="@id/browse_fragment_to_details"
+            app:destination="@id/details_fragment" />
+    </fragment>
+    <fragment
+        android:label="fragment_details"
+        android:name="org.ranobe.ranobe.ui.details.Details"
+        android:id="@id/details_fragment">
+        <action
+            android:id="@id/details_fragment_to_chapters"
+            app:destination="@id/chapters_fragment" />
+    </fragment>
+    <fragment
+        android:label="fragment_chapters"
+        android:name="org.ranobe.ranobe.ui.chapters.Chapters"
+        android:id="@id/chapters_fragment" />
+    <fragment
+        android:label="fragment_error"
+        android:name="org.ranobe.ranobe.ui.error.Error"
+        android:id="@id/error_fragment" />
+    <fragment
+        android:label="История"
+        android:name="org.ranobe.ranobe.ui.history.History"
+        android:id="@id/history_fragment">
+        <action
+            android:id="@id/history_fragment_to_details"
+            app:destination="@id/details_fragment" />
+    </fragment>
+</navigation>
