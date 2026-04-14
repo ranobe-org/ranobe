@@ -12,6 +12,7 @@
     <string name="select_default_theme">Выбрать тему по умолчанию</string>
     <string name="ui">ИНТЕРФЕЙС</string>
     <string name="start_typing">Начните печатать…</string>
+    <string name="search_helper_text">что вы хотите найти?</string>
     <string name="set_the_font_size">Размер шрифта</string>
     <string name="set_the_theme">Тема страницы</string>
     <string name="aa">Aa</string>
