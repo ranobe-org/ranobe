@@ -1,3 +1,5 @@
+**English** | [Русский](README_RU.md)
+
 ## General
 
 - You (contributor) are allowed to update any piece of code you see fit.
