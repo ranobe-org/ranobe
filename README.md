@@ -31,6 +31,12 @@
 <h3 align="center"><samp>Support with a Star :star:!</samp></h3>
 
 ---------------
+
+<p align="center">
+  <a href="README.md"><strong>English</strong></a> • 
+  <a href="README_RU.md"><strong>Русский</strong></a>
+</p>
+
 ### Features
 - Read Novels
 - No Ads, No Paywall

@@ -1,3 +1,5 @@
+**English** | [Русский](README_RU.md)
+
 # Privacy Policy
 
 Last Updated: 25/05/2023

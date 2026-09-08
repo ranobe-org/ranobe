@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Ранобэ</string>
+    <string name="nav_explore">Обзор</string>
+    <string name="nav_library">Книги</string>
+    <string name="nav_settings">Сервис</string>
+    <string name="image">изображение</string>
+    <string name="read_info">Читать</string>
+    <string name="light">Светлая</string>
+    <string name="dark">Тёмная</string>
+    <string name="automatic">Авто</string>
+    <string name="theme_mode_sub_text">измените оформление по своему вкусу</string>
+    <string name="select_default_theme">Выбрать тему по умолчанию</string>
+    <string name="ui">ИНТЕРФЕЙС</string>
+    <string name="start_typing">Начните печатать…</string>
+    <string name="search_helper_text">что вы хотите найти?</string>
+    <string name="set_the_font_size">Размер шрифта</string>
+    <string name="set_the_theme">Тема страницы</string>
+    <string name="aa">Aa</string>
+    <string name="customize_info">Изменить</string>
+    <string name="search">Поиск</string>
+    <string name="sort">Сортировка</string>
+    <string name="sources">Источники</string>
+    <string name="continue_reading_info">Читать дальше</string>
+    <string name="no_results_err">ничего не найдено!</string>
+    <string name="retry">Повторить</string>
+    <string name="info">ИНФОРМАЦИЯ</string>
+    <string name="mp_lite_subtitle">бесплатный музыкальный плеер от того же разработчика</string>
+    <string name="ranobem_subtitle">читалка манги для Android</string>
+    <string name="no_novels_error">В вашей библиотеке нет ни одного ранобэ. Перейдите в раздел «Обзор» и найдите что‑нибудь!</string>
+    <string name="update">Обновить</string>
+    <string name="swipe_tip">Совет: проведите пальцем, чтобы отметить прочитанным/непрочитанным</string>
+    <string name="continue_btn">Продолжить</string>
+    <string name="bionic_reading">Бионическое чтение</string>
+    <string name="read_history">История</string>
+    <string name="download">Скачать</string>
+    <string name="download_all">Скачать всё</string>
+    <string name="synopsis">Описание</string>
+    <string name="downloading_all_chapters_confirmation">Скачать все главы? Продолжить?</string>
+    <string name="new_chapter_updates">Новые главы</string>
+    <string name="enjoy_premium_features_and_faster_updates_with_pro">Получите премиум‑функции и более быстрые обновления с Pro‑версией.</string>
+    <string name="ranobe_pro">Ranobe Pro</string>
+    <string name="get_pro">Получить Pro – Play Market</string>
+    <string name="enable_new_chapter_update_notifications_for_your_library">Разрешить уведомления о новых главах для вашей библиотеки</string>
+    <string name="enable">Включить</string>
+    <string name="features">ВОЗМОЖНОСТИ</string>
+
+</resources>
