@@ -1,5 +1,7 @@
 package org.ranobe.ranobe.sources.ru;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -21,8 +23,15 @@ import java.util.HashMap;
 import java.util.List;
 
 public class RanobeHub implements Source {
-    private final String baseUrl = "https://ranobehub.org/";
+    private final String baseUrl = "https://ranobehub.org";
     private final int sourceId = 5;
+
+    public final HashMap<String, String> HEADERS = new HashMap<String, String>() {{
+        put("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36");
+        put("Cache-Control", "public max-age=604800");
+        put("host", "ranobehub.org");
+        put("referer", "https://ranobehub.org/");
+    }};
 
     @Override
     public DataSource metadata() {
@@ -32,28 +41,30 @@ public class RanobeHub implements Source {
         source.name = "Ranobehub — ранобэ на русском онлайн";
         source.lang = Lang.ru;
         source.dev = "ap-atul";
-        source.logo = "https://ranobehub.org/favicon.png";
+        source.logo = "https://ranobehub.org/icon.svg";
         source.isActive = true;
         return source;
     }
 
     @Override
     public List<Novel> novels(int page) throws Exception {
-        String web = baseUrl.concat("api/search?page=").concat(String.valueOf(page)).concat("&take=40");
         List<Novel> items = new ArrayList<>();
-        String json = HttpClient.GET(web, new HashMap<>());
+        String web = baseUrl.concat("/popular?page=").concat(String.valueOf(page));
+        Element doc = Jsoup.parse(HttpClient.GET(web, HEADERS));
 
-        JSONArray novels = new JSONObject(json).getJSONArray("resource");
-        for (int i = 0; i < novels.length(); i++) {
-            JSONObject novel = novels.getJSONObject(i);
+        for (Element element : doc.select("ol.popular-list > li")) {
+            Log.d("DEBUG", element.select("span.popular-rank").text());
+            String url = element.select("a.popular-list-cover").attr("href");
+            String full = baseUrl.concat(url);
 
-            String url = novel.getString("url");
-            Novel item = new Novel(url);
-            item.sourceId = sourceId;
-            item.name = novel.getJSONObject("names").getString("rus");
-            item.cover = novel.getJSONObject("poster").getString("medium")
-                    .replace("medium", "big");
-            items.add(item);
+            if (!full.isEmpty()) {
+                Novel item = new Novel(full);
+                item.sourceId = sourceId;
+                item.name = element.select("h3").text().trim();
+                item.cover = baseUrl.concat(element.select("img").attr("src").trim());
+                item.status = element.select("span.popular-list-status").text().trim();
+                items.add(item);
+            }
         }
 
         return items;
@@ -61,34 +72,27 @@ public class RanobeHub implements Source {
 
     @Override
     public Novel details(Novel novel) throws IOException {
-        Element doc = Jsoup.parse(HttpClient.GET(novel.url, new HashMap<>()));
+        Element doc = Jsoup.parse(HttpClient.GET(novel.url, HEADERS));
 
         novel.sourceId = sourceId;
-        novel.name = doc.select("h1.ui.huge.header").text().trim();
-        novel.alternateNames = Arrays.asList(doc.select("h2.ui.header.medium").text().trim().split(","));
-        novel.cover = doc.select("img.__posterbox").attr("data-src").replace("medium", "big").trim();
-        doc.select("div.book-description").select("p").append("::");
-        novel.summary = doc.select("div.book-description").text().replaceAll("::", "\n\n").trim();
+        novel.name = doc.select("h1.book-title-cyrillic").text().trim();
+        novel.alternateNames = Arrays.asList(doc.select("p.book-original-title").text().trim().split(","));
+        novel.cover = baseUrl.concat(doc.select("img.book-cover-image").attr("src").trim());
+        novel.summary = doc.select("p.book-hero-summary").text().trim();
 
         List<String> authors = new ArrayList<>();
-        for (Element element : doc.select("book-author")) {
-            authors.add(element.select("a").text().trim());
+        for (Element element : doc.select("div.book-author-byline > div > a")) {
+            authors.add(element.select("strong").text().trim());
         }
         novel.authors = authors;
-        novel.year = NumberUtils.toInt(doc.select("div.book-meta-value").select("a").text().trim());
+        novel.year = NumberUtils.toInt(doc.select("a.book-kicker-year").text().trim());
 
         List<String> genres = new ArrayList<>();
-        for (Element element : doc.select("div.book-meta-value.book-tags > a")) {
+        for (Element element : doc.select("nav[aria-label=Жанры произведения] > a")) {
             genres.add(element.text().trim());
         }
         novel.genres = genres;
-
-        for (Element element : doc.select("div.book-meta-row")) {
-            String header = element.select("div.book-meta-key").text().trim();
-            if (header.contains("перевода")) {
-                novel.status = element.select("div.book-meta-value").select("a").text().trim();
-            }
-        }
+        novel.status = doc.select("a.book-kicker-status").text().trim();
         return novel;
     }
 
@@ -101,40 +105,57 @@ public class RanobeHub implements Source {
     @Override
     public List<Chapter> chapters(Novel novel) throws Exception {
         List<Chapter> items = new ArrayList<>();
-        String web = baseUrl.concat("api/ranobe/").concat(getNovelId(novel.url)).concat("/contents");
-        String json = HttpClient.GET(web, new HashMap<>());
+        String baseApiUrl = baseUrl.concat("/api/books/").concat(getNovelId(novel.url)).concat("/chapters");
 
-        JSONArray vols = new JSONObject(json).getJSONArray("volumes");
+        // Start with offset 0 or no offset query param
+        Integer nextOffset = 0;
 
-        for (int i = 0; i < vols.length(); i++) {
-            JSONArray chaps = vols.getJSONObject(i).getJSONArray("chapters");
+        while (nextOffset != null) {
+            // Construct URL with offset pagination query param
+            String web = baseApiUrl.concat("?offset=").concat(String.valueOf(nextOffset));
+            String json = HttpClient.GET(web, HEADERS);
 
-            for (int j = 0; j < chaps.length(); j++) {
-                JSONObject chapter = chaps.getJSONObject(j);
+            JSONObject response = new JSONObject(json);
+            JSONArray chaps = response.optJSONArray("items");
 
+            if (chaps == null || chaps.length() == 0) {
+                break;
+            }
+
+            for (int i = 0; i < chaps.length(); i++) {
+                JSONObject chapter = chaps.getJSONObject(i);
                 Chapter item = new Chapter(novel.url);
-                item.url = chapter.getString("url");
-                item.name = chapter.getString("name");
+
+                // Appends "chapter" path properly (e.g., ensuring a separating slash if needed)
+                item.url = novel.url.concat("/chapter/").concat(chapter.getString("id"));
+                item.name = chapter.getString("title");
                 item.id = items.size() + 1;
-                item.updated = SourceUtils.getDate(chapter.getInt("changed_at"));
+                item.updated = SourceUtils.parseIsoDate(chapter.getString("publishedAt"));
+
                 items.add(item);
             }
+
+            // Extract nextOffset to continue loop, returns null if missing or explicitly null in JSON
+            if (response.has("nextOffset") && !response.isNull("nextOffset")) {
+                nextOffset = response.getInt("nextOffset");
+            } else {
+                nextOffset = null;
+            }
         }
+
         return items;
     }
 
     @Override
     public Chapter chapter(Chapter chapter) throws IOException {
-        Element doc = Jsoup.parse(HttpClient.GET(chapter.url, new HashMap<>()));
+        Element doc = Jsoup.parse(HttpClient.GET(chapter.url, HEADERS));
         chapter.content = "";
 
-        for (Element element : doc.select("div.ui.text.container")) {
-            if (element.hasAttr("data-container")) {
-                element.select("p").append("::");
-                chapter.content = SourceUtils.cleanContent(
-                        element.text().replaceAll("::", "\n\n").trim()
-                );
-            }
+        for (Element element : doc.select("div.reader-content")) {
+            element.select("p").append("::");
+            chapter.content = SourceUtils.cleanContent(
+                    element.text().replace("::", "\n\n\n").trim()
+            );
         }
 
         return chapter;
@@ -147,24 +168,22 @@ public class RanobeHub implements Source {
         List<Novel> items = new ArrayList<>();
         if (filters.hashKeyword()) {
             String keyword = filters.getKeyword();
-            String web = SourceUtils.buildUrl(baseUrl, "api/fulltext/global?query=", keyword, "&take=100");
-            String json = HttpClient.GET(web, new HashMap<>());
-            JSONArray response = new JSONArray(json);
+            String web = SourceUtils.buildUrl(baseUrl, "/api/search?q=", keyword, "&rh_client=modern");
+            String json = HttpClient.GET(web, HEADERS);
+            JSONObject response = new JSONObject(json);
+            JSONArray books = response.getJSONArray("books");
 
-            for (int i = 0; i < response.length(); i++) {
-                if (response.getJSONObject(i).getJSONObject("meta").getString("key").equals("ranobe")) {
-                    JSONArray novels = response.getJSONObject(i).getJSONArray("data");
-                    for (int j = 0; j < novels.length(); j++) {
-                        JSONObject novel = novels.getJSONObject(j);
+            for (int i = 0; i < books.length(); i++) {
+                JSONObject novel = books.getJSONObject(i);
 
-                        Novel item = new Novel(novel.getString("url"));
-                        item.sourceId = sourceId;
-                        item.name = novel.getJSONObject("names").getString("rus");
-                        item.cover = novel.getString("image").replace("small", "big");
-                        items.add(item);
-                    }
-                    break;
-                }
+                String id = novel.getString("id").concat("-").concat(novel.getString("slug"));
+                String url = baseUrl.concat("/ranobe/").concat(id);
+
+                Novel item = new Novel(url);
+                item.sourceId = sourceId;
+                item.name = novel.getString("title");
+                item.cover = baseUrl.concat(novel.getString("posterUrl"));
+                items.add(item);
             }
         }
         return items;
