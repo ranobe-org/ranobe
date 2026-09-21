@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -61,7 +62,12 @@ public class Settings extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         if (!Ranobe.isPro()) {
             binding.proApp.setVisibility(View.VISIBLE);
         }
@@ -84,8 +90,6 @@ public class Settings extends Fragment {
 
         viewModel.getUpdate().observe(getViewLifecycleOwner(), this::release);
         viewModel.checkForUpdate();
-
-        return binding.getRoot();
     }
 
     @Override
