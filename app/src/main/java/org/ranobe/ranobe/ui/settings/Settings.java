@@ -82,7 +82,7 @@ public class Settings extends Fragment {
 
         setCurrentThemeMode();
 
-        viewModel.getUpdate().observe(requireActivity(), this::release);
+        viewModel.getUpdate().observe(getViewLifecycleOwner(), this::release);
         viewModel.checkForUpdate();
 
         return binding.getRoot();
@@ -179,5 +179,10 @@ public class Settings extends Fragment {
                 Intent.ACTION_VIEW,
                 Uri.parse(url)
         ));
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

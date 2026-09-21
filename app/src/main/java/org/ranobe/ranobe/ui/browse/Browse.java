@@ -105,4 +105,10 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
         bundle.putParcelable(Ranobe.KEY_NOVEL, item);
         controller.navigate(R.id.browse_fragment_to_details, bundle);
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }

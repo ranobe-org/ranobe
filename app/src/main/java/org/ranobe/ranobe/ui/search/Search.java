@@ -170,4 +170,9 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
             }
         }
     }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }

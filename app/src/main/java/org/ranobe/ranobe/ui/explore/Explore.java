@@ -74,7 +74,7 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected,
     }
 
     private void setContinueReadingItem() {
-        RanobeDatabase.database().readHistory().getLastReadHistory().observe(requireActivity(), history -> {
+        RanobeDatabase.database().readHistory().getLastReadHistory().observe(getViewLifecycleOwner(), history -> {
             if (history != null) {
                 this.readHistory = history;
                 Glide.with(binding.novelCover.getContext())
@@ -122,5 +122,11 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected,
         Bundle bundle = new Bundle();
         bundle.putInt(Ranobe.KEY_SOURCE_ID, sourceId);
         controller.navigate(R.id.explore_fragment_to_browse, bundle);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
