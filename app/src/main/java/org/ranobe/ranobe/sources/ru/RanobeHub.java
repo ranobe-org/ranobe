@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.models.Filter;
@@ -148,10 +149,19 @@ public class RanobeHub implements Source {
 
     @Override
     public Chapter chapter(Chapter chapter) throws IOException {
-        Element doc = Jsoup.parse(HttpClient.GET(chapter.url, HEADERS));
+        Element doc = Jsoup.parse(HttpClient.GET(chapter.url, HEADERS), baseUrl);
         chapter.content = "";
 
         for (Element element : doc.select("div.reader-content")) {
+            for (Element img : element.select("img")) {
+                String src = img.absUrl("src");
+                if (src.isEmpty()) src = img.absUrl("data-src");
+                if (src.isEmpty()) {
+                    img.remove();
+                } else {
+                    img.replaceWith(new TextNode("::" + SourceUtils.imageTag(src) + "::"));
+                }
+            }
             element.select("p").append("::");
             chapter.content = SourceUtils.cleanContent(
                     element.text().replace("::", "\n\n\n").trim()

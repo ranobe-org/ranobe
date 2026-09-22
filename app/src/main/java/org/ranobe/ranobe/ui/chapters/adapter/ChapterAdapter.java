@@ -87,7 +87,7 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
             holder.binding.downloadProgress.hide();
             holder.binding.downloadBtn.setVisibility(View.VISIBLE);
             holder.binding.downloadBtn.setImageResource(R.drawable.ic_downloaded);
-            holder.binding.downloadBtn.setEnabled(false);
+            holder.binding.downloadBtn.setEnabled(true);
         } else {
             holder.binding.downloadProgress.hide();
             holder.binding.downloadBtn.setVisibility(View.VISIBLE);

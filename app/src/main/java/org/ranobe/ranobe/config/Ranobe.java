@@ -54,6 +54,8 @@ public class Ranobe {
             "- New features coming soon..."
     };
 
+    public static final String CHAPTER_IMAGES_DIR = "chapter-images";
+
     // database configs
     public static final String DATABASE_NAME = "ranobe_database";
     public static final int DATABASE_VERSION = 4;

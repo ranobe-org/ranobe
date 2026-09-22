@@ -16,6 +16,7 @@ import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.database.RanobeDatabase;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.network.repository.Repository;
+import org.ranobe.ranobe.util.ChapterImages;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -88,6 +89,7 @@ public class DownloadService extends Service {
                 try {
                     Chapter result = new Repository(item.sourceId).chapterSync(item.chapter);
                     if (result != null && result.content != null && !result.content.isEmpty()) {
+                        result.content = ChapterImages.saveLocally(this, result.content);
                         RanobeDatabase.database().chapters().save(result);
                         completedCount++;
                         Intent broadcast = new Intent(ACTION_DOWNLOAD_COMPLETE);
