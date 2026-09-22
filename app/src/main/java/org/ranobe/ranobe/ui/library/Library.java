@@ -284,4 +284,10 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
         RanobeDatabase.databaseExecutor.execute(() -> RanobeDatabase.database().novels().delete(novel.url));
         Snackbar.make(binding.getRoot(), "Removing novel from the library", Snackbar.LENGTH_LONG).show();
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }

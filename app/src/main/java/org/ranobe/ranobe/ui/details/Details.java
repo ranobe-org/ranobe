@@ -133,4 +133,10 @@ public class Details extends Fragment {
         RanobeDatabase.databaseExecutor.execute(() -> RanobeDatabase.database().novels().save(novel));
         Snackbar.make(binding.getRoot(), "Added novel to library", Snackbar.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }

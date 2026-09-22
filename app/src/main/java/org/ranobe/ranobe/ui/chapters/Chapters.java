@@ -125,6 +125,7 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
     public void onDestroyView() {
         super.onDestroyView();
         requireContext().unregisterReceiver(downloadReceiver);
+        binding = null;
     }
 
     private void registerDownloadReceiver() {
