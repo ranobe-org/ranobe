@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import org.ranobe.ranobe.R;
+import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.database.RanobeDatabase;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.network.repository.Repository;
@@ -89,7 +90,9 @@ public class DownloadService extends Service {
                 try {
                     Chapter result = new Repository(item.sourceId).chapterSync(item.chapter);
                     if (result != null && result.content != null && !result.content.isEmpty()) {
-                        result.content = ChapterImages.saveLocally(this, result.content);
+                        if (Ranobe.getShowImages()) {
+                            result.content = ChapterImages.saveLocally(this, result.content);
+                        }
                         RanobeDatabase.database().chapters().save(result);
                         completedCount++;
                         Intent broadcast = new Intent(ACTION_DOWNLOAD_COMPLETE);

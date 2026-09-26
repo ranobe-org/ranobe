@@ -36,12 +36,14 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
     private ReaderTheme theme;
     private float fontSize;
     private boolean isBionicReading;
+    private boolean showImages;
 
     public PageAdapter(List<Chapter> chapters) {
         this.chapters = chapters;
         this.theme = Ranobe.themes.get(Ranobe.getReaderTheme(App.getContext()));
         this.fontSize = Ranobe.getReaderFont(App.getContext());
         this.isBionicReading = Ranobe.getBionicReader();
+        this.showImages = Ranobe.getShowImages();
     }
 
     public void setTheme(ReaderTheme theme) {
@@ -54,6 +56,10 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
 
     public void setBionicReading(boolean isBionicReading) {
         this.isBionicReading = isBionicReading;
+    }
+
+    public void setShowImages(boolean showImages) {
+        this.showImages = showImages;
     }
 
     @NonNull
@@ -88,7 +94,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
         int last = 0;
         while (matcher.find()) {
             addText(inflater, container, content.substring(last, matcher.start()));
-            addImage(inflater, container, matcher.group(1));
+            if (showImages) addImage(inflater, container, matcher.group(1));
             last = matcher.end();
         }
         addText(inflater, container, content.substring(last));

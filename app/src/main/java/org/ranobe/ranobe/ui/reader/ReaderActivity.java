@@ -172,6 +172,19 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     }
 
     @Override
+    public void setShowImages(boolean showImages) {
+        Ranobe.setShowImages(this, showImages);
+        adapter.setShowImages(showImages);
+        if (layoutManager == null) return;
+
+        int scrollPosition = layoutManager.findFirstVisibleItemPosition();
+        View firstVisibleView = layoutManager.findViewByPosition(scrollPosition);
+        int scrollOffset = (firstVisibleView != null) ? firstVisibleView.getTop() : 0;
+        adapter.notifyItemRangeChanged(0, chapters.size());
+        binding.pageList.post(() -> layoutManager.scrollToPositionWithOffset(scrollPosition, scrollOffset));
+    }
+
+    @Override
     public boolean onMenuItemClick(MenuItem item) {
         int id = item.getItemId();
 
