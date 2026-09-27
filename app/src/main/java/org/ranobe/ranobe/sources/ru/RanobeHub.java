@@ -1,7 +1,5 @@
 package org.ranobe.ranobe.sources.ru;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -24,15 +22,14 @@ import java.util.HashMap;
 import java.util.List;
 
 public class RanobeHub implements Source {
-    private final String baseUrl = "https://ranobehub.org";
-    private final int sourceId = 5;
-
     public final HashMap<String, String> HEADERS = new HashMap<String, String>() {{
         put("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36");
         put("Cache-Control", "public max-age=604800");
         put("host", "ranobehub.org");
         put("referer", "https://ranobehub.org/");
     }};
+    private final String baseUrl = "https://ranobehub.org";
+    private final int sourceId = 5;
 
     @Override
     public DataSource metadata() {
