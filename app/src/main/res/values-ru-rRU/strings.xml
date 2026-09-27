@@ -31,6 +31,7 @@
     <string name="swipe_tip">Совет: проведите пальцем, чтобы отметить прочитанным/непрочитанным</string>
     <string name="continue_btn">Продолжить</string>
     <string name="bionic_reading">Бионическое чтение</string>
+    <string name="show_images">Показывать картинки</string>
     <string name="read_history">История</string>
     <string name="download">Скачать</string>
     <string name="download_all">Скачать всё</string>

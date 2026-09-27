@@ -4,21 +4,28 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.color.MaterialColors;
 
 import org.ranobe.ranobe.App;
+import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.ItemPageBinding;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.ReaderTheme;
+import org.ranobe.ranobe.ui.views.BionicReadingTextView;
+import org.ranobe.ranobe.util.SourceUtils;
 
+import java.io.File;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
 
 public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> {
     private final List<Chapter> chapters;
@@ -29,12 +36,14 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
     private ReaderTheme theme;
     private float fontSize;
     private boolean isBionicReading;
+    private boolean showImages;
 
     public PageAdapter(List<Chapter> chapters) {
         this.chapters = chapters;
         this.theme = Ranobe.themes.get(Ranobe.getReaderTheme(App.getContext()));
         this.fontSize = Ranobe.getReaderFont(App.getContext());
         this.isBionicReading = Ranobe.getBionicReader();
+        this.showImages = Ranobe.getShowImages();
     }
 
     public void setTheme(ReaderTheme theme) {
@@ -47,6 +56,10 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
 
     public void setBionicReading(boolean isBionicReading) {
         this.isBionicReading = isBionicReading;
+    }
+
+    public void setShowImages(boolean showImages) {
+        this.showImages = showImages;
     }
 
     @NonNull
@@ -62,22 +75,65 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.MyViewHolder> 
 
         if (theme != null) {
             holder.binding.pageLayout.setBackgroundColor(theme.getBackground());
-            holder.binding.content.setTextColor(theme.getText());
         } else {
             holder.binding.pageLayout.setBackgroundColor(
                     getThemeColor(holder.binding.pageLayout, com.google.android.material.R.attr.colorSurface)
             );
-            holder.binding.content.setTextColor(
-                    getThemeColor(holder.binding.content, com.google.android.material.R.attr.colorOnSurface)
-            );
         }
 
-        holder.binding.content.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize);
         holder.binding.chapterTitle.setText(String.format(Locale.getDefault(), "Chapter %.1f", chapter.id));
-        holder.binding.content.setText(chapter.content);
         holder.binding.pageLayout.setLayoutParams(params);
-        holder.binding.content.setLayoutParams(params);
-        holder.binding.content.setBionicReading(isBionicReading);
+        bindContent(holder.binding.content, chapter.content == null ? "" : chapter.content);
+    }
+
+    private void bindContent(LinearLayout container, String content) {
+        clearContent(container);
+        LayoutInflater inflater = LayoutInflater.from(container.getContext());
+
+        Matcher matcher = SourceUtils.IMAGE_TAG.matcher(content);
+        int last = 0;
+        while (matcher.find()) {
+            addText(inflater, container, content.substring(last, matcher.start()));
+            if (showImages) addImage(inflater, container, matcher.group(1));
+            last = matcher.end();
+        }
+        addText(inflater, container, content.substring(last));
+    }
+
+    private void addText(LayoutInflater inflater, LinearLayout container, String text) {
+        text = text.trim();
+        if (text.isEmpty()) return;
+
+        BionicReadingTextView view = (BionicReadingTextView) inflater.inflate(R.layout.item_page_text, container, false);
+        if (theme != null) {
+            view.setTextColor(theme.getText());
+        } else {
+            view.setTextColor(getThemeColor(view, com.google.android.material.R.attr.colorOnSurface));
+        }
+        view.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize);
+        view.setText(text);
+        view.setBionicReading(isBionicReading);
+        container.addView(view);
+    }
+
+    private void addImage(LayoutInflater inflater, LinearLayout container, String url) {
+        ImageView view = (ImageView) inflater.inflate(R.layout.item_page_image, container, false);
+        container.addView(view);
+        if (url.startsWith("/")) {
+            Glide.with(view.getContext()).load(new File(url)).into(view);
+        } else {
+            Glide.with(view.getContext()).load(url).into(view);
+        }
+    }
+
+    private void clearContent(LinearLayout container) {
+        for (int i = 0; i < container.getChildCount(); i++) {
+            View child = container.getChildAt(i);
+            if (child instanceof ImageView) {
+                Glide.with(child.getContext()).clear(child);
+            }
+        }
+        container.removeAllViews();
     }
 
     private int getThemeColor(View view, int attr) {
