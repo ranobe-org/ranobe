@@ -1,6 +1,7 @@
 package org.ranobe.ranobe.ui.reader;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -50,6 +51,8 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     private boolean isLoading = false;
     private int currentChapterIndex;
     private LinearLayoutManager layoutManager;
+    private boolean isVolumeKeyScroll = false;
+    private long lastVolumeScrollTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         ChaptersViewModel chaptersViewModel = new ViewModelProvider(this).get(ChaptersViewModel.class);
         if (readHistory != null) RanobeSettings.get().setCurrentSource(readHistory.sourceId).save();
 
+        isVolumeKeyScroll = Ranobe.isVolumeKeyScrollEnabled();
         adapter = new PageAdapter(chapters);
         binding.pageList.setLayoutManager(new LinearLayoutManager(this));
         binding.pageList.setAdapter(adapter);
@@ -82,14 +86,8 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1) && !isLoading) {
-                    isLoading = true;
-                    currentChapterIndex += 1;
-                    if (currentChapterIndex < chapterItems.size()) {
-                        binding.progress.show();
-                        Toast.makeText(ReaderActivity.this, "Loading next chapter", Toast.LENGTH_SHORT).show();
-                        readerViewModel.getChapter(chapterItems.get(currentChapterIndex)).observe(ReaderActivity.this, chapter -> setChapter(chapter));
-                    }
+                if (!recyclerView.canScrollVertically(1)) {
+                    loadNextChapter();
                 }
             }
         });
@@ -169,6 +167,101 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         int scrollOffset = (firstVisibleView != null) ? firstVisibleView.getTop() : 0;
         adapter.notifyItemChanged(scrollPosition);
         binding.pageList.post(() -> layoutManager.scrollToPositionWithOffset(scrollPosition, scrollOffset));
+    }
+
+    @Override
+    public void setVolumeKeyScroll(boolean isVolumeKeyScroll) {
+        this.isVolumeKeyScroll = isVolumeKeyScroll;
+        Ranobe.setVolumeKeyScroll(this, isVolumeKeyScroll);
+    }
+
+    private void scrollDown() {
+        int scrollDistance = getScrollDistance();
+        if (!binding.pageList.canScrollVertically(1)) {
+            loadNextChapter();
+        } else {
+            binding.pageList.smoothScrollBy(0, scrollDistance);
+        }
+    }
+
+    private void scrollUp() {
+        int scrollDistance = getScrollDistance();
+        binding.pageList.smoothScrollBy(0, -scrollDistance);
+    }
+
+    private int getScrollDistance() {
+        int height = binding.pageList.getHeight();
+        if (height <= 0) {
+            height = getResources().getDisplayMetrics().heightPixels;
+        }
+        int VOLUME_BTN_SCROLL_PERCENT = 60;
+        return height * VOLUME_BTN_SCROLL_PERCENT / 100;
+    }
+
+    private void loadNextChapter() {
+        if (!isLoading) {
+            if (currentChapterIndex + 1 < chapterItems.size()) {
+                isLoading = true;
+                currentChapterIndex += 1;
+                binding.progress.show();
+                Toast.makeText(ReaderActivity.this, "Loading next chapter", Toast.LENGTH_SHORT).show();
+                readerViewModel.getChapter(chapterItems.get(currentChapterIndex)).observe(ReaderActivity.this, this::setChapter);
+            }
+        }
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (isVolumeKeyScroll) {
+            int action = event.getAction();
+            int keyCode = event.getKeyCode();
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                if (action == KeyEvent.ACTION_DOWN) {
+                    if (event.getRepeatCount() == 0) {
+                        lastVolumeScrollTime = System.currentTimeMillis();
+                        scrollDown();
+                    } else if (System.currentTimeMillis() - lastVolumeScrollTime >= 200) {
+                        lastVolumeScrollTime = System.currentTimeMillis();
+                        scrollDown();
+                    }
+                }
+                return true;
+            } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                if (action == KeyEvent.ACTION_DOWN) {
+                    if (event.getRepeatCount() == 0) {
+                        lastVolumeScrollTime = System.currentTimeMillis();
+                        scrollUp();
+                    } else if (System.currentTimeMillis() - lastVolumeScrollTime >= 200) {
+                        lastVolumeScrollTime = System.currentTimeMillis();
+                        scrollUp();
+                    }
+                }
+                return true;
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (isVolumeKeyScroll && (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (isVolumeKeyScroll && (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isVolumeKeyScroll = Ranobe.isVolumeKeyScrollEnabled();
     }
 
     @Override

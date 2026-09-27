@@ -24,6 +24,7 @@ public class Ranobe {
     public static final String SETTINGS_READER_THEME = "shared_pref_reader_theme";
     public static final String SETTINGS_READER_FONT = "shared_pref_reader_font";
     public static final String SETTINGS_READER_BIONIC = "shared_pref_reader_bionic";
+    public static final String SETTING_VOLUME_KEY_SCROLL = "shared_pref_reader_volume_key_scroll";
     public static final String SETTING_SELECTED_SOURCE = "shared_pref_selected_source";
     public static final String SETTING_DISABLED_SOURCES = "shared_pref_disabled_sources";
 
@@ -170,5 +171,13 @@ public class Ranobe {
 
     public static void setChapterUpdateBannerShown(boolean shown) {
         getEditor(App.getContext()).putBoolean(SETTING_CHAPTER_UPDATE_BANNER_SHOWN, shown).apply();
+    }
+
+    public static void setVolumeKeyScroll(Context context, boolean enabled) {
+        getEditor(context).putBoolean(Ranobe.SETTING_VOLUME_KEY_SCROLL, enabled).apply();
+    }
+
+    public static boolean isVolumeKeyScrollEnabled() {
+        return getSharedPref(App.getContext()).getBoolean(Ranobe.SETTING_VOLUME_KEY_SCROLL, false);
     }
 }

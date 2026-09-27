@@ -42,5 +42,7 @@
     <string name="enable_new_chapter_update_notifications_for_your_library">Enable new chapter update notifications for your library</string>
     <string name="enable">Enable</string>
     <string name="features">FEATURES</string>
+    <string name="volume_key_scroll">Volume keys scroll</string>
+    <string name="volume_key_scroll_sub_text">Scroll page using volume up and down buttons</string>
 
 </resources>

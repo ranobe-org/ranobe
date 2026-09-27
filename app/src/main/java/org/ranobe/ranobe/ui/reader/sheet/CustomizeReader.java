@@ -36,6 +36,9 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
 
         binding.bionicReadingToggle.setChecked(Ranobe.getBionicReader());
         binding.bionicReadingToggle.setOnCheckedChangeListener((cb, b) -> listener.setBionicReading(b));
+
+        binding.volumeScrollToggle.setChecked(Ranobe.isVolumeKeyScrollEnabled());
+        binding.volumeScrollToggle.setOnCheckedChangeListener((cb, b) -> listener.setVolumeKeyScroll(b));
         return binding.getRoot();
     }
 
@@ -50,5 +53,7 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
         void setReaderTheme(String themeName);
 
         void setBionicReading(boolean isBionicReading);
+
+        void setVolumeKeyScroll(boolean isVolumeKeyScroll);
     }
 }

@@ -43,5 +43,7 @@
     <string name="enable_new_chapter_update_notifications_for_your_library">Разрешить уведомления о новых главах для вашей библиотеки</string>
     <string name="enable">Включить</string>
     <string name="features">ВОЗМОЖНОСТИ</string>
+    <string name="volume_key_scroll">Прокрутка кнопками громкости</string>
+    <string name="volume_key_scroll_sub_text">Прокручивать страницу кнопками регулировки громкости</string>
 
 </resources>

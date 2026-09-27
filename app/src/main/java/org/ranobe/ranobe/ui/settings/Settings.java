@@ -80,6 +80,13 @@ public class Settings extends Fragment {
         binding.chapterUpdatesOption.setOnClickListener(v -> handleChapterUpdatesClick());
         syncChapterUpdatesToggle();
 
+        binding.volumeScrollOption.setChecked(Ranobe.isVolumeKeyScrollEnabled());
+        binding.volumeScrollOption.setOnClickListener(v -> {
+            boolean newState = !Ranobe.isVolumeKeyScrollEnabled();
+            Ranobe.setVolumeKeyScroll(requireContext(), newState);
+            binding.volumeScrollOption.setChecked(newState);
+        });
+
         binding.projectLink.setOnClickListener(v -> openLink(Ranobe.RANOBE_GITHUB_LINK));
         binding.musicPlayerLink.setOnClickListener(v -> openLink(Ranobe.MP_LITE_GITHUB_LINK));
         binding.discordLink.setOnClickListener(v -> openLink(Ranobe.DISCORD_INVITE_LINK));
@@ -96,6 +103,7 @@ public class Settings extends Fragment {
     public void onResume() {
         super.onResume();
         syncChapterUpdatesToggle();
+        binding.volumeScrollOption.setChecked(Ranobe.isVolumeKeyScrollEnabled());
     }
 
     private void release(GithubRepo.GithubRelease release) {
