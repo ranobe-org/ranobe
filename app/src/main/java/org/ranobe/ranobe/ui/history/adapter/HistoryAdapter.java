@@ -58,22 +58,6 @@ public class HistoryAdapter extends ListAdapter<HistoryAdapter.Row, RecyclerView
         this.listener = listener;
     }
 
-    // list is newest first, so each section header is emitted once when the day bucket changes
-    public void submitHistory(List<ReadHistory> histories) {
-        List<Row> rows = new ArrayList<>();
-        int lastHeader = 0;
-        long today = startOfToday();
-        for (ReadHistory history : histories) {
-            int header = sectionFor(history.timestamp, today);
-            if (header != lastHeader) {
-                rows.add(new Row(header, null));
-                lastHeader = header;
-            }
-            rows.add(new Row(0, history));
-        }
-        submitList(rows);
-    }
-
     @StringRes
     private static int sectionFor(long timestamp, long today) {
         long day = 24L * 60 * 60 * 1000;
@@ -90,6 +74,22 @@ public class HistoryAdapter extends ListAdapter<HistoryAdapter.Row, RecyclerView
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTimeInMillis();
+    }
+
+    // list is newest first, so each section header is emitted once when the day bucket changes
+    public void submitHistory(List<ReadHistory> histories) {
+        List<Row> rows = new ArrayList<>();
+        int lastHeader = 0;
+        long today = startOfToday();
+        for (ReadHistory history : histories) {
+            int header = sectionFor(history.timestamp, today);
+            if (header != lastHeader) {
+                rows.add(new Row(header, null));
+                lastHeader = header;
+            }
+            rows.add(new Row(0, history));
+        }
+        submitList(rows);
     }
 
     @Override

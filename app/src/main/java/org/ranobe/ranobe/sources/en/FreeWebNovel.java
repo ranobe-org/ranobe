@@ -41,6 +41,7 @@ public class FreeWebNovel implements Source {
         String web = BASE_URL.concat("/sort/latest-release/" + page + "/");
         return parseNovel(HttpClient.GET(web, new HashMap<>()));
     }
+
     private List<Novel> parseNovel(String response) {
         // https://freewebnovel.com/sort/latest-release/2/
         List<Novel> items = new ArrayList<>();

@@ -8,9 +8,6 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="automatic">Auto</string>
-    <string name="theme_mode_sub_text">change the look and feel as per your preferences</string>
-    <string name="select_default_theme">Select default theme</string>
-    <string name="ui">UI</string>
     <string name="start_typing">Start typing…</string>
     <string name="set_the_font_size">Font Size</string>
     <string name="set_the_theme">Page Theme</string>
@@ -18,11 +15,9 @@
     <string name="customize_info">Customize</string>
     <string name="search">Search</string>
     <string name="sort">Sort</string>
-    <string name="sources">Sources</string>
     <string name="continue_reading_info">Continue Reading</string>
     <string name="no_results_err">we didn\'t find anything for you!</string>
     <string name="retry">Retry</string>
-    <string name="info">INFO</string>
     <string name="mp_lite_subtitle">An open source music player from the same developer</string>
     <string name="ranobem_subtitle">Manga reader for Android</string>
     <string name="no_novels_error">There are no novels in your library. Go to Explore and find some!</string>
@@ -42,7 +37,6 @@
     <string name="get_pro">get pro - play store</string>
     <string name="enable_new_chapter_update_notifications_for_your_library">Enable new chapter update notifications for your library</string>
     <string name="enable">Enable</string>
-    <string name="features">FEATURES</string>
     <string name="volume_key_scroll">Volume keys scroll</string>
     <string name="volume_key_scroll_sub_text">Scroll page using volume up and down buttons</string>
     <string name="scroll_speed">Scroll Speed</string>

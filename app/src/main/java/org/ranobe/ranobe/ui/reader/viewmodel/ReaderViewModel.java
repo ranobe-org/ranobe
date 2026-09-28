@@ -56,7 +56,8 @@ public class ReaderViewModel extends ViewModel {
 
     // fetch a chapter in the background so it's instant when the reader reaches it
     public void prefetch(Chapter chap) {
-        if (chap == null || prefetched.containsKey(chap.url) || prefetched.size() >= MAX_PREFETCHED) return;
+        if (chap == null || prefetched.containsKey(chap.url) || prefetched.size() >= MAX_PREFETCHED)
+            return;
         if (!prefetching.add(chap.url)) return;
 
         RanobeDatabase.databaseExecutor.execute(() -> {

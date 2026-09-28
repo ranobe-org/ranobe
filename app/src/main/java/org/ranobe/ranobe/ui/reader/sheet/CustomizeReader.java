@@ -75,7 +75,7 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
         void setVolumeKeyScroll(boolean isVolumeKeyScroll);
 
         void setVolumeScrollSpeed(int speed);
-    
+
         void setShowImages(boolean showImages);
     }
 }

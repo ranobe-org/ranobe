@@ -151,7 +151,8 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
 
             binding.chapterItemLayout.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) listener.onChapterItemClick(items.get(position));
+                if (position != RecyclerView.NO_POSITION)
+                    listener.onChapterItemClick(items.get(position));
             });
 
             binding.downloadBtn.setOnClickListener(v -> {

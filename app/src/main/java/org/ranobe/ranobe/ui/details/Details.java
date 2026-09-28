@@ -2,8 +2,8 @@ package org.ranobe.ranobe.ui.details;
 
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
-import android.text.Layout;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +16,8 @@ import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.google.android.material.color.MaterialColors;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.ranobe.ranobe.R;
@@ -76,7 +76,8 @@ public class Details extends Fragment {
         super.onResume();
         // the chapter list / reader go through the current source; re-pin it when coming back
         // to this page after another novel's details were opened on top of it
-        if (novel != null && novel.sourceId > 0) RanobeSettings.get().setCurrentSource(novel.sourceId).save();
+        if (novel != null && novel.sourceId > 0)
+            RanobeSettings.get().setCurrentSource(novel.sourceId).save();
     }
 
     // browse / search / library already hand over the title and cover (usually in Glide's

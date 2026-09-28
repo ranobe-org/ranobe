@@ -126,7 +126,8 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.MyViewHolder
 
             coverLayout.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) listener.onNovelItemClick(items.get(position));
+                if (position != RecyclerView.NO_POSITION)
+                    listener.onNovelItemClick(items.get(position));
             });
 
             coverLayout.setOnLongClickListener(v -> {

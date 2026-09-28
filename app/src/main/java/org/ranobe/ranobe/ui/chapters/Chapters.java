@@ -63,7 +63,6 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
     private HistoryViewModel historyViewModel;
     private Novel novel;
     private ChapterAdapter adapter;
-    private boolean scrolledToLastRead = false;
     private final BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -77,6 +76,7 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
             }
         }
     };
+    private boolean scrolledToLastRead = false;
     // Pending chapter/action to start after permission is granted
     private Chapter pendingDownloadChapter = null;
     private boolean pendingDownloadAll = false;
@@ -270,12 +270,14 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
 
     // jump to where the reader stopped, once both chapters and history have arrived
     private void scrollToLastReadOnce() {
-        if (scrolledToLastRead || originalItems.isEmpty() || adapter.getLastReadUrl() == null) return;
+        if (scrolledToLastRead || originalItems.isEmpty() || adapter.getLastReadUrl() == null)
+            return;
         for (int i = 0; i < originalItems.size(); i++) {
             if (originalItems.get(i).url.equals(adapter.getLastReadUrl())) {
                 scrolledToLastRead = true;
                 LinearLayoutManager manager = (LinearLayoutManager) binding.chapterList.getLayoutManager();
-                if (manager != null) manager.scrollToPositionWithOffset(i, binding.chapterList.getHeight() / 3);
+                if (manager != null)
+                    manager.scrollToPositionWithOffset(i, binding.chapterList.getHeight() / 3);
                 return;
             }
         }

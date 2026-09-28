@@ -105,7 +105,8 @@ public class PageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         int start = indexOfHeader(chapter);
         for (String paragraph : PARAGRAPH_BREAK.split(text)) {
             String trimmed = paragraph.trim();
-            if (!trimmed.isEmpty()) items.add(new Item(TYPE_TEXT, chapter, trimmed, items.size() - start));
+            if (!trimmed.isEmpty())
+                items.add(new Item(TYPE_TEXT, chapter, trimmed, items.size() - start));
         }
     }
 
@@ -137,7 +138,8 @@ public class PageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int chapterRowCount(int headerPosition) {
         int count = 0;
         Chapter chapter = chapterAt(headerPosition);
-        for (int i = headerPosition; i < items.size() && items.get(i).chapter == chapter; i++) count++;
+        for (int i = headerPosition; i < items.size() && items.get(i).chapter == chapter; i++)
+            count++;
         return count;
     }
 

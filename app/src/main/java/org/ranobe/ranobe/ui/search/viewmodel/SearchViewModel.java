@@ -31,6 +31,16 @@ public class SearchViewModel extends ViewModel {
     private int generation = 0;
     private int pending = 0;
 
+    private static List<DataSource> enabledSources() {
+        List<DataSource> sources = new ArrayList<>();
+        for (Integer id : SourceManager.getSources().keySet()) {
+            if (!Ranobe.isSourceEnabled(id)) continue;
+            DataSource dataSource = SourceManager.getSource(id).metadata();
+            if (dataSource.isActive) sources.add(dataSource);
+        }
+        return sources;
+    }
+
     public LiveData<Map<DataSource, List<Novel>>> getResults() {
         return results;
     }
@@ -48,7 +58,8 @@ public class SearchViewModel extends ViewModel {
         Filter next = new Filter();
         next.addFilter(Filter.FILTER_KEYWORD, keyword.trim());
         // same query again (e.g. back from details): keep the results / the search in flight
-        if (next.equals(filter) && (!collected.isEmpty() || Boolean.TRUE.equals(loading.getValue()))) return;
+        if (next.equals(filter) && (!collected.isEmpty() || Boolean.TRUE.equals(loading.getValue())))
+            return;
 
         filter = next;
         int current = ++generation;
@@ -82,15 +93,5 @@ public class SearchViewModel extends ViewModel {
             results.setValue(new LinkedHashMap<>(collected));
         }
         if (pending <= 0) loading.setValue(false);
-    }
-
-    private static List<DataSource> enabledSources() {
-        List<DataSource> sources = new ArrayList<>();
-        for (Integer id : SourceManager.getSources().keySet()) {
-            if (!Ranobe.isSourceEnabled(id)) continue;
-            DataSource dataSource = SourceManager.getSource(id).metadata();
-            if (dataSource.isActive) sources.add(dataSource);
-        }
-        return sources;
     }
 }

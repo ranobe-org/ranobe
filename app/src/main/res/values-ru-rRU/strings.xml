@@ -8,9 +8,6 @@
     <string name="light">Светлая</string>
     <string name="dark">Тёмная</string>
     <string name="automatic">Авто</string>
-    <string name="theme_mode_sub_text">измените оформление по своему вкусу</string>
-    <string name="select_default_theme">Выбрать тему по умолчанию</string>
-    <string name="ui">ИНТЕРФЕЙС</string>
     <string name="start_typing">Начните печатать…</string>
 <!--    <string name="search_helper_text">что вы хотите найти?</string>-->
     <string name="set_the_font_size">Размер шрифта</string>
@@ -19,11 +16,9 @@
     <string name="customize_info">Изменить</string>
     <string name="search">Поиск</string>
     <string name="sort">Сортировка</string>
-    <string name="sources">Источники</string>
     <string name="continue_reading_info">Читать дальше</string>
     <string name="no_results_err">ничего не найдено!</string>
     <string name="retry">Повторить</string>
-    <string name="info">ИНФОРМАЦИЯ</string>
     <string name="mp_lite_subtitle">Бесплатный музыкальный плеер от того же разработчика</string>
     <string name="ranobem_subtitle">Читалка манги для Android</string>
     <string name="no_novels_error">В вашей библиотеке нет ни одного ранобэ. Перейдите в раздел «Обзор» и найдите что‑нибудь!</string>
@@ -43,7 +38,6 @@
     <string name="get_pro">Получить Pro – Play Market</string>
     <string name="enable_new_chapter_update_notifications_for_your_library">Разрешить уведомления о новых главах для вашей библиотеки</string>
     <string name="enable">Включить</string>
-    <string name="features">ВОЗМОЖНОСТИ</string>
     <string name="volume_key_scroll">Прокрутка кнопками громкости</string>
     <string name="volume_key_scroll_sub_text">Прокручивать страницу кнопками регулировки громкости</string>
     <string name="scroll_speed">Скорость прокрутки</string>

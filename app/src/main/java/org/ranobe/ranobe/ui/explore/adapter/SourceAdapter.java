@@ -44,6 +44,12 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
         this.toggleListener = toggleListener;
     }
 
+    private static String languageName(String lang) {
+        if (Lang.eng.equals(lang)) return "English";
+        if (Lang.ru.equals(lang)) return "Русский";
+        return lang;
+    }
+
     public boolean isManaging() {
         return managing;
     }
@@ -52,12 +58,6 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
     public void setManaging(boolean managing) {
         this.managing = managing && toggleListener != null;
         notifyDataSetChanged();
-    }
-
-    private static String languageName(String lang) {
-        if (Lang.eng.equals(lang)) return "English";
-        if (Lang.ru.equals(lang)) return "Русский";
-        return lang;
     }
 
     @NonNull

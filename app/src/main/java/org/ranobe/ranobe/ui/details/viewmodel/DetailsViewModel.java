@@ -16,6 +16,17 @@ public class DetailsViewModel extends ViewModel {
     private static final long CACHE_EXPIRY_HOURS = 24;
     private MutableLiveData<String> error = new MutableLiveData<>();
 
+    private static Novel copy(Novel novel) {
+        Parcel parcel = Parcel.obtain();
+        try {
+            novel.writeToParcel(parcel, 0);
+            parcel.setDataPosition(0);
+            return Novel.CREATOR.createFromParcel(parcel);
+        } finally {
+            parcel.recycle();
+        }
+    }
+
     public MutableLiveData<String> getError() {
         return error = new MutableLiveData<>();
     }
@@ -37,17 +48,6 @@ public class DetailsViewModel extends ViewModel {
         });
 
         return details;
-    }
-
-    private static Novel copy(Novel novel) {
-        Parcel parcel = Parcel.obtain();
-        try {
-            novel.writeToParcel(parcel, 0);
-            parcel.setDataPosition(0);
-            return Novel.CREATOR.createFromParcel(parcel);
-        } finally {
-            parcel.recycle();
-        }
     }
 
     private boolean isCacheExpired(long cachedDate) {
