@@ -7,27 +7,43 @@
     android:layout_height="match_parent"
     tools:context=".ui.reader.ReaderActivity">
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/page_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/progress"
-        android:scrollbarSize="5dp"
+        android:clipToPadding="false"
+        android:paddingTop="16dp"
+        android:paddingBottom="96dp"
+        android:scrollbarSize="4dp"
         android:scrollbarThumbVertical="?colorSecondaryContainer"
         android:scrollbars="vertical" />
+
+    <!-- reading chrome: shown on tap, hidden while scrolling -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:elevation="2dp"
+        app:navigationContentDescription="@string/back"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:subtitleTextAppearance="?attr/textAppearanceBodySmall"
+        app:titleTextAppearance="?attr/textAppearanceTitleMedium" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:elevation="3dp"
+        android:indeterminate="true" />
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/customize"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:layout_gravity="bottom"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        android:elevation="2dp"
         app:menu="@menu/menu_reader_options"
         app:menuAlignmentMode="auto" />
 

@@ -1,25 +1,30 @@
 package org.ranobe.ranobe.ui.reader;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.ranobe.ranobe.R;
@@ -41,16 +46,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReaderActivity extends AppCompatActivity implements CustomizeReader.OnOptionSelection, Toolbar.OnMenuItemClickListener {
-    private final List<Chapter> chapters = new ArrayList<>();
+    // start loading the next chapter while this many paragraphs are still ahead
+    private static final int PREFETCH_ROWS = 12;
+    private static final long CHROME_ANIMATION_MS = 180;
+
     private ActivityReaderBinding binding;
     private PageAdapter adapter;
     private ReaderViewModel readerViewModel;
     private HistoryViewModel historyViewModel;
     private List<Chapter> chapterItems = new ArrayList<>();
-    private Chapter currentChapter;
     private ReadHistory readHistory;
+    private String openedChapterUrl;
+    // index in chapterItems of the last chapter appended to the page; -1 until the chapter list arrives
+    private int lastLoadedIndex = -1;
+    private String lastLoadedUrl;
+    private String visibleChapterUrl;
     private boolean isLoading = false;
-    private int currentChapterIndex;
+    private boolean endShown = false;
+    private boolean chromeVisible = true;
     private LinearLayoutManager layoutManager;
     private boolean isVolumeKeyScroll = false;
     private int volumeScrollSpeed = Ranobe.DEFAULT_VOLUME_SCROLL_SPEED;
@@ -61,7 +74,6 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         binding = ActivityReaderBinding.inflate(getLayoutInflater());
-        AppCompatDelegate.setDefaultNightMode(Ranobe.getThemeMode(getApplicationContext()));
         WindowInsetsControllerCompat windowInsetsController = new WindowInsetsControllerCompat(getWindow(), binding.getRoot());
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
         windowInsetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
@@ -72,49 +84,116 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
             return insets;
         });
 
-        binding.customize.setOnMenuItemClickListener(this);
-
         @SuppressWarnings("deprecation")
         Novel currentNovel = getIntent().getParcelableExtra(Ranobe.KEY_NOVEL);
         @SuppressWarnings("deprecation")
         Chapter chapter = getIntent().getParcelableExtra(Ranobe.KEY_CHAPTER);
         @SuppressWarnings("deprecation")
         ReadHistory history = getIntent().getParcelableExtra(Ranobe.KEY_READ_HISTORY);
-        currentChapter = chapter;
         readHistory = history;
+        openedChapterUrl = chapter.url;
         readerViewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
         historyViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
         ChaptersViewModel chaptersViewModel = new ViewModelProvider(this).get(ChaptersViewModel.class);
-        if (readHistory != null) RanobeSettings.get().setCurrentSource(readHistory.sourceId).save();
+        // chapter requests go through the current source, so pin it to the novel being read
+        int sourceId = readHistory != null ? readHistory.sourceId : currentNovel != null ? currentNovel.sourceId : 0;
+        if (sourceId > 0) RanobeSettings.get().setCurrentSource(sourceId).save();
 
         isVolumeKeyScroll = Ranobe.isVolumeKeyScrollEnabled();
         volumeScrollSpeed = Ranobe.getVolumeScrollSpeed();
-        adapter = new PageAdapter(chapters);
-        binding.pageList.setLayoutManager(new LinearLayoutManager(this));
-        binding.pageList.setAdapter(adapter);
-        binding.pageList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1)) {
-                    loadNextChapter();
-                }
-            }
-        });
-        layoutManager = (LinearLayoutManager) binding.pageList.getLayoutManager();
 
+        setUpChrome(currentNovel);
+        setUpPageList();
+        applyReaderTheme(Ranobe.themes.get(Ranobe.getReaderTheme(this)));
+
+        // the opened chapter loads right away; the full list is only needed to find the next one
+        isLoading = true;
+        binding.progress.show();
+        readerViewModel.getChapter(chapter).observe(this, this::setChapter);
+        readerViewModel.getError().observe(this, this::setChapterError);
         chaptersViewModel.getChapters(currentNovel).observe(this, this::setChapters);
         chaptersViewModel.getError().observe(this, this::setError);
     }
 
+    private void setUpChrome(Novel novel) {
+        binding.customize.setOnMenuItemClickListener(this);
+        binding.topBar.setNavigationOnClickListener(v -> finish());
+        String novelName = novel != null && novel.name != null ? novel.name
+                : readHistory != null ? readHistory.novelName : null;
+        binding.topBar.setTitle(novelName);
+    }
+
+    private void setUpPageList() {
+        adapter = new PageAdapter();
+        layoutManager = new LinearLayoutManager(this);
+        binding.pageList.setLayoutManager(layoutManager);
+        binding.pageList.setAdapter(adapter);
+        // theme/font changes rebind the visible rows; the default cross-fade on all of them at once glitches
+        if (binding.pageList.getItemAnimator() instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) binding.pageList.getItemAnimator()).setSupportsChangeAnimations(false);
+        }
+        binding.pageList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy != 0 && chromeVisible) setChromeVisible(false);
+                updateVisibleChapter();
+                if (dy > 0) maybeLoadNext();
+            }
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (!recyclerView.canScrollVertically(1)) loadNextChapter();
+            }
+        });
+
+        // a single tap on the page toggles the bars; long presses stay free for text selection
+        GestureDetectorCompat tapDetector = new GestureDetectorCompat(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(@NonNull MotionEvent e) {
+                setChromeVisible(!chromeVisible);
+                return true;
+            }
+        });
+        binding.pageList.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                tapDetector.onTouchEvent(e);
+                return false;
+            }
+        });
+    }
+
+    private void setChromeVisible(boolean visible) {
+        chromeVisible = visible;
+        animateBar(binding.topBar, visible, -1);
+        animateBar(binding.customize, visible, 1);
+    }
+
+    private void animateBar(View bar, boolean visible, int direction) {
+        bar.animate().cancel();
+        if (visible) {
+            bar.setVisibility(View.VISIBLE);
+            bar.animate().translationY(0).alpha(1f).setDuration(CHROME_ANIMATION_MS).setListener(null).start();
+        } else {
+            float distance = direction * (bar.getHeight() > 0 ? bar.getHeight() : 200);
+            bar.animate().translationY(distance).alpha(0f).setDuration(CHROME_ANIMATION_MS)
+                    .withEndAction(() -> bar.setVisibility(View.INVISIBLE)).start();
+        }
+    }
+
     private void setChapters(List<Chapter> items) {
         chapterItems = ListUtils.sortById(items);
-        for (Chapter chapter : items) {
-            if (chapter.url.equals(currentChapter.url)) {
-                currentChapterIndex = chapterItems.indexOf(chapter);
-            }
+        lastLoadedIndex = indexOf(lastLoadedUrl != null ? lastLoadedUrl : openedChapterUrl);
+        prefetchAfter(lastLoadedIndex);
+        maybeLoadNext();
+    }
+
+    private int indexOf(String url) {
+        if (url == null) return -1;
+        for (int i = 0; i < chapterItems.size(); i++) {
+            if (url.equals(chapterItems.get(i).url)) return i;
         }
-        readerViewModel.getChapter(currentChapter).observe(ReaderActivity.this, this::setChapter);
+        return -1;
     }
 
     private void setUpCustomizeReader() {
@@ -125,44 +204,101 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     private void setChapter(Chapter chapter) {
         isLoading = false;
         binding.progress.hide();
-        chapters.add(chapter);
-        currentChapter = chapter;
+        int start = adapter.appendChapter(chapter);
+        lastLoadedUrl = chapter.url;
+        if (!chapterItems.isEmpty()) lastLoadedIndex = indexOf(chapter.url);
 
-        if (layoutManager == null) return;
-        int scrollPosition = layoutManager.findFirstVisibleItemPosition();
-        View firstVisibleView = layoutManager.findViewByPosition(scrollPosition);
-        int scrollOffset = (firstVisibleView != null) ? firstVisibleView.getTop() : 0;
-
-        adapter.notifyItemInserted(chapters.size() - 1);
-
-        if (readHistory != null && binding.pageList.getAdapter() != null) {
-            binding.pageList.post(() -> {
-                if (binding.pageList.getAdapter().getItemCount() == 1)
-                    layoutManager.scrollToPositionWithOffset(0, readHistory.readerOffset);
-                else layoutManager.scrollToPositionWithOffset(scrollPosition, scrollOffset);
-            });
+        // reopening from history: return to the saved paragraph of the first chapter
+        if (start == 0 && readHistory != null && chapter.url.equals(readHistory.url)) {
+            int target = start + Math.max(0, Math.min(readHistory.position, adapter.chapterRowCount(start) - 1));
+            layoutManager.scrollToPositionWithOffset(target, readHistory.readerOffset);
         }
 
-        historyViewModel.markAsRead(currentChapter);
+        binding.pageList.post(this::updateVisibleChapter);
+        prefetchAfter(lastLoadedIndex);
+    }
+
+    private void prefetchAfter(int index) {
+        if (index >= 0 && index + 1 < chapterItems.size()) {
+            readerViewModel.prefetch(chapterItems.get(index + 1));
+        }
+    }
+
+    // tracks the chapter on screen: it's the one that gets marked read and whose position is saved
+    private void updateVisibleChapter() {
+        int position = layoutManager.findFirstVisibleItemPosition();
+        Chapter chapter = adapter.chapterAt(position);
+        if (chapter == null || chapter.url.equals(visibleChapterUrl)) return;
+        visibleChapterUrl = chapter.url;
+        binding.topBar.setSubtitle(chapter.name);
+        historyViewModel.markAsRead(chapter);
+    }
+
+    private void maybeLoadNext() {
+        if (adapter.getItemCount() == 0) return;
+        int lastVisible = layoutManager.findLastVisibleItemPosition();
+        if (lastVisible >= adapter.getItemCount() - PREFETCH_ROWS) loadNextChapter();
+    }
+
+    // pages only cover the screen once a chapter loads, so the window and loader must match the reader theme too
+    private void applyReaderTheme(ReaderTheme theme) {
+        int background = theme != null ? theme.getBackground()
+                : MaterialColors.getColor(binding.getRoot(), com.google.android.material.R.attr.colorSurface);
+        int text = theme != null ? theme.getText()
+                : MaterialColors.getColor(binding.getRoot(), com.google.android.material.R.attr.colorOnSurface);
+        int indicator = theme != null ? theme.getText()
+                : MaterialColors.getColor(binding.getRoot(), androidx.appcompat.R.attr.colorPrimary);
+        getWindow().getDecorView().setBackgroundColor(background);
+        binding.readerView.setBackgroundColor(background);
+        binding.progress.setIndicatorColor(indicator);
+        binding.progress.setTrackColor(ColorUtils.setAlphaComponent(indicator, 0x33));
+
+        // bars sit on the page, so they take the page colors with a slight tint to stand apart
+        int barColor = ColorUtils.blendARGB(background, text, 0.06f);
+        for (Toolbar bar : new Toolbar[]{binding.topBar, binding.customize}) {
+            bar.setBackgroundColor(barColor);
+            bar.setTitleTextColor(text);
+            bar.setSubtitleTextColor(ColorUtils.setAlphaComponent(text, 0xB3));
+            Drawable navigation = bar.getNavigationIcon();
+            if (navigation != null) navigation.mutate().setTint(text);
+            for (int i = 0; i < bar.getMenu().size(); i++) {
+                Drawable icon = bar.getMenu().getItem(i).getIcon();
+                if (icon != null) icon.mutate().setTint(text);
+            }
+        }
     }
 
     private void setError(String msg) {
-        if (msg.isEmpty()) return;
+        if (msg == null || msg.isEmpty()) return;
         Snackbar.make(binding.getRoot(), msg, Snackbar.LENGTH_LONG).show();
+    }
+
+    // a failed chapter load used to leave the spinner running forever
+    private void setChapterError(String msg) {
+        if (msg == null || msg.isEmpty()) return;
+        isLoading = false;
+        binding.progress.hide();
+        Snackbar.make(binding.getRoot(), R.string.chapter_load_failed, Snackbar.LENGTH_LONG)
+                .setAction(R.string.retry, v -> {
+                    if (adapter.getItemCount() == 0) recreate();
+                    else loadNextChapter();
+                })
+                .show();
     }
 
     @Override
     public void setFontSize(float size) {
         Ranobe.storeReaderFont(this, size);
         adapter.setFontSize(size);
-        adapter.notifyItemRangeChanged(0, chapters.size());
+        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
     }
 
     @Override
     public void setReaderTheme(String themeName) {
         ReaderTheme theme = Ranobe.themes.get(themeName);
+        applyReaderTheme(theme);
         adapter.setTheme(theme);
-        adapter.notifyItemRangeChanged(0, chapters.size());
+        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
         Ranobe.storeReaderTheme(this, themeName);
     }
 
@@ -170,13 +306,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     public void setBionicReading(boolean isBionicReading) {
         Ranobe.setBionicReader(this, isBionicReading);
         adapter.setBionicReading(isBionicReading);
-        if (layoutManager == null) return;
-
-        int scrollPosition = layoutManager.findFirstVisibleItemPosition();
-        View firstVisibleView = layoutManager.findViewByPosition(scrollPosition);
-        int scrollOffset = (firstVisibleView != null) ? firstVisibleView.getTop() : 0;
-        adapter.notifyItemChanged(scrollPosition);
-        binding.pageList.post(() -> layoutManager.scrollToPositionWithOffset(scrollPosition, scrollOffset));
+        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
     }
 
     @Override
@@ -232,14 +362,14 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     }
 
     private void loadNextChapter() {
-        if (!isLoading) {
-            if (currentChapterIndex + 1 < chapterItems.size()) {
-                isLoading = true;
-                currentChapterIndex += 1;
-                binding.progress.show();
-                Toast.makeText(ReaderActivity.this, "Loading next chapter", Toast.LENGTH_SHORT).show();
-                readerViewModel.getChapter(chapterItems.get(currentChapterIndex)).observe(ReaderActivity.this, this::setChapter);
-            }
+        if (isLoading || lastLoadedIndex < 0 || lastLoadedUrl == null) return;
+        if (lastLoadedIndex + 1 < chapterItems.size()) {
+            isLoading = true;
+            binding.progress.show();
+            readerViewModel.getChapter(chapterItems.get(lastLoadedIndex + 1)).observe(this, this::setChapter);
+        } else if (!endShown) {
+            endShown = true;
+            adapter.appendEnd();
         }
     }
 
@@ -292,13 +422,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     public void setShowImages(boolean showImages) {
         Ranobe.setShowImages(this, showImages);
         adapter.setShowImages(showImages);
-        if (layoutManager == null) return;
-
-        int scrollPosition = layoutManager.findFirstVisibleItemPosition();
-        View firstVisibleView = layoutManager.findViewByPosition(scrollPosition);
-        int scrollOffset = (firstVisibleView != null) ? firstVisibleView.getTop() : 0;
-        adapter.notifyItemRangeChanged(0, chapters.size());
-        binding.pageList.post(() -> layoutManager.scrollToPositionWithOffset(scrollPosition, scrollOffset));
+        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
     }
 
     @Override
@@ -313,15 +437,17 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         return false;
     }
 
+    // saved on pause rather than destroy, which isn't guaranteed to run; stores the paragraph
+    // within the chapter that's on screen, not the last chapter that happened to be loaded
     @Override
-    protected void onDestroy() {
-        if (layoutManager != null && currentChapter != null) {
-            int position = layoutManager.findFirstVisibleItemPosition();
-            View view = layoutManager.findViewByPosition(position);
-            int offset = (view != null) ? view.getTop() : 0;
-            historyViewModel.updateReadHistoryPosition(position, offset, currentChapter.url);
-        }
-        super.onDestroy();
-
+    protected void onPause() {
+        super.onPause();
+        if (layoutManager == null) return;
+        int position = layoutManager.findFirstVisibleItemPosition();
+        Chapter chapter = adapter.chapterAt(position);
+        if (chapter == null) return;
+        View view = layoutManager.findViewByPosition(position);
+        int offset = (view != null) ? view.getTop() - binding.pageList.getPaddingTop() : 0;
+        historyViewModel.updateReadHistoryPosition(adapter.indexInChapter(position), offset, chapter.url);
     }
 }

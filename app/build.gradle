@@ -73,6 +73,7 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.7.1'
     annotationProcessor 'androidx.room:room-compiler:2.7.1'
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20240303'
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 
 

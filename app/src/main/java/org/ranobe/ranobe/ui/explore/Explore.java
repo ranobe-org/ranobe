@@ -31,8 +31,9 @@ import org.ranobe.ranobe.ui.reader.ReaderActivity;
 import org.ranobe.ranobe.util.DateUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class Explore extends Fragment implements SourceAdapter.OnSourceSelected, SourceAdapter.OnSourceToggled {
     private FragmentExploreBinding binding;
@@ -56,6 +57,7 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected,
         binding.sourceList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         binding.novelCoverLayout.setOnClickListener(v -> openNovelDetails());
         binding.continueBtn.setOnClickListener(v -> continueReading());
+        binding.continueReading.setOnClickListener(v -> continueReading());
 
         setSourcesListToUi();
         setContinueReadingItem();
@@ -81,34 +83,47 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected,
 
     private void setContinueReadingItem() {
         RanobeDatabase.database().readHistory().getLastReadHistory().observe(getViewLifecycleOwner(), history -> {
-            if (history != null) {
-                this.readHistory = history;
-                Glide.with(binding.novelCover.getContext())
-                        .load(history.cover)
-                        .into(binding.novelCover);
+            this.readHistory = history;
+            // hide again once history is cleared, instead of leaving a stale card behind
+            int visibility = history == null ? View.GONE : View.VISIBLE;
+            binding.continueReadingInfo.setVisibility(visibility);
+            binding.continueReading.setVisibility(visibility);
+            if (history == null) return;
 
-                binding.novelTitle.setText(history.novelName);
-                binding.lastReadChapter.setText(history.name);
-                binding.lastReadTimestamp.setText(DateUtils.getRelativeTime(history.timestamp));
+            Glide.with(binding.novelCover.getContext())
+                    .load(history.cover)
+                    .centerCrop()
+                    .into(binding.novelCover);
 
-                binding.continueReadingInfo.setVisibility(View.VISIBLE);
-                binding.continueReading.setVisibility(View.VISIBLE);
-
-            }
+            binding.novelTitle.setText(history.novelName);
+            binding.lastReadChapter.setText(history.name);
+            binding.lastReadTimestamp.setText(DateUtils.getRelativeTime(history.timestamp));
         });
     }
 
     private void setSourcesListToUi() {
-        HashMap<Integer, Class<?>> sources = (HashMap<Integer, Class<?>>) SourceManager.getSources();
+        Map<Integer, Class<?>> sources = SourceManager.getSources();
         List<DataSource> dataSources = new ArrayList<>();
         for (Integer id : sources.keySet()) {
             Source src = SourceManager.getSource(id);
             DataSource dataSource = src.metadata();
             if (dataSource.isActive) {
-                dataSources.add(src.metadata());
+                dataSources.add(dataSource);
             }
         }
-        binding.sourceList.setAdapter(new SourceAdapter(dataSources, this, this));
+        // group by language, then alphabetically
+        Collections.sort(dataSources, (a, b) -> {
+            int byLang = a.lang.compareTo(b.lang);
+            return byLang != 0 ? byLang : a.name.compareToIgnoreCase(b.name);
+        });
+        SourceAdapter adapter = new SourceAdapter(dataSources, this, this);
+        binding.sourceList.setAdapter(adapter);
+        binding.manageSources.setOnClickListener(v -> {
+            boolean managing = !adapter.isManaging();
+            adapter.setManaging(managing);
+            binding.manageSources.setText(managing ? R.string.done : R.string.manage);
+            binding.sourcesHint.setText(managing ? R.string.sources_hint : R.string.sources_browse_hint);
+        });
     }
 
     @Override

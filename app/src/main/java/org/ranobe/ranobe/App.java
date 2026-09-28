@@ -8,6 +8,8 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.google.android.material.color.DynamicColors;
 
 import org.ranobe.ranobe.config.Ranobe;
@@ -26,6 +28,8 @@ public class App extends Application {
         Log.d(Ranobe.DEBUG, "app launched");
         DynamicColors.applyToActivitiesIfAvailable(this);
         App.context = getApplicationContext();
+        // night mode is process-wide; setting it from an activity recreates every live activity
+        AppCompatDelegate.setDefaultNightMode(Ranobe.getThemeMode(this));
         createNotificationChannels();
     }
 

@@ -5,13 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="56dp"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:paddingVertical="8dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="8dp">
+
+    <!-- marks the chapter you stopped at -->
+    <View
+        android:id="@+id/last_read_marker"
+        android:layout_width="4dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/bg_setting_icon"
+        android:backgroundTint="?colorPrimary"
+        android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/chapter_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -20,17 +34,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="?colorOnSurface"
-            android:textSize="15sp" />
+            android:maxLines="2"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?colorOnSurface" />
 
         <TextView
             android:id="@+id/updated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             android:textColor="?colorOnSurfaceVariant"
-            android:textSize="11sp"
             android:visibility="gone" />
 
     </LinearLayout>
@@ -39,21 +54,19 @@
         android:id="@+id/download_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="4dp"
+        android:layout_marginHorizontal="12dp"
         android:indeterminate="true"
-        android:visibility="visible"
+        android:visibility="gone"
         app:indicatorSize="20dp" />
 
     <ImageButton
         android:id="@+id/download_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/download"
-        android:padding="8dp"
+        android:padding="10dp"
         android:src="@drawable/ic_download"
-        app:tint="?colorOnSurface" />
+        app:tint="?colorOnSurfaceVariant" />
 
 </LinearLayout>

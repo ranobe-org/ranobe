@@ -10,6 +10,7 @@ import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.HttpClient;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
+import org.ranobe.ranobe.util.SourceUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,14 +32,14 @@ public class WordRain69 implements Source {
         source.name = "WordRain69";
         source.lang = Lang.eng;
         source.dev = "ak-sohag";
-        source.logo = "https://wordrain69.com/storage/2024/06/cropped-IMG_20240623_094303-270x270.png";
-        source.isActive = false;
+        source.logo = "https://wordrain69.com/storage/2025/11/cropped-Wordrain-removebg-preview-1-270x270.png";
+        source.isActive = true;
         return source;
     }
 
     @Override
     public List<Novel> novels(int page) throws Exception {
-        String web = BASE_URL.concat("/manga-genre/novel/page/" + page + "/");
+        String web = BASE_URL.concat("/manga/page/" + page + "/");
         return parseNovel(HttpClient.GET(web, new HashMap<>()));
     }
 
@@ -49,11 +50,11 @@ public class WordRain69 implements Source {
         for (Element element : doc.select(".page-item-detail.text")) {
             String url = element.select("h3.h5 > a").attr("href").trim();
 
-            if (url.length() > 0) {
+            if (!url.isEmpty()) {
                 Novel item = new Novel(url);
                 item.sourceId = SOURCE_ID;
                 item.name = element.select("h3.h5 > a").text().trim();
-                item.cover = element.select("div.item-thumb  img").attr("src");
+                item.cover = element.select("div.item-thumb img").attr("data-src");
                 items.add(item);
             }
         }
@@ -67,7 +68,7 @@ public class WordRain69 implements Source {
 
         novel.sourceId = SOURCE_ID;
         novel.name = doc.select("div.post-title > h1").text().trim();
-        novel.cover = doc.select("div.summary_image > a > img").attr("src").trim();
+        novel.cover = doc.select("div.summary_image > a > img").attr("data-src").trim();
         novel.summary = String.join("\n\n", doc.select("div.summary__content > p").eachText());
         novel.rating = NumberUtils.toFloat(doc.select("div.post-total-rating span.score").text().trim());
         novel.authors = Arrays.asList(doc.select(".author-content > a").text().split(","));
@@ -129,28 +130,23 @@ public class WordRain69 implements Source {
 
     @Override
     public List<Novel> search(Filter filters, int page) throws Exception {
-
-        //// Search function is not working in site
-
         List<Novel> items = new ArrayList<>();
 
-//        if (filters.hashKeyword()) {
-//            String web = SourceUtils.buildUrl(BASE_URL,"/?s=", filters.getKeyword());
-//            Element doc = Jsoup.parse(HttpClient.GET(web, new HashMap<>()));
-//            for (Element element : doc.select(".page-item-detail.text")) {
-//                String url = element.select("h3.h5 > a").attr("href").trim();
-//
-//                if (url.length() > 0) {
-//                    Novel item = new Novel(url);
-//                    item.sourceId = SOURCE_ID;
-//                    item.url = url;
-//                    item.name = element.select("h3.h5 > a").text().trim();
-//                    item.cover = element.select("div.item-thumb  img").attr("src");
-//
-//                    items.add(item);
-//                }
-//            }
-//        }
+        if (filters.hashKeyword()) {
+            String web = SourceUtils.buildUrl(BASE_URL, "/page/", String.valueOf(page), "/?post_type=wp-manga&s=", filters.getKeyword());
+            Element doc = Jsoup.parse(HttpClient.GET(web, new HashMap<>()));
+            for (Element element : doc.select(".c-tabs-item__content")) {
+                String url = element.select(".post-title a").attr("href").trim();
+
+                if (!url.isEmpty()) {
+                    Novel item = new Novel(url);
+                    item.sourceId = SOURCE_ID;
+                    item.name = element.select(".post-title a").text().trim();
+                    item.cover = element.select(".tab-thumb img").attr("data-src");
+                    items.add(item);
+                }
+            }
+        }
 
         return items;
     }

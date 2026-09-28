@@ -1,70 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/source_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
+    android:gravity="center_vertical"
+    android:minHeight="72dp"
     android:orientation="horizontal"
-    android:padding="5dp">
-
-    <TextView
-        android:id="@+id/source_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="20dp"
-        android:textColor="?colorOnSurface"
-        android:textSize="@dimen/text_med" />
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="10dp">
 
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp">
+        style="@style/Widget.Material3.CardView.Filled"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:cardBackgroundColor="?colorSecondaryContainer"
+        app:cardCornerRadius="14dp">
+
+        <!-- shown until the logo loads, and kept when it fails -->
+        <TextView
+            android:id="@+id/source_initial"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="?colorOnSecondaryContainer"
+            tools:text="R" />
 
         <ImageView
             android:id="@+id/source_logo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:background="?colorSurfaceVariant"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:contentDescription="@string/image"
-            android:padding="10dp" />
+            android:padding="8dp"
+            android:scaleType="fitCenter" />
+
     </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout
+        android:id="@+id/source_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/source_name"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="?colorOnSurface"
-            android:textSize="@dimen/text_big" />
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="?colorOnSurface" />
 
         <TextView
             android:id="@+id/source_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="?colorOnSurfaceVariant"
-            android:textSize="@dimen/text_small" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?colorOnSurfaceVariant" />
 
     </LinearLayout>
+
+    <!-- tells the user the row opens the source; swapped for the switch while managing -->
+    <ImageView
+        android:id="@+id/source_chevron"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_chevron_right"
+        app:tint="?colorOnSurfaceVariant" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/source_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="5dp"
         android:visibility="gone" />
 
 </LinearLayout>

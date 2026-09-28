@@ -12,17 +12,17 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class Repository {
-    private final Executor executor;
+    // shared across all repositories; a new pool per instance spun up fresh threads for every request
+    private static final Executor executor = Executors.newCachedThreadPool();
     private final Source source;
 
     public Repository() {
-        this.executor = Executors.newCachedThreadPool();
         this.source = SourceManager.getSource(RanobeSettings.get().getCurrentSource());
     }
 
+    // novels opened from old history rows may not carry a source id; fall back to the current one
     public Repository(int sourceId) {
-        this.executor = Executors.newCachedThreadPool();
-        this.source = SourceManager.getSource(sourceId);
+        this.source = SourceManager.getSource(sourceId > 0 ? sourceId : RanobeSettings.get().getCurrentSource());
     }
 
     public void novels(int page, Callback<List<Novel>> callback) {

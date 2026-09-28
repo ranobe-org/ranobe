@@ -1,5 +1,7 @@
 package org.ranobe.ranobe.ui.details.viewmodel;
 
+import android.os.Parcel;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -27,7 +29,7 @@ public class DetailsViewModel extends ViewModel {
                     .get(novel.url);
 
             if (cachedMetadata == null || isCacheExpired(cachedMetadata.cachedDate)) {
-                fetchFromNetwork(novel, details, error, cachedMetadata != null);
+                fetchFromNetwork(novel, details, error, cachedMetadata);
             } else {
                 Novel cachedNovel = NovelMapper.ToNovel(cachedMetadata);
                 details.postValue(cachedNovel);
@@ -35,6 +37,17 @@ public class DetailsViewModel extends ViewModel {
         });
 
         return details;
+    }
+
+    private static Novel copy(Novel novel) {
+        Parcel parcel = Parcel.obtain();
+        try {
+            novel.writeToParcel(parcel, 0);
+            parcel.setDataPosition(0);
+            return Novel.CREATOR.createFromParcel(parcel);
+        } finally {
+            parcel.recycle();
+        }
     }
 
     private boolean isCacheExpired(long cachedDate) {
@@ -45,24 +58,40 @@ public class DetailsViewModel extends ViewModel {
     private void fetchFromNetwork(Novel novel,
                                   MutableLiveData<Novel> details,
                                   MutableLiveData<String> error,
-                                  boolean shouldDeleteOldCache) {
-        new Repository().details(novel, new Repository.Callback<Novel>() {
+                                  NovelMetadata staleCache) {
+        // sources fill in the novel they're given on a worker thread; don't hand them the
+        // instance the details page is showing
+        new Repository(novel.sourceId).details(copy(novel), new Repository.Callback<Novel>() {
             @Override
             public void onComplete(Novel result) {
-                // Update cache
-                if (shouldDeleteOldCache) {
-                    RanobeDatabase.database().novelMetadata().delete(novel.url);
+                // a block / error page parses into a nameless novel; don't let it replace or pin a good copy
+                if (result == null || result.name == null || result.name.trim().isEmpty()) {
+                    if (staleCache != null) details.postValue(NovelMapper.ToNovel(staleCache));
+                    else if (result != null) details.postValue(result);
+                    else error.postValue("Couldn't load novel details");
+                    return;
                 }
                 NovelMetadata newMetadata = NovelMapper.ToNovelMetadata(result);
-                newMetadata.cachedDate = System.currentTimeMillis();
-                RanobeDatabase.database().novelMetadata().save(newMetadata);
-
                 details.postValue(result);
+
+                // Update cache
+                newMetadata.cachedDate = System.currentTimeMillis();
+                RanobeDatabase.database().runInTransaction(() -> {
+                    if (staleCache != null) {
+                        RanobeDatabase.database().novelMetadata().delete(novel.url);
+                    }
+                    RanobeDatabase.database().novelMetadata().save(newMetadata);
+                });
             }
 
             @Override
             public void onError(Exception e) {
-                error.postValue(e.getLocalizedMessage());
+                // an expired copy is better than nothing when the source is unreachable
+                if (staleCache != null) {
+                    details.postValue(NovelMapper.ToNovel(staleCache));
+                } else {
+                    error.postValue(e.getLocalizedMessage());
+                }
             }
         });
     }

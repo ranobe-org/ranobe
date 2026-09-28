@@ -32,7 +32,7 @@ public class ChaptersViewModel extends ViewModel {
 
             if (!hasCache || cacheExpired) {
                 // Cache miss or expired → fetch from network
-                fetchFromNetwork(novel, chapters, error, hasCache);
+                fetchFromNetwork(novel, chapters, error, hasCache ? cachedMetadata : null);
             } else {
                 chapters.postValue(ChapterMapper.ToChapterList(cachedMetadata));
             }
@@ -48,27 +48,38 @@ public class ChaptersViewModel extends ViewModel {
     private void fetchFromNetwork(Novel novel,
                                   MutableLiveData<List<Chapter>> chapters,
                                   MutableLiveData<String> error,
-                                  boolean shouldDeleteOldCache) {
-        RanobeDatabase.databaseExecutor.execute(() -> {
-            new Repository().chapters(novel, new Repository.Callback<List<Chapter>>() {
-                @Override
-                public void onComplete(List<Chapter> result) {
-                    if (shouldDeleteOldCache) {
+                                  List<ChapterMetadata> staleCache) {
+        new Repository(novel.sourceId).chapters(novel, new Repository.Callback<List<Chapter>>() {
+            @Override
+            public void onComplete(List<Chapter> result) {
+                // an empty list is usually a block / error page; keep the cached list instead of wiping it
+                if ((result == null || result.isEmpty()) && staleCache != null) {
+                    chapters.postValue(ChapterMapper.ToChapterList(staleCache));
+                    return;
+                }
+                List<ChapterMetadata> list = ChapterMapper.ToChapterMetadataList(result);
+                // show the list first, persisting a few thousand rows shouldn't delay the UI
+                chapters.postValue(result);
+
+                long now = System.currentTimeMillis();
+                for (ChapterMetadata item : list) item.cachedDate = now;
+                RanobeDatabase.database().runInTransaction(() -> {
+                    if (staleCache != null) {
                         RanobeDatabase.database().chapterMetadata().deleteByNovel(novel.url);
                     }
-                    List<ChapterMetadata> list = ChapterMapper.ToChapterMetadataList(result);
-                    for (int i = 0; i < list.size(); i++)
-                        list.get(i).cachedDate = System.currentTimeMillis();
                     RanobeDatabase.database().chapterMetadata().saveAll(list);
-                    chapters.postValue(result);
-                }
+                });
+            }
 
-                @Override
-                public void onError(Exception e) {
+            @Override
+            public void onError(Exception e) {
+                // an expired list is better than nothing when the source is unreachable
+                if (staleCache != null) {
+                    chapters.postValue(ChapterMapper.ToChapterList(staleCache));
+                } else {
                     error.postValue(e.getLocalizedMessage());
                 }
-            });
-
+            }
         });
     }
 

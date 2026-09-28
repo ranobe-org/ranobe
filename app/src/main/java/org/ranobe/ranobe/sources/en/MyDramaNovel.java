@@ -33,7 +33,7 @@ public class MyDramaNovel implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://mydramanovel.com/wp-content/uploads/2025/01/Icon-300x300.webp";
-        source.isActive = false;
+        source.isActive = true;
         return source;
     }
 
@@ -51,7 +51,8 @@ public class MyDramaNovel implements Source {
         }
 
         int start = (page == 0 || page == 1) ? 0 : NOVELS_PER_PAGE * (page - 1);
-        int end = start + NOVELS_PER_PAGE;
+        if (start >= allNovels.size()) return items;
+        int end = Math.min(start + NOVELS_PER_PAGE, allNovels.size());
         List<String> sub = allNovels.subList(start, end);
 
         for (String u : sub) {

@@ -21,10 +21,14 @@ import org.ranobe.ranobe.sources.en.WordRain69;
 import org.ranobe.ranobe.sources.en.WuxiaWorld;
 import org.ranobe.ranobe.sources.ru.RanobeHub;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class SourceManager {
+    // built once; looked up on every repository call. Sorted by id so iteration order is stable.
+    private static final Map<Integer, Class<?>> SOURCES = buildSources();
+
     private SourceManager() throws IllegalAccessException {
         throw new IllegalAccessException("Cannot initialize this class ;)");
     }
@@ -43,7 +47,11 @@ public class SourceManager {
     }
 
     public static Map<Integer, Class<?>> getSources() {
-        HashMap<Integer, Class<?>> sources = new HashMap<>();
+        return SOURCES;
+    }
+
+    private static Map<Integer, Class<?>> buildSources() {
+        Map<Integer, Class<?>> sources = new TreeMap<>();
         sources.put(1, ReadLightNovel.class);
         sources.put(2, VipNovel.class);
         sources.put(3, LightNovelBtt.class);
@@ -65,6 +73,6 @@ public class SourceManager {
         sources.put(19, MyDramaNovel.class);
         sources.put(20, RoyalRoad.class);
 
-        return sources;
+        return Collections.unmodifiableMap(sources);
     }
 }

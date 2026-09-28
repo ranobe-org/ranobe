@@ -14,28 +14,36 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentBrowseBinding;
+import org.ranobe.ranobe.models.DataSource;
+import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
+import org.ranobe.ranobe.sources.Source;
+import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
 import org.ranobe.ranobe.ui.browse.viewmodel.BrowseViewModel;
 import org.ranobe.ranobe.ui.error.Error;
-import org.ranobe.ranobe.ui.views.SpacingDecorator;
 import org.ranobe.ranobe.util.DisplayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickListener {
+    // start the next page while this many rows are still below the screen
+    private static final int PREFETCH_ROWS = 2;
+
     private final List<Novel> list = new ArrayList<>();
     private FragmentBrowseBinding binding;
 
     private BrowseViewModel viewModel;
     private NovelAdapter adapter;
+    private GridLayoutManager layoutManager;
 
     private int sourceId = -1;
-    private boolean isLoading = false;
 
     public Browse() {
     }
@@ -59,42 +67,76 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding = FragmentBrowseBinding.bind(view);
+        setUpToolbar();
 
-        adapter = new NovelAdapter(list, this);
-        DisplayUtils utils = new DisplayUtils(requireContext(), R.layout.item_novel);
-        binding.novelList.setLayoutManager(new GridLayoutManager(requireActivity(), utils.noOfCols()));
-        binding.novelList.addItemDecoration(new SpacingDecorator(utils.spacing()));
+        adapter = new NovelAdapter(list, this).asGrid();
+        layoutManager = DisplayUtils.applyNovelGrid(binding.novelList);
         binding.novelList.setAdapter(adapter);
         binding.novelList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1) && !isLoading) {
-                    binding.progress.show();
-                    isLoading = true;
-                    viewModel.getNovels(sourceId);
-                }
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) maybeLoadMore();
             }
         });
 
+        viewModel.open(sourceId);
+        viewModel.getNovels().observe(getViewLifecycleOwner(), this::setNovels);
+        viewModel.isLoading().observe(getViewLifecycleOwner(), loading -> updateLoading());
         viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
-        viewModel.getNovels(sourceId).observe(getViewLifecycleOwner(), (novels) -> {
-            binding.progress.hide();
-            isLoading = false;
-            int old = list.size();
-            list.clear();
-            list.addAll(novels);
-            adapter.notifyItemRangeInserted(old, list.size());
+    }
+
+    private void setUpToolbar() {
+        binding.toolbar.setNavigationOnClickListener(v ->
+                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigateUp());
+        Source source = SourceManager.getSource(sourceId);
+        if (source == null) return;
+        DataSource metadata = source.metadata();
+        binding.toolbar.setTitle(metadata.name);
+        binding.toolbar.setSubtitle(Lang.eng.equals(metadata.lang) ? "English" : Lang.ru.equals(metadata.lang) ? "Русский" : metadata.lang);
+    }
+
+    private void setNovels(List<Novel> novels) {
+        int old = list.size();
+        list.clear();
+        list.addAll(novels);
+        if (novels.size() >= old) {
+            adapter.notifyItemRangeInserted(old, novels.size() - old);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+        updateLoading();
+        // a short first page can't be scrolled, so keep loading until the screen is filled
+        binding.novelList.post(() -> {
+            if (binding != null && !binding.novelList.canScrollVertically(1)) maybeLoadMore();
         });
     }
 
-    private void setUpError(String error) {
-        binding.progress.hide();
-        // error on the first call
-        if (list.isEmpty()) {
-            Error.navigateToErrorFragment(requireActivity(), error);
+    private void maybeLoadMore() {
+        if (layoutManager == null || viewModel.isEndReached()) return;
+        int lastVisible = layoutManager.findLastVisibleItemPosition();
+        if (lastVisible >= list.size() - layoutManager.getSpanCount() * PREFETCH_ROWS) {
+            viewModel.loadMore();
         }
+    }
+
+    private void updateLoading() {
+        boolean loading = Boolean.TRUE.equals(viewModel.isLoading().getValue());
+        boolean empty = list.isEmpty();
+        binding.initialProgress.setVisibility(loading && empty ? View.VISIBLE : View.GONE);
+        binding.progress.setVisibility(loading && !empty ? View.VISIBLE : View.GONE);
+        binding.empty.setVisibility(!loading && empty && viewModel.isEndReached() ? View.VISIBLE : View.GONE);
+    }
+
+    private void setUpError(BrowseViewModel.LoadError error) {
+        if (error == null) return;
+        viewModel.clearError();
+        if (error.firstPage && list.isEmpty()) {
+            Error.navigateToErrorFragment(requireActivity(), error.message);
+            return;
+        }
+        Snackbar.make(binding.getRoot(), R.string.browse_load_failed, Snackbar.LENGTH_LONG)
+                .setAction(R.string.retry, v -> viewModel.loadMore())
+                .show();
     }
 
     @Override

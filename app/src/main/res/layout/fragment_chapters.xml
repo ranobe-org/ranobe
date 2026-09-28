@@ -7,46 +7,63 @@
     android:orientation="vertical"
     tools:context=".ui.chapters.Chapters">
 
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorSurface"
-        app:menu="@menu/menu_chapter_toolbar" />
+        android:layout_marginTop="-16dp"
+        app:menu="@menu/menu_chapter_toolbar"
+        app:subtitleTextAppearance="?attr/textAppearanceBodyMedium"
+        app:subtitleTextColor="?colorOnSurfaceVariant"
+        app:titleTextAppearance="?attr/textAppearanceTitleLarge" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminate="true" />
+        android:layout_marginHorizontal="16dp"
+        android:indeterminate="true"
+        app:trackCornerRadius="2dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/search_view"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
-        android:hint="@string/start_typing"
-        android:visibility="gone">
+        android:hint="@string/search_chapters"
+        android:visibility="gone"
+        app:boxCornerRadiusBottomEnd="24dp"
+        app:boxCornerRadiusBottomStart="24dp"
+        app:boxCornerRadiusTopEnd="24dp"
+        app:boxCornerRadiusTopStart="24dp"
+        app:endIconMode="clear_text"
+        app:startIconDrawable="@drawable/ic_search">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/search_field"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorSurface"
+        android:paddingHorizontal="16dp"
         android:paddingVertical="6dp"
         android:text="@string/swipe_tip"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-        android:textColor="?colorPrimarySurface" />
+        android:textAppearance="?attr/textAppearanceLabelSmall"
+        android:textColor="?colorOutline" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chapter_list"
@@ -54,6 +71,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingBottom="200dp" />
+        android:paddingBottom="24dp" />
 
 </LinearLayout>

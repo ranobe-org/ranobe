@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.ranobe.ranobe.BuildConfig;
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentSettingsBinding;
@@ -68,14 +69,20 @@ public class Settings extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (!Ranobe.isPro()) {
-            binding.proApp.setVisibility(View.VISIBLE);
-        }
+        boolean isPro = Ranobe.isPro();
+        binding.proApp.setVisibility(isPro ? View.GONE : View.VISIBLE);
+        binding.editionBadge.setText(isPro ? R.string.edition_pro : R.string.edition_free);
+        binding.appVersion.setText(BuildConfig.VERSION_NAME);
 
-        binding.themeModeOption.setOnClickListener(v -> binding.themeModeView.setVisibility(getPolarVisibility(binding.themeModeView)));
-        binding.lightChip.setOnClickListener(v -> selectTheme(AppCompatDelegate.MODE_NIGHT_NO));
-        binding.nightChip.setOnClickListener(v -> selectTheme(AppCompatDelegate.MODE_NIGHT_YES));
-        binding.autoChip.setOnClickListener(v -> selectTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM));
+        // the row only labels the segmented control below it
+        binding.themeModeOption.setClickable(false);
+        binding.themeModeToggle.check(themeButtonFor(Ranobe.getThemeMode(requireActivity().getApplicationContext())));
+        binding.themeModeToggle.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (!isChecked) return;
+            if (checkedId == R.id.theme_light) selectTheme(AppCompatDelegate.MODE_NIGHT_NO);
+            else if (checkedId == R.id.theme_dark) selectTheme(AppCompatDelegate.MODE_NIGHT_YES);
+            else selectTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        });
 
         binding.chapterUpdatesOption.setOnClickListener(v -> handleChapterUpdatesClick());
         syncChapterUpdatesToggle();
@@ -128,7 +135,7 @@ public class Settings extends Fragment {
     private void release(GithubRepo.GithubRelease release) {
         if (release.updateAvailable) {
             binding.updateCard.setVisibility(View.VISIBLE);
-            binding.versionString.setText(String.format("A new version of the app is available %s", release.newReleaseVersion));
+            binding.versionString.setText(getString(R.string.update_available, release.newReleaseVersion));
             binding.getUpdate.setOnClickListener(v -> openLink(release.newReleaseUrl));
         }
     }
@@ -143,14 +150,16 @@ public class Settings extends Fragment {
             binding.themeModeOption.setIcon(R.drawable.ic_theme_mode_auto);
     }
 
-    private int getPolarVisibility(View view) {
-        int mode = view.getVisibility();
-        return mode == View.VISIBLE ? View.GONE : View.VISIBLE;
+    private int themeButtonFor(int mode) {
+        if (mode == AppCompatDelegate.MODE_NIGHT_NO) return R.id.theme_light;
+        if (mode == AppCompatDelegate.MODE_NIGHT_YES) return R.id.theme_dark;
+        return R.id.theme_auto;
     }
 
     private void selectTheme(int theme) {
-        AppCompatDelegate.setDefaultNightMode(theme);
+        // store first: changing the mode recreates the activity, which re-reads the stored value
         Ranobe.storeThemeMode(requireActivity().getApplicationContext(), theme);
+        AppCompatDelegate.setDefaultNightMode(theme);
     }
 
     private void syncChapterUpdatesToggle() {

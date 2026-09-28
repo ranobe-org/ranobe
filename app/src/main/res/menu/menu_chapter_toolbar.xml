@@ -6,18 +6,21 @@
         android:id="@+id/search"
         android:icon="@drawable/ic_search"
         android:title="@string/search"
+        app:iconTint="?colorOnSurfaceVariant"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/sort"
         android:icon="@drawable/ic_sort"
         android:title="@string/sort"
+        app:iconTint="?colorOnSurfaceVariant"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/download_all"
         android:icon="@drawable/ic_download"
         android:title="@string/download_all"
+        app:iconTint="?colorOnSurfaceVariant"
         app:showAsAction="ifRoom" />
 
 </menu>

@@ -27,6 +27,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -50,7 +52,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 public class Chapters extends BottomSheetDialogFragment implements ChapterAdapter.OnChapterItemClickListener, ChapterAdapter.OnChapterDownloadClickListener, Toolbar.OnMenuItemClickListener {
@@ -62,6 +63,7 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
     private HistoryViewModel historyViewModel;
     private Novel novel;
     private ChapterAdapter adapter;
+    private boolean scrolledToLastRead = false;
     private final BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -121,6 +123,21 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
         registerDownloadReceiver();
     }
 
+    // open as a tall sheet straight away; a half-height list of chapters is hard to scan
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!(getDialog() instanceof BottomSheetDialog)) return;
+        BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
+        View sheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+        if (sheet != null) {
+            sheet.getLayoutParams().height = (int) (getResources().getDisplayMetrics().heightPixels * 0.9f);
+            sheet.requestLayout();
+        }
+        dialog.getBehavior().setSkipCollapsed(true);
+        dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -154,7 +171,13 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
         historyViewModel.getReadHistoriesByNovel(novel.url).observe(getViewLifecycleOwner(), readHistories -> {
             readHistoryList.clear();
             readHistoryList.addAll(readHistories);
-            adapter.notifyDataSetChanged();
+            adapter.setHistory(readHistoryList);
+            RecyclerView.Adapter<?> current = binding.chapterList.getAdapter();
+            if (current instanceof ChapterAdapter && current != adapter) {
+                ((ChapterAdapter) current).setHistory(readHistoryList);
+            }
+            updateSubtitle();
+            scrollToLastReadOnce();
         });
     }
 
@@ -176,11 +199,16 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
         ) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                int position = viewHolder.getAdapterPosition();
+                // while searching the list shows a filtered adapter, so read the chapter from it
+                ChapterAdapter current = (ChapterAdapter) binding.chapterList.getAdapter();
+                if (current == null || position == RecyclerView.NO_POSITION) return;
+                Chapter chapter = current.getItem(position);
+                current.notifyItemChanged(position);
                 if (direction == ItemTouchHelper.LEFT) {
-                    historyViewModel.markAsUnread(originalItems.get(viewHolder.getAdapterPosition()));
+                    historyViewModel.markAsUnread(chapter);
                 } else {
-                    historyViewModel.markAsRead(originalItems.get(viewHolder.getAdapterPosition()));
+                    historyViewModel.markAsRead(chapter);
                 }
             }
         };
@@ -198,7 +226,10 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
     private void searchResults(String keyword) {
         if (!keyword.isEmpty()) {
             List<Chapter> filtered = ListUtils.searchByName(keyword.toLowerCase(), originalItems);
-            ChapterAdapter searchAdapter = new ChapterAdapter(filtered, this);
+            // same read state and downloads as the full list
+            ChapterAdapter searchAdapter = new ChapterAdapter(filtered, readHistoryList, this);
+            searchAdapter.setDownloadListener(this);
+            searchAdapter.setDownloadedUrls(new HashSet<>(downloadedUrls));
             binding.chapterList.setAdapter(searchAdapter);
         } else {
             binding.chapterList.setAdapter(adapter);
@@ -206,8 +237,14 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
     }
 
     private void setSearchView() {
-        int mode = binding.searchView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE;
-        binding.searchView.setVisibility(mode);
+        boolean show = binding.searchView.getVisibility() != View.VISIBLE;
+        binding.searchView.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (show) {
+            binding.searchField.requestFocus();
+        } else {
+            // closing search returns to the full list
+            binding.searchField.setText(null);
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -215,11 +252,32 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
         originalItems.clear();
         originalItems.addAll(chapters);
         adapter.notifyDataSetChanged();
-        binding.toolbar.setTitle(String.format(Locale.getDefault(), "%d Chapters", chapters.size()));
+        binding.toolbar.setTitle(novel.name);
+        updateSubtitle();
         binding.progress.hide();
+        binding.progress.setVisibility(View.GONE);
+        scrollToLastReadOnce();
 
         if (!chapters.isEmpty() && novel.url != null) {
             RanobeDatabase.databaseExecutor.execute(() -> RanobeDatabase.database().novels().updateLastKnownChapterCount(chapters.size(), novel.url));
+        }
+    }
+
+    private void updateSubtitle() {
+        if (originalItems.isEmpty()) return;
+        binding.toolbar.setSubtitle(getString(R.string.chapters_summary, originalItems.size(), adapter.readCount()));
+    }
+
+    // jump to where the reader stopped, once both chapters and history have arrived
+    private void scrollToLastReadOnce() {
+        if (scrolledToLastRead || originalItems.isEmpty() || adapter.getLastReadUrl() == null) return;
+        for (int i = 0; i < originalItems.size(); i++) {
+            if (originalItems.get(i).url.equals(adapter.getLastReadUrl())) {
+                scrolledToLastRead = true;
+                LinearLayoutManager manager = (LinearLayoutManager) binding.chapterList.getLayoutManager();
+                if (manager != null) manager.scrollToPositionWithOffset(i, binding.chapterList.getHeight() / 3);
+                return;
+            }
         }
     }
 
