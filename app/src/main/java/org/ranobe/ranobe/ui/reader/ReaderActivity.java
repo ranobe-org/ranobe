@@ -5,6 +5,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -52,6 +53,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     private int currentChapterIndex;
     private LinearLayoutManager layoutManager;
     private boolean isVolumeKeyScroll = false;
+    private int volumeScrollSpeed = Ranobe.DEFAULT_VOLUME_SCROLL_SPEED;
     private long lastVolumeScrollTime = 0;
 
     @Override
@@ -79,6 +81,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         if (readHistory != null) RanobeSettings.get().setCurrentSource(readHistory.sourceId).save();
 
         isVolumeKeyScroll = Ranobe.isVolumeKeyScrollEnabled();
+        volumeScrollSpeed = Ranobe.getVolumeScrollSpeed();
         adapter = new PageAdapter(chapters);
         binding.pageList.setLayoutManager(new LinearLayoutManager(this));
         binding.pageList.setAdapter(adapter);
@@ -175,18 +178,24 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         Ranobe.setVolumeKeyScroll(this, isVolumeKeyScroll);
     }
 
+    @Override
+    public void setVolumeScrollSpeed(int speed) {
+        this.volumeScrollSpeed = speed;
+        Ranobe.setVolumeScrollSpeed(this, speed);
+    }
+
     private void scrollDown() {
         int scrollDistance = getScrollDistance();
         if (!binding.pageList.canScrollVertically(1)) {
             loadNextChapter();
         } else {
-            binding.pageList.smoothScrollBy(0, scrollDistance);
+            binding.pageList.smoothScrollBy(0, scrollDistance, new DecelerateInterpolator(), getScrollDuration());
         }
     }
 
     private void scrollUp() {
         int scrollDistance = getScrollDistance();
-        binding.pageList.smoothScrollBy(0, -scrollDistance);
+        binding.pageList.smoothScrollBy(0, -scrollDistance, new DecelerateInterpolator(), getScrollDuration());
     }
 
     private int getScrollDistance() {
@@ -196,6 +205,22 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         }
         int VOLUME_BTN_SCROLL_PERCENT = 60;
         return height * VOLUME_BTN_SCROLL_PERCENT / 100;
+    }
+
+    private int getScrollDuration() {
+        switch (volumeScrollSpeed) {
+            case 1:
+                return 700;
+            case 2:
+                return 550;
+            case 4:
+                return 300;
+            case 5:
+                return 200;
+            case 3:
+            default:
+                return 400;
+        }
     }
 
     private void loadNextChapter() {
@@ -215,12 +240,13 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         if (isVolumeKeyScroll) {
             int action = event.getAction();
             int keyCode = event.getKeyCode();
+            long throttle = Math.max(250, getScrollDuration() - 50);
             if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
                 if (action == KeyEvent.ACTION_DOWN) {
                     if (event.getRepeatCount() == 0) {
                         lastVolumeScrollTime = System.currentTimeMillis();
                         scrollDown();
-                    } else if (System.currentTimeMillis() - lastVolumeScrollTime >= 200) {
+                    } else if (System.currentTimeMillis() - lastVolumeScrollTime >= throttle) {
                         lastVolumeScrollTime = System.currentTimeMillis();
                         scrollDown();
                     }
@@ -231,7 +257,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
                     if (event.getRepeatCount() == 0) {
                         lastVolumeScrollTime = System.currentTimeMillis();
                         scrollUp();
-                    } else if (System.currentTimeMillis() - lastVolumeScrollTime >= 200) {
+                    } else if (System.currentTimeMillis() - lastVolumeScrollTime >= throttle) {
                         lastVolumeScrollTime = System.currentTimeMillis();
                         scrollUp();
                     }
@@ -262,6 +288,7 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     protected void onResume() {
         super.onResume();
         isVolumeKeyScroll = Ranobe.isVolumeKeyScrollEnabled();
+        volumeScrollSpeed = Ranobe.getVolumeScrollSpeed();
     }
 
     @Override

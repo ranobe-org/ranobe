@@ -80,11 +80,25 @@ public class Settings extends Fragment {
         binding.chapterUpdatesOption.setOnClickListener(v -> handleChapterUpdatesClick());
         syncChapterUpdatesToggle();
 
-        binding.volumeScrollOption.setChecked(Ranobe.isVolumeKeyScrollEnabled());
+        boolean volumeScrollEnabled = Ranobe.isVolumeKeyScrollEnabled();
+        binding.volumeScrollOption.setChecked(volumeScrollEnabled);
+        binding.scrollSpeedSetting.getRoot().setVisibility(volumeScrollEnabled ? View.VISIBLE : View.GONE);
         binding.volumeScrollOption.setOnClickListener(v -> {
             boolean newState = !Ranobe.isVolumeKeyScrollEnabled();
             Ranobe.setVolumeKeyScroll(requireContext(), newState);
             binding.volumeScrollOption.setChecked(newState);
+            binding.scrollSpeedSetting.getRoot().setVisibility(newState ? View.VISIBLE : View.GONE);
+        });
+
+        int currentSpeed = Ranobe.getVolumeScrollSpeed();
+        binding.scrollSpeedSetting.speedSlider.setValue(currentSpeed);
+        binding.scrollSpeedSetting.speedLabel.setText(Ranobe.getSpeedLabel(requireContext(), currentSpeed));
+        binding.scrollSpeedSetting.speedSlider.setLabelFormatter(value -> Ranobe.getSpeedLabel(requireContext(), (int) value));
+        binding.scrollSpeedSetting.speedSlider.addOnChangeListener((slider, value, fromUser) -> {
+            if (!fromUser) return;
+            int speed = (int) value;
+            Ranobe.setVolumeScrollSpeed(requireContext(), speed);
+            binding.scrollSpeedSetting.speedLabel.setText(Ranobe.getSpeedLabel(requireContext(), speed));
         });
 
         binding.projectLink.setOnClickListener(v -> openLink(Ranobe.RANOBE_GITHUB_LINK));
@@ -103,7 +117,12 @@ public class Settings extends Fragment {
     public void onResume() {
         super.onResume();
         syncChapterUpdatesToggle();
-        binding.volumeScrollOption.setChecked(Ranobe.isVolumeKeyScrollEnabled());
+        boolean volumeScrollEnabled = Ranobe.isVolumeKeyScrollEnabled();
+        binding.volumeScrollOption.setChecked(volumeScrollEnabled);
+        binding.scrollSpeedSetting.getRoot().setVisibility(volumeScrollEnabled ? View.VISIBLE : View.GONE);
+        int speed = Ranobe.getVolumeScrollSpeed();
+        binding.scrollSpeedSetting.speedSlider.setValue(speed);
+        binding.scrollSpeedSetting.speedLabel.setText(Ranobe.getSpeedLabel(requireContext(), speed));
     }
 
     private void release(GithubRepo.GithubRelease release) {

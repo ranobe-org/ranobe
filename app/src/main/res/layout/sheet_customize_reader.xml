@@ -61,6 +61,13 @@
 
     </LinearLayout>
 
+    <include
+        android:id="@+id/scroll_speed_setting"
+        layout="@layout/view_scroll_speed_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

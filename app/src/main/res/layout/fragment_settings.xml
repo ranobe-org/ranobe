@@ -163,6 +163,16 @@
                     app:settingSubtitle="@string/volume_key_scroll_sub_text"
                     app:settingTitle="@string/volume_key_scroll" />
 
+                <include
+                    android:id="@+id/scroll_speed_setting"
+                    layout="@layout/view_scroll_speed_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="56dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="12dp"
+                    android:visibility="gone" />
+
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>

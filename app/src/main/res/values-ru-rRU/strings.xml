@@ -45,5 +45,12 @@
     <string name="features">ВОЗМОЖНОСТИ</string>
     <string name="volume_key_scroll">Прокрутка кнопками громкости</string>
     <string name="volume_key_scroll_sub_text">Прокручивать страницу кнопками регулировки громкости</string>
+    <string name="scroll_speed">Скорость прокрутки</string>
+    <string name="scroll_speed_info">Настройка скорости анимации прокрутки кнопками громкости</string>
+    <string name="speed_very_slow">Очень медленно</string>
+    <string name="speed_slow">Медленно</string>
+    <string name="speed_normal">Обычно</string>
+    <string name="speed_fast">Быстро</string>
+    <string name="speed_very_fast">Очень быстро</string>
 
 </resources>
