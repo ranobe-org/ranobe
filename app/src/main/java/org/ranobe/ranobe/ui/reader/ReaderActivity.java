@@ -5,7 +5,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -189,22 +189,23 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         if (!binding.pageList.canScrollVertically(1)) {
             loadNextChapter();
         } else {
-            binding.pageList.smoothScrollBy(0, scrollDistance, new DecelerateInterpolator(), getScrollDuration());
+            binding.pageList.smoothScrollBy(0, scrollDistance, new LinearInterpolator(), getScrollDuration());
         }
     }
 
     private void scrollUp() {
+        if (!binding.pageList.canScrollVertically(-1)) {
+            return;
+        }
         int scrollDistance = getScrollDistance();
-        binding.pageList.smoothScrollBy(0, -scrollDistance, new DecelerateInterpolator(), getScrollDuration());
+        binding.pageList.smoothScrollBy(0, -scrollDistance, new LinearInterpolator(), getScrollDuration());
     }
 
     private int getScrollDistance() {
         int height = binding.pageList.getHeight();
-        if (height <= 0) {
-            height = getResources().getDisplayMetrics().heightPixels;
-        }
+        int effectiveHeight = (height > 0) ? height : getResources().getDisplayMetrics().heightPixels;
         int VOLUME_BTN_SCROLL_PERCENT = 60;
-        return height * VOLUME_BTN_SCROLL_PERCENT / 100;
+        return effectiveHeight * VOLUME_BTN_SCROLL_PERCENT / 100;
     }
 
     private int getScrollDuration() {
@@ -240,26 +241,16 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         if (isVolumeKeyScroll) {
             int action = event.getAction();
             int keyCode = event.getKeyCode();
-            long throttle = Math.max(250, getScrollDuration() - 50);
-            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            long throttle = Math.max(80, getScrollDuration() / 4);
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
                 if (action == KeyEvent.ACTION_DOWN) {
-                    if (event.getRepeatCount() == 0) {
+                    if (event.getRepeatCount() == 0 || System.currentTimeMillis() - lastVolumeScrollTime >= throttle) {
                         lastVolumeScrollTime = System.currentTimeMillis();
-                        scrollDown();
-                    } else if (System.currentTimeMillis() - lastVolumeScrollTime >= throttle) {
-                        lastVolumeScrollTime = System.currentTimeMillis();
-                        scrollDown();
-                    }
-                }
-                return true;
-            } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-                if (action == KeyEvent.ACTION_DOWN) {
-                    if (event.getRepeatCount() == 0) {
-                        lastVolumeScrollTime = System.currentTimeMillis();
-                        scrollUp();
-                    } else if (System.currentTimeMillis() - lastVolumeScrollTime >= throttle) {
-                        lastVolumeScrollTime = System.currentTimeMillis();
-                        scrollUp();
+                        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                            scrollDown();
+                        } else {
+                            scrollUp();
+                        }
                     }
                 }
                 return true;
