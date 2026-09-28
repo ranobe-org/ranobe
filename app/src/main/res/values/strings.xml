@@ -51,5 +51,7 @@
     <string name="speed_normal">Normal</string>
     <string name="speed_fast">Fast</string>
     <string name="speed_very_fast">Very Fast</string>
+    <string name="bionic_reading_info">Highlights the first few letters of words to guide reading speed</string>
+    <string name="volume_scroll_info">Scroll pages up and down using hardware volume buttons</string>
 
 </resources>

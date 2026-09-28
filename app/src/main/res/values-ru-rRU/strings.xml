@@ -52,5 +52,7 @@
     <string name="speed_normal">Обычно</string>
     <string name="speed_fast">Быстро</string>
     <string name="speed_very_fast">Очень быстро</string>
+    <string name="bionic_reading_info">Выделение первых букв слов для ускорения чтения</string>
+    <string name="volume_scroll_info">Прокрутка страниц вверх и вниз аппаратными кнопками громкости</string>
 
 </resources>
