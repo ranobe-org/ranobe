@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
@@ -16,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,7 +62,9 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         EdgeToEdge.enable(this);
         binding = ActivityReaderBinding.inflate(getLayoutInflater());
         AppCompatDelegate.setDefaultNightMode(Ranobe.getThemeMode(getApplicationContext()));
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        WindowInsetsControllerCompat windowInsetsController = new WindowInsetsControllerCompat(getWindow(), binding.getRoot());
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+        windowInsetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.reader_view), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -72,9 +74,14 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
 
         binding.customize.setOnMenuItemClickListener(this);
 
+        @SuppressWarnings("deprecation")
         Novel currentNovel = getIntent().getParcelableExtra(Ranobe.KEY_NOVEL);
-        currentChapter = getIntent().getParcelableExtra(Ranobe.KEY_CHAPTER);
-        readHistory = getIntent().getParcelableExtra(Ranobe.KEY_READ_HISTORY);
+        @SuppressWarnings("deprecation")
+        Chapter chapter = getIntent().getParcelableExtra(Ranobe.KEY_CHAPTER);
+        @SuppressWarnings("deprecation")
+        ReadHistory history = getIntent().getParcelableExtra(Ranobe.KEY_READ_HISTORY);
+        currentChapter = chapter;
+        readHistory = history;
         readerViewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
         historyViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
         ChaptersViewModel chaptersViewModel = new ViewModelProvider(this).get(ChaptersViewModel.class);
