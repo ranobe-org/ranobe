@@ -211,6 +211,7 @@ public class Settings extends Fragment {
                 Uri.parse(url)
         ));
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

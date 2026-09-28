@@ -1,11 +1,10 @@
 package org.ranobe.ranobe.sources.ru;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.models.Filter;
@@ -23,15 +22,14 @@ import java.util.HashMap;
 import java.util.List;
 
 public class RanobeHub implements Source {
-    private final String baseUrl = "https://ranobehub.org";
-    private final int sourceId = 5;
-
     public final HashMap<String, String> HEADERS = new HashMap<String, String>() {{
         put("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36");
         put("Cache-Control", "public max-age=604800");
         put("host", "ranobehub.org");
         put("referer", "https://ranobehub.org/");
     }};
+    private final String baseUrl = "https://ranobehub.org";
+    private final int sourceId = 5;
 
     @Override
     public DataSource metadata() {
@@ -52,8 +50,25 @@ public class RanobeHub implements Source {
         String web = baseUrl.concat("/popular?page=").concat(String.valueOf(page));
         Element doc = Jsoup.parse(HttpClient.GET(web, HEADERS));
 
+        // top 3 books are in separate section;
+        for (Element element : doc.select("div.popular-podium > article")) {
+            String url = element.select("a.popular-leader-cover").attr("href");
+            String full = baseUrl.concat(url);
+
+            if (!full.isEmpty()) {
+                Novel item = new Novel(full);
+                item.sourceId = sourceId;
+                item.name = element.select("h2").text().trim();
+                item.cover = baseUrl.concat(element.select("img").attr("src").trim());
+                Element status = element.select("div.popular-leader-meta > span").first();
+                if (status != null) {
+                    item.status = status.text().trim();
+                }
+                items.add(item);
+            }
+        }
+
         for (Element element : doc.select("ol.popular-list > li")) {
-            Log.d("DEBUG", element.select("span.popular-rank").text());
             String url = element.select("a.popular-list-cover").attr("href");
             String full = baseUrl.concat(url);
 
@@ -99,7 +114,8 @@ public class RanobeHub implements Source {
     private String getNovelId(String url) {
         String[] parts = url.split("/");
         String last = parts[parts.length - 1];
-        return String.valueOf(NumberUtils.toInt(last));
+        String bookId = last.split("-")[0];
+        return String.valueOf(NumberUtils.toInt(bookId));
     }
 
     @Override
@@ -148,10 +164,19 @@ public class RanobeHub implements Source {
 
     @Override
     public Chapter chapter(Chapter chapter) throws IOException {
-        Element doc = Jsoup.parse(HttpClient.GET(chapter.url, HEADERS));
+        Element doc = Jsoup.parse(HttpClient.GET(chapter.url, HEADERS), baseUrl);
         chapter.content = "";
 
         for (Element element : doc.select("div.reader-content")) {
+            for (Element img : element.select("img")) {
+                String src = img.absUrl("src");
+                if (src.isEmpty()) src = img.absUrl("data-src");
+                if (src.isEmpty()) {
+                    img.remove();
+                } else {
+                    img.replaceWith(new TextNode("::" + SourceUtils.imageTag(src) + "::"));
+                }
+            }
             element.select("p").append("::");
             chapter.content = SourceUtils.cleanContent(
                     element.text().replace("::", "\n\n\n").trim()

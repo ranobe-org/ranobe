@@ -55,6 +55,8 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
             binding.scrollSpeedSetting.speedLabel.setText(Ranobe.getSpeedLabel(requireContext(), speed));
             listener.setVolumeScrollSpeed(speed);
         });
+        binding.showImagesToggle.setChecked(Ranobe.getShowImages());
+        binding.showImagesToggle.setOnCheckedChangeListener((cb, b) -> listener.setShowImages(b));
         return binding.getRoot();
     }
 
@@ -73,5 +75,7 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
         void setVolumeKeyScroll(boolean isVolumeKeyScroll);
 
         void setVolumeScrollSpeed(int speed);
+    
+        void setShowImages(boolean showImages);
     }
 }

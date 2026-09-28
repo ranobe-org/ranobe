@@ -28,6 +28,7 @@ public class Ranobe {
     public static final String SETTING_VOLUME_KEY_SCROLL = "shared_pref_reader_volume_key_scroll";
     public static final String SETTING_VOLUME_SCROLL_SPEED = "shared_pref_reader_volume_scroll_speed";
     public static final int DEFAULT_VOLUME_SCROLL_SPEED = 3;
+    public static final String SETTINGS_READER_IMAGES = "shared_pref_reader_images";
     public static final String SETTING_SELECTED_SOURCE = "shared_pref_selected_source";
     public static final String SETTING_DISABLED_SOURCES = "shared_pref_disabled_sources";
 
@@ -57,6 +58,8 @@ public class Ranobe {
             "- New Chapter notification updates",
             "- New features coming soon..."
     };
+
+    public static final String CHAPTER_IMAGES_DIR = "chapter-images";
 
     // database configs
     public static final String DATABASE_NAME = "ranobe_database";
@@ -158,6 +161,14 @@ public class Ranobe {
 
     public static boolean getBionicReader() {
         return getSharedPref(App.getContext()).getBoolean(Ranobe.SETTINGS_READER_BIONIC, false);
+    }
+
+    public static void setShowImages(Context context, boolean showImages) {
+        getEditor(context).putBoolean(Ranobe.SETTINGS_READER_IMAGES, showImages).apply();
+    }
+
+    public static boolean getShowImages() {
+        return getSharedPref(App.getContext()).getBoolean(Ranobe.SETTINGS_READER_IMAGES, true);
     }
 
     public static boolean isNewChapterUpdatesEnabled() {

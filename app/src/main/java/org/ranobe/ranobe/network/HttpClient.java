@@ -5,7 +5,10 @@ import androidx.annotation.NonNull;
 import org.ranobe.ranobe.App;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +46,26 @@ public class HttpClient {
         }
         ResponseBody response = HttpClient.client().newCall(builder.build()).execute().body();
         return response == null ? "" : response.string();
+    }
+
+    public static void DOWNLOAD(String url, HashMap<String, String> headers, File dest) throws IOException {
+        Request.Builder builder = new Request.Builder().url(url).cacheControl(CacheControl.FORCE_NETWORK);
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            builder.addHeader(entry.getKey(), entry.getValue());
+        }
+        try (Response response = HttpClient.client().newCall(builder.build()).execute()) {
+            ResponseBody body = response.body();
+            if (!response.isSuccessful() || body == null) {
+                throw new IOException("HTTP " + response.code() + " for " + url);
+            }
+            try (InputStream in = body.byteStream(); OutputStream out = new FileOutputStream(dest)) {
+                byte[] buffer = new byte[8192];
+                int read;
+                while ((read = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+            }
+        }
     }
 
     public static String POST(String url, HashMap<String, String> headers, HashMap<String, String> form) throws IOException {

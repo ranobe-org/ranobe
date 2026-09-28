@@ -4,8 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 public class SourceUtils {
+    public static final Pattern IMAGE_TAG = Pattern.compile("\\[img](.+?)\\[/img]");
+
+    public static String imageTag(String url) {
+        return "[img]".concat(url).concat("[/img]");
+    }
+
     public static Long generateId(String url) {
         long hash = 1125899906842597L;
         for (int i = 0; i < url.length(); i++) {

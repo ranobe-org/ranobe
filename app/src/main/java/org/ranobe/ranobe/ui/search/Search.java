@@ -121,6 +121,12 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
         controller.navigate(R.id.details_fragment, bundle);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
     public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.MyViewHolder> {
         private final Map<DataSource, List<Novel>> results;
         private final NovelAdapter.OnNovelItemClickListener listener;
@@ -169,10 +175,5 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
                 binding.searchResults.addItemDecoration(spacingDecorator);
             }
         }
-    }
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
     }
 }

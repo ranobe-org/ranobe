@@ -30,6 +30,7 @@
     <string name="swipe_tip">Tip: Swipe to mark as read/unread</string>
     <string name="continue_btn">Continue</string>
     <string name="bionic_reading">Bionic Reading</string>
+    <string name="show_images">Show Images</string>
     <string name="read_history">History</string>
     <string name="download">Download</string>
     <string name="download_all">Download All</string>
