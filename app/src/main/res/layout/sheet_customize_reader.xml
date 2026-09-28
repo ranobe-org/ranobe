@@ -1,35 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingHorizontal="25dp"
-    android:paddingTop="40dp"
-    android:paddingBottom="20dp">
+    android:paddingHorizontal="24dp"
+    android:paddingTop="28dp"
+    android:paddingBottom="36dp">
 
+    <!-- Title / Header -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:text="@string/customize_info"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         android:textColor="?colorOnSurface"
-        android:textSize="@dimen/text_head"
         android:textStyle="bold" />
 
+    <!-- Bionic Reading Option -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="20dp"
-            android:drawablePadding="10dp"
-            android:text="@string/bionic_reading"
-            android:textColor="?colorOnSurface"
-            android:textSize="@dimen/text_med" />
+            android:layout_weight="1"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/bionic_reading"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="?colorOnSurface" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/bionic_reading_info"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:textColor="?colorOnSurfaceVariant" />
+        </LinearLayout>
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/bionic_reading_toggle"
@@ -38,21 +55,36 @@
 
     </LinearLayout>
 
+    <!-- Show Images Option -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="20dp"
-            android:drawablePadding="10dp"
-            android:text="@string/show_images"
-            android:textColor="?colorOnSurface"
-            android:textSize="@dimen/text_med" />
+            android:layout_weight="1"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/show_images"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="?colorOnSurface" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/show_images_info"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:textColor="?colorOnSurfaceVariant" />
+        </LinearLayout>
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/show_images_toggle"
@@ -61,41 +93,85 @@
 
     </LinearLayout>
 
+    <!-- Volume Key Scroll Option -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="20dp"
-            android:drawablePadding="10dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/volume_key_scroll"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="?colorOnSurface" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/volume_scroll_info"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:textColor="?colorOnSurfaceVariant" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/volume_scroll_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <!-- Scroll Speed Setting (conditional visibility) -->
+    <include
+        android:id="@+id/scroll_speed_setting"
+        layout="@layout/view_scroll_speed_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Font Size Slider Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:text="@string/set_the_font_size"
-            android:textColor="?colorOnSurface"
-            android:textSize="@dimen/text_med" />
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:textColor="?colorOnSurface" />
 
         <com.google.android.material.slider.Slider
             android:id="@+id/font_slider"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/image"
+            android:contentDescription="@string/set_the_font_size"
+            android:stepSize="1"
             android:valueFrom="10"
             android:valueTo="50" />
     </LinearLayout>
 
+    <!-- Page Theme Section -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:drawablePadding="10dp"
+        android:layout_marginBottom="12dp"
         android:text="@string/set_the_theme"
-        android:textColor="?colorOnSurface"
-        android:textSize="@dimen/text_med" />
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textColor="?colorOnSurface" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/reader_theme_list"

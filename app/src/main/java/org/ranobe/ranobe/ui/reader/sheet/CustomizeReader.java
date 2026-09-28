@@ -37,6 +37,24 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
         binding.bionicReadingToggle.setChecked(Ranobe.getBionicReader());
         binding.bionicReadingToggle.setOnCheckedChangeListener((cb, b) -> listener.setBionicReading(b));
 
+        binding.volumeScrollToggle.setChecked(Ranobe.isVolumeKeyScrollEnabled());
+        binding.scrollSpeedSetting.getRoot().setVisibility(Ranobe.isVolumeKeyScrollEnabled() ? View.VISIBLE : View.GONE);
+        binding.volumeScrollToggle.setOnCheckedChangeListener((cb, b) -> {
+            binding.scrollSpeedSetting.getRoot().setVisibility(b ? View.VISIBLE : View.GONE);
+            listener.setVolumeKeyScroll(b);
+        });
+
+        int currentSpeed = Ranobe.getVolumeScrollSpeed();
+        binding.scrollSpeedSetting.speedSlider.setValue(currentSpeed);
+        binding.scrollSpeedSetting.speedLabel.setText(Ranobe.getSpeedLabel(requireContext(), currentSpeed));
+        binding.scrollSpeedSetting.speedSlider.setLabelFormatter(value -> Ranobe.getSpeedLabel(requireContext(), (int) value));
+        binding.scrollSpeedSetting.speedSlider.addOnChangeListener((slider, value, fromUser) -> {
+            if (!fromUser) return;
+            int speed = (int) value;
+            Ranobe.setVolumeScrollSpeed(requireContext(), speed);
+            binding.scrollSpeedSetting.speedLabel.setText(Ranobe.getSpeedLabel(requireContext(), speed));
+            listener.setVolumeScrollSpeed(speed);
+        });
         binding.showImagesToggle.setChecked(Ranobe.getShowImages());
         binding.showImagesToggle.setOnCheckedChangeListener((cb, b) -> listener.setShowImages(b));
         return binding.getRoot();
@@ -54,6 +72,10 @@ public class CustomizeReader extends BottomSheetDialogFragment implements Reader
 
         void setBionicReading(boolean isBionicReading);
 
+        void setVolumeKeyScroll(boolean isVolumeKeyScroll);
+
+        void setVolumeScrollSpeed(int speed);
+    
         void setShowImages(boolean showImages);
     }
 }

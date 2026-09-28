@@ -43,5 +43,17 @@
     <string name="enable_new_chapter_update_notifications_for_your_library">Enable new chapter update notifications for your library</string>
     <string name="enable">Enable</string>
     <string name="features">FEATURES</string>
+    <string name="volume_key_scroll">Volume keys scroll</string>
+    <string name="volume_key_scroll_sub_text">Scroll page using volume up and down buttons</string>
+    <string name="scroll_speed">Scroll Speed</string>
+    <string name="scroll_speed_info">Adjust the animation speed when scrolling with volume buttons</string>
+    <string name="speed_very_slow">Very Slow</string>
+    <string name="speed_slow">Slow</string>
+    <string name="speed_normal">Normal</string>
+    <string name="speed_fast">Fast</string>
+    <string name="speed_very_fast">Very Fast</string>
+    <string name="bionic_reading_info">Highlights the first few letters of words to guide reading speed</string>
+    <string name="volume_scroll_info">Scroll pages up and down using hardware volume buttons</string>
+    <string name="show_images_info">Display images and illustrations within chapters</string>
 
 </resources>

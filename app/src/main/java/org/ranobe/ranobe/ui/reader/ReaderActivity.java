@@ -1,9 +1,10 @@
 package org.ranobe.ranobe.ui.reader;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -14,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,6 +52,9 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     private boolean isLoading = false;
     private int currentChapterIndex;
     private LinearLayoutManager layoutManager;
+    private boolean isVolumeKeyScroll = false;
+    private int volumeScrollSpeed = Ranobe.DEFAULT_VOLUME_SCROLL_SPEED;
+    private long lastVolumeScrollTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +62,9 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
         EdgeToEdge.enable(this);
         binding = ActivityReaderBinding.inflate(getLayoutInflater());
         AppCompatDelegate.setDefaultNightMode(Ranobe.getThemeMode(getApplicationContext()));
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        WindowInsetsControllerCompat windowInsetsController = new WindowInsetsControllerCompat(getWindow(), binding.getRoot());
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+        windowInsetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.reader_view), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -67,14 +74,21 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
 
         binding.customize.setOnMenuItemClickListener(this);
 
+        @SuppressWarnings("deprecation")
         Novel currentNovel = getIntent().getParcelableExtra(Ranobe.KEY_NOVEL);
-        currentChapter = getIntent().getParcelableExtra(Ranobe.KEY_CHAPTER);
-        readHistory = getIntent().getParcelableExtra(Ranobe.KEY_READ_HISTORY);
+        @SuppressWarnings("deprecation")
+        Chapter chapter = getIntent().getParcelableExtra(Ranobe.KEY_CHAPTER);
+        @SuppressWarnings("deprecation")
+        ReadHistory history = getIntent().getParcelableExtra(Ranobe.KEY_READ_HISTORY);
+        currentChapter = chapter;
+        readHistory = history;
         readerViewModel = new ViewModelProvider(this).get(ReaderViewModel.class);
         historyViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
         ChaptersViewModel chaptersViewModel = new ViewModelProvider(this).get(ChaptersViewModel.class);
         if (readHistory != null) RanobeSettings.get().setCurrentSource(readHistory.sourceId).save();
 
+        isVolumeKeyScroll = Ranobe.isVolumeKeyScrollEnabled();
+        volumeScrollSpeed = Ranobe.getVolumeScrollSpeed();
         adapter = new PageAdapter(chapters);
         binding.pageList.setLayoutManager(new LinearLayoutManager(this));
         binding.pageList.setAdapter(adapter);
@@ -82,14 +96,8 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1) && !isLoading) {
-                    isLoading = true;
-                    currentChapterIndex += 1;
-                    if (currentChapterIndex < chapterItems.size()) {
-                        binding.progress.show();
-                        Toast.makeText(ReaderActivity.this, "Loading next chapter", Toast.LENGTH_SHORT).show();
-                        readerViewModel.getChapter(chapterItems.get(currentChapterIndex)).observe(ReaderActivity.this, chapter -> setChapter(chapter));
-                    }
+                if (!recyclerView.canScrollVertically(1)) {
+                    loadNextChapter();
                 }
             }
         });
@@ -172,6 +180,115 @@ public class ReaderActivity extends AppCompatActivity implements CustomizeReader
     }
 
     @Override
+    public void setVolumeKeyScroll(boolean isVolumeKeyScroll) {
+        this.isVolumeKeyScroll = isVolumeKeyScroll;
+        Ranobe.setVolumeKeyScroll(this, isVolumeKeyScroll);
+    }
+
+    @Override
+    public void setVolumeScrollSpeed(int speed) {
+        this.volumeScrollSpeed = speed;
+        Ranobe.setVolumeScrollSpeed(this, speed);
+    }
+
+    private void scrollDown() {
+        int scrollDistance = getScrollDistance();
+        if (!binding.pageList.canScrollVertically(1)) {
+            loadNextChapter();
+        } else {
+            binding.pageList.smoothScrollBy(0, scrollDistance, new LinearInterpolator(), getScrollDuration());
+        }
+    }
+
+    private void scrollUp() {
+        if (!binding.pageList.canScrollVertically(-1)) {
+            return;
+        }
+        int scrollDistance = getScrollDistance();
+        binding.pageList.smoothScrollBy(0, -scrollDistance, new LinearInterpolator(), getScrollDuration());
+    }
+
+    private int getScrollDistance() {
+        int height = binding.pageList.getHeight();
+        int effectiveHeight = (height > 0) ? height : getResources().getDisplayMetrics().heightPixels;
+        int VOLUME_BTN_SCROLL_PERCENT = 60;
+        return effectiveHeight * VOLUME_BTN_SCROLL_PERCENT / 100;
+    }
+
+    private int getScrollDuration() {
+        switch (volumeScrollSpeed) {
+            case 1:
+                return 700;
+            case 2:
+                return 550;
+            case 4:
+                return 300;
+            case 5:
+                return 200;
+            case 3:
+            default:
+                return 400;
+        }
+    }
+
+    private void loadNextChapter() {
+        if (!isLoading) {
+            if (currentChapterIndex + 1 < chapterItems.size()) {
+                isLoading = true;
+                currentChapterIndex += 1;
+                binding.progress.show();
+                Toast.makeText(ReaderActivity.this, "Loading next chapter", Toast.LENGTH_SHORT).show();
+                readerViewModel.getChapter(chapterItems.get(currentChapterIndex)).observe(ReaderActivity.this, this::setChapter);
+            }
+        }
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (isVolumeKeyScroll) {
+            int action = event.getAction();
+            int keyCode = event.getKeyCode();
+            long throttle = Math.max(80, getScrollDuration() / 4);
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                if (action == KeyEvent.ACTION_DOWN) {
+                    if (event.getRepeatCount() == 0 || System.currentTimeMillis() - lastVolumeScrollTime >= throttle) {
+                        lastVolumeScrollTime = System.currentTimeMillis();
+                        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                            scrollDown();
+                        } else {
+                            scrollUp();
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (isVolumeKeyScroll && (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (isVolumeKeyScroll && (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isVolumeKeyScroll = Ranobe.isVolumeKeyScrollEnabled();
+        volumeScrollSpeed = Ranobe.getVolumeScrollSpeed();
+    }
+
     public void setShowImages(boolean showImages) {
         Ranobe.setShowImages(this, showImages);
         adapter.setShowImages(showImages);

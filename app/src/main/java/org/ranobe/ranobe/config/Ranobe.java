@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import org.ranobe.ranobe.App;
 import org.ranobe.ranobe.BuildConfig;
+import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.models.ReaderTheme;
 
 import java.util.HashSet;
@@ -24,6 +25,9 @@ public class Ranobe {
     public static final String SETTINGS_READER_THEME = "shared_pref_reader_theme";
     public static final String SETTINGS_READER_FONT = "shared_pref_reader_font";
     public static final String SETTINGS_READER_BIONIC = "shared_pref_reader_bionic";
+    public static final String SETTING_VOLUME_KEY_SCROLL = "shared_pref_reader_volume_key_scroll";
+    public static final String SETTING_VOLUME_SCROLL_SPEED = "shared_pref_reader_volume_scroll_speed";
+    public static final int DEFAULT_VOLUME_SCROLL_SPEED = 3;
     public static final String SETTINGS_READER_IMAGES = "shared_pref_reader_images";
     public static final String SETTING_SELECTED_SOURCE = "shared_pref_selected_source";
     public static final String SETTING_DISABLED_SOURCES = "shared_pref_disabled_sources";
@@ -181,5 +185,44 @@ public class Ranobe {
 
     public static void setChapterUpdateBannerShown(boolean shown) {
         getEditor(App.getContext()).putBoolean(SETTING_CHAPTER_UPDATE_BANNER_SHOWN, shown).apply();
+    }
+
+    public static void setVolumeKeyScroll(Context context, boolean enabled) {
+        getEditor(context).putBoolean(Ranobe.SETTING_VOLUME_KEY_SCROLL, enabled).apply();
+    }
+
+    public static boolean isVolumeKeyScrollEnabled() {
+        return getSharedPref(App.getContext()).getBoolean(Ranobe.SETTING_VOLUME_KEY_SCROLL, false);
+    }
+
+    public static void setVolumeScrollSpeed(Context context, int speed) {
+        if (speed < 1 || speed > 5) {
+            speed = DEFAULT_VOLUME_SCROLL_SPEED;
+        }
+        getEditor(context).putInt(Ranobe.SETTING_VOLUME_SCROLL_SPEED, speed).apply();
+    }
+
+    public static int getVolumeScrollSpeed() {
+        int speed = getSharedPref(App.getContext()).getInt(Ranobe.SETTING_VOLUME_SCROLL_SPEED, DEFAULT_VOLUME_SCROLL_SPEED);
+        if (speed < 1 || speed > 5) {
+            return DEFAULT_VOLUME_SCROLL_SPEED;
+        }
+        return speed;
+    }
+
+    public static String getSpeedLabel(Context context, int speed) {
+        switch (speed) {
+            case 1:
+                return context.getString(R.string.speed_very_slow);
+            case 2:
+                return context.getString(R.string.speed_slow);
+            case 4:
+                return context.getString(R.string.speed_fast);
+            case 5:
+                return context.getString(R.string.speed_very_fast);
+            case 3:
+            default:
+                return context.getString(R.string.speed_normal);
+        }
     }
 }

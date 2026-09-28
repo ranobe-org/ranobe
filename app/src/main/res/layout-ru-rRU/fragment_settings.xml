@@ -123,6 +123,26 @@
                     app:settingIcon="@drawable/ic_notifications_active"
                     app:settingSubtitle="сообщать о выходе новых глав"
                     app:settingTitle="@string/new_chapter_updates" />
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="56.0dip" />
+                <org.ranobe.ranobe.ui.views.SettingOptionView
+                    android:id="@+id/volume_scroll_option"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    app:settingIcon="@drawable/ic_volume"
+                    app:settingSubtitle="@string/volume_key_scroll_sub_text"
+                    app:settingTitle="@string/volume_key_scroll" />
+                <include
+                    android:id="@+id/scroll_speed_setting"
+                    layout="@layout/view_scroll_speed_setting"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="56.0dip"
+                    android:layout_marginEnd="16.0dip"
+                    android:layout_marginBottom="12.0dip"
+                    android:visibility="gone" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         <TextView
