@@ -9,7 +9,7 @@ android {
         applicationId "org.ranobe.ranobe"
         minSdk 23
         targetSdkVersion 36
-        versionCode 15
+        versionCode 16
         versionName "v0.0.16"
 
         javaCompileOptions {
