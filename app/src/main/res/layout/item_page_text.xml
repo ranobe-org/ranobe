@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- one paragraph; spacing between paragraphs comes from the vertical padding -->
 <org.ranobe.ranobe.ui.views.BionicReadingTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:lineSpacingExtra="5dp"
-    android:padding="10dp"
-    android:textColor="?colorOnSurfaceVariant"
+    android:lineSpacingMultiplier="1.45"
+    android:paddingHorizontal="24dp"
+    android:paddingVertical="8dp"
     android:textIsSelectable="true"
     android:textSize="18sp" />

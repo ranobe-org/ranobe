@@ -6,8 +6,12 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -20,27 +24,20 @@ import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentSearchBinding;
 import org.ranobe.ranobe.databinding.ItemSearchResultBinding;
 import org.ranobe.ranobe.models.DataSource;
-import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.sources.Source;
-import org.ranobe.ranobe.sources.SourceManager;
 import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
 import org.ranobe.ranobe.ui.search.viewmodel.SearchViewModel;
 import org.ranobe.ranobe.ui.views.SpacingDecorator;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Search extends Fragment implements NovelAdapter.OnNovelItemClickListener {
+    private final List<Map.Entry<DataSource, List<Novel>>> results = new ArrayList<>();
     private FragmentSearchBinding binding;
     private SearchViewModel viewModel;
-    private List<DataSource> dataSources;
-
     private SearchResultAdapter resultAdapter;
-    private LinkedHashMap<DataSource, List<Novel>> results;
 
     public Search() {
         // Required empty public constructor
@@ -56,60 +53,54 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
-        binding.searchView.setEndIconOnClickListener(v -> searchNovels());
-        binding.searchView.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                searchNovels();
-                return true;
-            }
-            return false;
-        });
-        binding.resultList.setLayoutManager(new LinearLayoutManager(requireActivity()));
-
-        results = new LinkedHashMap<>();
-        resultAdapter = new SearchResultAdapter(results, this);
-        binding.resultList.setAdapter(resultAdapter);
-
-        HashMap<Integer, Class<?>> sources = (HashMap<Integer, Class<?>>) SourceManager.getSources();
-        dataSources = new ArrayList<>();
-        for (Integer id : sources.keySet()) {
-            if (!Ranobe.isSourceEnabled(id)) continue;
-            Source src = SourceManager.getSource(id);
-            DataSource dataSource = src.metadata();
-            if (dataSource.isActive) {
-                dataSources.add(dataSource);
-            }
-        }
-
-        runSearch(viewModel.getFilter().getKeyword());
         return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        binding.searchView.setEndIconOnClickListener(v -> searchNovels());
+        binding.searchField.setOnEditorActionListener((v, actionId, event) -> {
+            boolean enter = event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER;
+            // a hardware enter sends both down and up; only search once
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || (enter && event.getAction() == KeyEvent.ACTION_DOWN)) {
+                searchNovels();
+                return true;
+            }
+            return enter;
+        });
+
+        binding.resultList.setLayoutManager(new LinearLayoutManager(requireContext()));
+        resultAdapter = new SearchResultAdapter();
+        binding.resultList.setAdapter(resultAdapter);
+
+        viewModel.getResults().observe(getViewLifecycleOwner(), this::setResults);
+        viewModel.isLoading().observe(getViewLifecycleOwner(), loading -> updateState());
+    }
+
     private void searchNovels() {
+        CharSequence text = binding.searchField.getText();
+        if (text == null || text.toString().trim().isEmpty()) return;
         binding.searchField.clearFocus();
-        if (binding.searchField.getText() != null && !binding.searchField.getText().toString().isEmpty()) {
-            String keyword = binding.searchField.getText().toString();
-            runSearch(keyword);
-        }
+        InputMethodManager imm = ContextCompat.getSystemService(requireContext(), InputMethodManager.class);
+        if (imm != null) imm.hideSoftInputFromWindow(binding.searchField.getWindowToken(), 0);
+        viewModel.search(text.toString());
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void runSearch(String keyword) {
-        if (keyword == null || keyword.isEmpty()) return;
-        binding.progress.show();
-
-        Filter filter = new Filter();
-        filter.addFilter(Filter.FILTER_KEYWORD, keyword);
+    private void setResults(Map<DataSource, List<Novel>> result) {
         results.clear();
+        results.addAll(result.entrySet());
         resultAdapter.notifyDataSetChanged();
-        viewModel.search(dataSources, filter, 1).observe(getViewLifecycleOwner(), result -> {
-            results.clear();
-            results.putAll(result);
-            resultAdapter.notifyDataSetChanged();
-            binding.progress.hide();
-        });
+        updateState();
+    }
 
-        viewModel.getError().observe(getViewLifecycleOwner(), err -> binding.progress.hide());
+    private void updateState() {
+        boolean loading = Boolean.TRUE.equals(viewModel.isLoading().getValue());
+        boolean searched = viewModel.getKeyword() != null;
+        if (loading) binding.progress.show();
+        else binding.progress.hide();
+        binding.empty.setVisibility(!loading && searched && results.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -128,35 +119,22 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
     }
 
     public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.MyViewHolder> {
-        private final Map<DataSource, List<Novel>> results;
-        private final NovelAdapter.OnNovelItemClickListener listener;
         private final SpacingDecorator spacingDecorator = new SpacingDecorator(10);
-
-        public SearchResultAdapter(Map<DataSource, List<Novel>> results, Search listener) {
-            this.results = results;
-            this.listener = listener;
-        }
+        // every row is the same horizontal cover list, so let them share recycled tiles
+        private final RecyclerView.RecycledViewPool novelPool = new RecyclerView.RecycledViewPool();
 
         @NonNull
         @Override
-        public SearchResultAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             ItemSearchResultBinding resultBinding = ItemSearchResultBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
             return new MyViewHolder(resultBinding);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull SearchResultAdapter.MyViewHolder holder, int position) {
-            DataSource source = (DataSource) results.keySet().toArray()[position];
-            holder.binding.sourceName.setText(source.name);
-
-            List<Novel> novels = results.get(source);
-            if (novels == null) return;
-            if (!novels.isEmpty()) {
-                holder.binding.rootLayout.setVisibility(View.VISIBLE);
-            }
-
-            NovelAdapter adapter = new NovelAdapter(novels, listener);
-            holder.binding.searchResults.setAdapter(adapter);
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            Map.Entry<DataSource, List<Novel>> entry = results.get(position);
+            holder.binding.sourceName.setText(entry.getKey().name);
+            holder.binding.searchResults.setAdapter(new NovelAdapter(entry.getValue(), Search.this));
         }
 
         @Override
@@ -171,7 +149,10 @@ public class Search extends Fragment implements NovelAdapter.OnNovelItemClickLis
                 super(binding.getRoot());
                 this.binding = binding;
 
-                binding.searchResults.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                LinearLayoutManager layoutManager = new LinearLayoutManager(binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false);
+                layoutManager.setRecycleChildrenOnDetach(true);
+                binding.searchResults.setLayoutManager(layoutManager);
+                binding.searchResults.setRecycledViewPool(novelPool);
                 binding.searchResults.addItemDecoration(spacingDecorator);
             }
         }

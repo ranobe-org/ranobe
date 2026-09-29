@@ -14,6 +14,10 @@ import java.util.List;
 public class HistoryViewModel extends ViewModel {
 
 
+    public HistoryViewModel() {
+        RanobeDatabase.databaseExecutor.execute(() -> RanobeDatabase.database().readHistory().clearStoredContent());
+    }
+
     public LiveData<List<ReadHistory>> getReadHistories() {
         return RanobeDatabase.database().readHistory().getLatestReadPerNovel();
     }
@@ -32,6 +36,10 @@ public class HistoryViewModel extends ViewModel {
 
     public void deleteNovelReadHistory(String novelUrl) {
         RanobeDatabase.databaseExecutor.execute(() -> RanobeDatabase.database().readHistory().deleteHistoryByNovel(novelUrl));
+    }
+
+    public void clearHistory() {
+        RanobeDatabase.databaseExecutor.execute(() -> RanobeDatabase.database().readHistory().deleteAll());
     }
 
     public void markAsRead(Chapter chapter) {

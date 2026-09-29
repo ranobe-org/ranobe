@@ -1,11 +1,15 @@
 package org.ranobe.ranobe.ui.chapters.adapter;
 
+import android.annotation.SuppressLint;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.color.MaterialColors;
 
 import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.databinding.ItemChapterBinding;
@@ -17,14 +21,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHolder> {
+    private static final float READ_ALPHA = 0.5f;
+
     private final List<Chapter> items;
     private final OnChapterItemClickListener listener;
-    private List<ReadHistory> historyList;
+    // built once per history change instead of on every bind; long novels have thousands of rows
+    private final Map<String, ReadHistory> historyMap = new HashMap<>();
     private Set<String> downloadedUrls = new HashSet<>();
     private OnChapterDownloadClickListener downloadListener;
+    private String lastReadUrl;
 
     public ChapterAdapter(List<Chapter> items, OnChapterItemClickListener listener) {
         this.items = items;
@@ -32,9 +41,39 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
     }
 
     public ChapterAdapter(List<Chapter> items, List<ReadHistory> historyList, OnChapterItemClickListener listener) {
-        this.historyList = historyList;
-        this.listener = listener;
-        this.items = items;
+        this(items, listener);
+        setHistory(historyList);
+    }
+
+    public Chapter getItem(int position) {
+        return items.get(position);
+    }
+
+    // history is newest first, so the first entry is where the reader stopped
+    @SuppressLint("NotifyDataSetChanged")
+    public void setHistory(List<ReadHistory> historyList) {
+        historyMap.clear();
+        lastReadUrl = null;
+        if (historyList != null) {
+            for (ReadHistory history : historyList) {
+                if (history == null) continue;
+                if (lastReadUrl == null) lastReadUrl = history.url;
+                historyMap.put(history.url, history);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public String getLastReadUrl() {
+        return lastReadUrl;
+    }
+
+    public int readCount() {
+        int count = 0;
+        for (Chapter chapter : items) {
+            if (historyMap.containsKey(chapter.url)) count++;
+        }
+        return count;
     }
 
     public void setDownloadedUrls(Set<String> urls) {
@@ -44,18 +83,6 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
 
     public void setDownloadListener(OnChapterDownloadClickListener listener) {
         this.downloadListener = listener;
-    }
-
-    private Map<String, ReadHistory> getHistoryMap() {
-        Map<String, ReadHistory> historyMap = new HashMap<>();
-        if (historyList != null && !historyList.isEmpty()) {
-            for (ReadHistory history : historyList) {
-                if (history != null) {
-                    historyMap.put(history.url, history);
-                }
-            }
-        }
-        return historyMap;
     }
 
     @NonNull
@@ -68,14 +95,23 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Chapter item = items.get(position);
-        ReadHistory history = getHistoryMap().get(item.url);
-        boolean isRead = (history != null);
-        holder.binding.chapterItemLayout.setAlpha(isRead ? 0.5F : 1.0F);
+        boolean isRead = historyMap.containsKey(item.url);
+        boolean isLastRead = Objects.equals(item.url, lastReadUrl);
+
+        // the last read chapter stays fully visible and highlighted even though it counts as read
+        holder.binding.chapterText.setAlpha(isRead && !isLastRead ? READ_ALPHA : 1f);
+        holder.binding.lastReadMarker.setVisibility(isLastRead ? View.VISIBLE : View.GONE);
         holder.binding.chapterName.setText(item.name);
-        if (item.updated != null && !item.updated.isEmpty()) {
-            holder.binding.updated.setText(item.updated);
-            holder.binding.updated.setVisibility(View.VISIBLE);
-        }
+        holder.binding.chapterName.setTypeface(null, isLastRead ? Typeface.BOLD : Typeface.NORMAL);
+        holder.binding.chapterName.setTextColor(MaterialColors.getColor(holder.binding.chapterName,
+                isLastRead ? androidx.appcompat.R.attr.colorPrimary : com.google.android.material.R.attr.colorOnSurface));
+
+        String updated = isLastRead
+                ? holder.itemView.getContext().getString(R.string.last_read)
+                : item.updated;
+        boolean hasUpdated = updated != null && !updated.isEmpty();
+        holder.binding.updated.setText(hasUpdated ? updated : null);
+        holder.binding.updated.setVisibility(hasUpdated ? View.VISIBLE : View.GONE);
 
         boolean isPending = DownloadService.isPending(item.url);
         boolean isDownloaded = downloadedUrls.contains(item.url);
@@ -83,15 +119,12 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
         if (isPending) {
             holder.binding.downloadProgress.show();
             holder.binding.downloadBtn.setVisibility(View.GONE);
-        } else if (isDownloaded) {
-            holder.binding.downloadProgress.hide();
-            holder.binding.downloadBtn.setVisibility(View.VISIBLE);
-            holder.binding.downloadBtn.setImageResource(R.drawable.ic_downloaded);
-            holder.binding.downloadBtn.setEnabled(true);
         } else {
             holder.binding.downloadProgress.hide();
             holder.binding.downloadBtn.setVisibility(View.VISIBLE);
-            holder.binding.downloadBtn.setImageResource(R.drawable.ic_download);
+            holder.binding.downloadBtn.setImageResource(isDownloaded ? R.drawable.ic_downloaded : R.drawable.ic_download);
+            holder.binding.downloadBtn.setColorFilter(MaterialColors.getColor(holder.binding.downloadBtn,
+                    isDownloaded ? androidx.appcompat.R.attr.colorPrimary : com.google.android.material.R.attr.colorOnSurfaceVariant));
             holder.binding.downloadBtn.setEnabled(true);
         }
     }
@@ -116,12 +149,16 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.MyViewHo
             super(binding.getRoot());
             this.binding = binding;
 
-            binding.chapterItemLayout.setOnClickListener(v ->
-                    listener.onChapterItemClick(items.get(getAdapterPosition())));
+            binding.chapterItemLayout.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION)
+                    listener.onChapterItemClick(items.get(position));
+            });
 
             binding.downloadBtn.setOnClickListener(v -> {
-                if (downloadListener != null) {
-                    downloadListener.onDownloadClick(items.get(getAdapterPosition()));
+                int position = getAdapterPosition();
+                if (downloadListener != null && position != RecyclerView.NO_POSITION) {
+                    downloadListener.onDownloadClick(items.get(position));
                 }
             });
         }

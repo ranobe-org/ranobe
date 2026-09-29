@@ -22,6 +22,11 @@ public class LightNovelHeaven implements Source {
     private final String baseUrl = "https://lightnovelheaven.com/";
     private final int sourceId = 9;
 
+    private String cleanImg(String cover) {
+        if (cover == null) return "";
+        return cover.replaceAll("-\\d+x\\d+\\.", ".");
+    }
+
     @Override
     public DataSource metadata() {
         DataSource source = new DataSource();
@@ -48,7 +53,7 @@ public class LightNovelHeaven implements Source {
                 Novel item = new Novel(url);
                 item.sourceId = sourceId;
                 item.name = element.select(".h5 > a").text().trim();
-                item.cover = element.select("img").attr("data-src").trim();
+                item.cover = cleanImg(element.select("img").attr("data-src").trim());
                 items.add(item);
             }
         }
@@ -62,7 +67,7 @@ public class LightNovelHeaven implements Source {
 
         novel.sourceId = sourceId;
         novel.name = doc.select(".post-title > h1").text().trim();
-        novel.cover = doc.select(".summary_image > a > img").attr("data-src").trim();
+        novel.cover = cleanImg(doc.select(".summary_image > a > img").attr("data-src").trim());
         novel.summary = String.join("\n\n", doc.select("div.summary__content").select("p").eachText());
         novel.rating = NumberUtils.toFloat(doc.select(".total_votes").text().trim());
         novel.authors = Arrays.asList(doc.select(".author-content > a").text().split(","));

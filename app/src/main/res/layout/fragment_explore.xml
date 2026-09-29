@@ -4,123 +4,179 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:paddingBottom="200dp"
     tools:context=".ui.explore.Explore">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp">
 
         <TextView
-            android:id="@+id/continue_reading_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/nav_explore"
+            android:textAppearance="?attr/textAppearanceHeadlineMedium"
+            android:textColor="?colorOnSurface" />
+
+        <!-- Continue reading -->
+        <TextView
+            android:id="@+id/continue_reading_info"
+            style="@style/SectionTitle"
+            android:layout_marginTop="20dp"
             android:text="@string/continue_reading_info"
-            android:textSize="@dimen/text_med"
-            android:textStyle="bold"
             android:visibility="gone" />
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/continue_reading"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="8dp"
-            android:orientation="horizontal"
-            android:paddingHorizontal="5dp"
-            android:paddingVertical="10dp"
+            style="@style/SectionCard"
+            android:clickable="true"
+            android:focusable="true"
             android:visibility="gone">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/novel_cover_layout"
-                style="@style/Widget.Material3.CardView.Elevated"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="4dp">
-
-                <ImageView
-                    android:id="@+id/novel_cover"
-                    android:layout_width="80dp"
-                    android:layout_height="115dp"
-                    android:contentDescription="@string/image"
-                    android:scaleType="centerCrop" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <LinearLayout
+            <!-- ConstraintLayout so the card grows to fit the text and button instead of clipping to the cover -->
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingStart="12dp"
-                android:paddingEnd="4dp">
+                android:layout_height="wrap_content"
+                android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/lastReadChapter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/novel_cover_layout"
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="88dp"
+                    android:layout_height="128dp"
+                    android:clickable="true"
+                    android:contentDescription="@string/history_open_details"
+                    android:focusable="true"
+                    app:cardCornerRadius="14dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/novel_cover"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/image"
+                        android:scaleType="centerCrop" />
+
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:id="@+id/novelTitle"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?colorOnSurface"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/novel_cover_layout"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/lastReadChapter"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:alpha="0.7"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?colorOnSurfaceVariant"
+                    app:layout_constraintEnd_toEndOf="@id/novelTitle"
+                    app:layout_constraintStart_toStartOf="@id/novelTitle"
+                    app:layout_constraintTop_toBottomOf="@id/novelTitle" />
 
                 <TextView
                     android:id="@+id/lastReadTimestamp"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:alpha="0.5"
-                    android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                    android:layout_marginTop="6dp"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                    android:textColor="?colorOutline"
+                    app:drawableStartCompat="@drawable/ic_history_small"
+                    app:drawableTint="?colorOutline"
+                    app:layout_constraintEnd_toEndOf="@id/novelTitle"
+                    app:layout_constraintStart_toStartOf="@id/novelTitle"
+                    app:layout_constraintTop_toBottomOf="@id/lastReadChapter" />
 
+                <!-- sits below the text, and at the cover's bottom edge when the text is short -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/continueBtn"
-                    style="@style/Widget.Material3.Button.TonalButton"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/continue_btn" />
+                    android:layout_marginTop="12dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="@string/continue_btn"
+                    app:icon="@drawable/ic_play"
+                    app:iconGravity="textStart"
+                    app:iconSize="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/novelTitle"
+                    app:layout_constraintStart_toStartOf="@id/novelTitle"
+                    app:layout_constraintTop_toBottomOf="@id/lastReadTimestamp"
+                    app:layout_constraintVertical_bias="1" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Sources -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/source_info"
+                style="@style/SectionTitle"
+                android:layout_width="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1"
+                android:text="@string/browse_sources" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/manage_sources"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/manage" />
 
         </LinearLayout>
 
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp" />
-
         <TextView
-            android:id="@+id/source_info"
+            android:id="@+id/sources_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/sources"
-            android:textSize="@dimen/text_med"
-            android:textStyle="bold"
-            tools:ignore="TextContrastCheck" />
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/sources_browse_hint"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?colorOnSurfaceVariant" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/source_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:clipToPadding="false"
-            android:nestedScrollingEnabled="false"
-            android:paddingBottom="200dp" />
+        <com.google.android.material.card.MaterialCardView style="@style/SectionCard">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/source_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:paddingVertical="4dp" />
+
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 

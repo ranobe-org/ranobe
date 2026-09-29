@@ -4,6 +4,6 @@
     android:layout_height="wrap_content"
     android:adjustViewBounds="true"
     android:contentDescription="@null"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp"
     android:scaleType="fitCenter" />

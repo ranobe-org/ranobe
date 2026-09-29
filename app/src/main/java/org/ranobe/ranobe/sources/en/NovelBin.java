@@ -20,7 +20,7 @@ import java.util.List;
 
 public class NovelBin implements Source {
 
-    private final String baseUrl = "https://novelbin.me";
+    private final String baseUrl = "https://novelbin.org";
     private final int sourceId = 18;
 
     @Override
@@ -31,8 +31,8 @@ public class NovelBin implements Source {
         source.name = "Novel Bin";
         source.lang = Lang.eng;
         source.dev = "ap-atul";
-        source.logo = "https://novelbin.me/img/logo.png";
-        source.isActive = true;
+        source.logo = "https://novelbin.org/img/logo.png";
+        source.isActive = false;
         return source;
     }
 

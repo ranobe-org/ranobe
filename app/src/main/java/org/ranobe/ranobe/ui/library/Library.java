@@ -19,7 +19,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -33,7 +32,6 @@ import org.ranobe.ranobe.databinding.FragmentLibraryBinding;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
 import org.ranobe.ranobe.ui.views.GetPro;
-import org.ranobe.ranobe.ui.views.SpacingDecorator;
 import org.ranobe.ranobe.util.DisplayUtils;
 import org.ranobe.ranobe.util.ListUtils;
 import org.ranobe.ranobe.util.NumberUtils;
@@ -50,6 +48,7 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
 
     private FragmentLibraryBinding binding;
     private List<Novel> allNovels = new ArrayList<>();
+    private NovelAdapter adapter;
     private int currentSort = SORT_DEFAULT;
     private ActivityResultLauncher<String> notificationPermissionLauncher;
 
@@ -85,7 +84,6 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding = FragmentLibraryBinding.bind(view);
 
         binding.toolbar.setOnMenuItemClickListener(this);
         syncNewChaptersIcon();
@@ -106,9 +104,9 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
             }
         });
 
-        DisplayUtils utils = new DisplayUtils(requireContext(), R.layout.item_novel);
-        binding.novelList.setLayoutManager(new GridLayoutManager(requireActivity(), utils.noOfCols()));
-        binding.novelList.addItemDecoration(new SpacingDecorator(utils.spacing()));
+        DisplayUtils.applyNovelGrid(binding.novelList);
+        adapter = new NovelAdapter(new ArrayList<>(), this, this).asGrid();
+        binding.novelList.setAdapter(adapter);
 
         RanobeDatabase.database().novels().list().observe(getViewLifecycleOwner(), novels -> {
             allNovels = novels;
@@ -235,13 +233,16 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
 
         if (filtered.isEmpty() && allNovels.isEmpty()) {
             showNoNovels();
+        } else if (filtered.isEmpty()) {
+            // library has novels, just none matching the search
+            binding.emoji.setText(null);
+            binding.error.setText(R.string.no_results_err);
         } else {
             binding.emoji.setText(null);
             binding.error.setText(null);
         }
 
-        NovelAdapter adapter = new NovelAdapter(filtered, this, this);
-        binding.novelList.setAdapter(adapter);
+        adapter.submit(filtered);
     }
 
     private void showSortDialog() {
@@ -289,5 +290,6 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        adapter = null;
     }
 }

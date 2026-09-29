@@ -23,7 +23,8 @@ public class WuxiaWorld implements Source {
     private static final int sourceId = 13;
 
     private String cleanImg(String cover) {
-        return cover.replaceAll("/-\\d+x\\d+.\\w{3}/gm", ".jpg");
+        if (cover == null) return "";
+        return cover.replaceAll("-\\d+x\\d+\\.", ".");
     }
 
     @Override

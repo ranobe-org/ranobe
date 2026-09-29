@@ -33,7 +33,7 @@ public class NewNovel implements Source {
         source.lang = Lang.eng;
         source.dev = "ap-atul";
         source.logo = "https://novlove.com/img/logo.png";
-        source.isActive = true;
+        source.isActive = false;
         return source;
     }
 

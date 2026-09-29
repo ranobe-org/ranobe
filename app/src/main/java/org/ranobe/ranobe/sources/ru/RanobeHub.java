@@ -39,7 +39,8 @@ public class RanobeHub implements Source {
         source.name = "Ranobehub — ранобэ на русском онлайн";
         source.lang = Lang.ru;
         source.dev = "ap-atul";
-        source.logo = "https://ranobehub.org/icon.svg";
+        // the site only serves an SVG icon, which Glide cannot decode
+        source.logo = "https://www.google.com/s2/favicons?domain=ranobehub.org&sz=128";
         source.isActive = true;
         return source;
     }
@@ -143,7 +144,7 @@ public class RanobeHub implements Source {
                 Chapter item = new Chapter(novel.url);
 
                 // Appends "chapter" path properly (e.g., ensuring a separating slash if needed)
-                item.url = novel.url.concat("/chapter/").concat(chapter.getString("id"));
+                item.url = novel.url.concat("/chapter/").concat(String.valueOf(chapter.get("id")));
                 item.name = chapter.getString("title");
                 item.id = items.size() + 1;
                 item.updated = SourceUtils.parseIsoDate(chapter.getString("publishedAt"));
@@ -201,7 +202,7 @@ public class RanobeHub implements Source {
             for (int i = 0; i < books.length(); i++) {
                 JSONObject novel = books.getJSONObject(i);
 
-                String id = novel.getString("id").concat("-").concat(novel.getString("slug"));
+                String id = String.valueOf(novel.get("id")).concat("-").concat(novel.getString("slug"));
                 String url = baseUrl.concat("/ranobe/").concat(id);
 
                 Novel item = new Novel(url);

@@ -36,9 +36,12 @@ public class DateUtils {
         } else if (diff < TimeUnit.DAYS.toMillis(1)) {
             long hours = TimeUnit.MILLISECONDS.toHours(diff);
             return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
+        } else if (diff < TimeUnit.DAYS.toMillis(2)) {
+            return "Yesterday";
+        } else if (diff < TimeUnit.DAYS.toMillis(7)) {
+            return TimeUnit.MILLISECONDS.toDays(diff) + " days ago";
         } else {
-            long days = TimeUnit.MILLISECONDS.toDays(diff);
-            return days + " day" + (days > 1 ? "s" : "") + " ago";
+            return formatShortDate(timestamp);
         }
     }
 }

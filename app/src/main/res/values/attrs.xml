@@ -4,5 +4,7 @@
         <attr name="settingIcon" format="reference" />
         <attr name="settingTitle" format="string" />
         <attr name="settingSubtitle" format="string" />
+        <!-- shows an "opens outside the app" marker at the end of the row -->
+        <attr name="settingExternal" format="boolean" />
     </declare-styleable>
 </resources>

@@ -65,7 +65,8 @@ public class ChapterMapper {
         ReadHistory history = new ReadHistory(chapter.novelUrl);
         history.url = chapter.url;
         history.novelUrl = chapter.novelUrl;
-        history.content = chapter.content;
+        // content is left out: the reader loads text from saved chapters or the network, and full
+        // chapter text here bloats every history query and the reader Intent extras
         history.name = chapter.name;
         history.updated = chapter.updated;
         history.id = chapter.id;
