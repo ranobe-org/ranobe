@@ -19,4 +19,5 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class org.ranobe.ranobe.sources.** { *;}
+# sources are instantiated reflectively via Class.newInstance() in SourceManager
+-keep class * implements org.ranobe.ranobe.sources.Source { public <init>(); }

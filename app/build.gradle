@@ -9,8 +9,8 @@ android {
         applicationId "org.ranobe.ranobe"
         minSdk 23
         targetSdkVersion 36
-        versionCode 16
-        versionName "v0.0.16"
+        versionCode 17
+        versionName "v0.0.17"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -24,19 +24,19 @@ android {
         downloader {
             dimension "version"
             applicationId "org.ranobe.downloader"
-            versionName "v0.0.16-downloader"
+            versionName "v0.0.17-downloader"
         }
 
         pro {
             dimension "version"
             applicationId "org.ranobe.downloader.pro"
-            versionName "v0.0.16-downloader-pro"
+            versionName "v0.0.17-downloader-pro"
         }
 
         ranobe {
             dimension "version"
             applicationId "org.ranobe.ranobe"
-            versionName "v0.0.16"
+            versionName "v0.0.17"
         }
     }
 
@@ -51,6 +51,27 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    androidResources {
+        // app ships only en + ru strings; drop the ~80 other locales pulled in by appcompat/material
+        localeFilters += ["en", "ru"]
+    }
+
+    packaging {
+        resources {
+            excludes += [
+                    "META-INF/*.version",
+                    "META-INF/*.kotlin_module",
+                    "META-INF/CHANGES",
+                    "META-INF/README.md",
+                    "META-INF/LICENSE*",
+                    "META-INF/NOTICE*",
+                    "META-INF/androidx/**",
+                    "kotlin/**",
+                    "DebugProbesKt.bin",
+            ]
+        }
     }
 
     buildFeatures {
