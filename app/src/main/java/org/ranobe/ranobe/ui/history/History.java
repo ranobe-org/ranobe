@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.ranobe.ranobe.R;
+import org.ranobe.ranobe.ui.views.EmptyState;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.database.mapper.ChapterMapper;
 import org.ranobe.ranobe.databinding.FragmentHistoryBinding;
@@ -25,7 +26,6 @@ import org.ranobe.ranobe.models.ReadHistory;
 import org.ranobe.ranobe.ui.history.adapter.HistoryAdapter;
 import org.ranobe.ranobe.ui.history.viewmodel.HistoryViewModel;
 import org.ranobe.ranobe.ui.reader.ReaderActivity;
-import org.ranobe.ranobe.util.NumberUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,6 @@ public class History extends Fragment implements HistoryAdapter.Listener {
         adapter = new HistoryAdapter(this);
         binding.historyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.historyRecyclerView.setAdapter(adapter);
-        binding.emoji.setText(Ranobe.SILLY_EMOJI[NumberUtils.getRandom(Ranobe.SILLY_EMOJI.length)]);
         View clearAll = binding.toolbar.getMenu().findItem(R.id.clear_history).getActionView();
         if (clearAll != null) clearAll.setOnClickListener(v -> confirmClearHistory());
 
@@ -74,7 +73,11 @@ public class History extends Fragment implements HistoryAdapter.Listener {
     private void setReadHistory(List<ReadHistory> list) {
         adapter.submitHistory(list == null ? new ArrayList<>() : list);
         boolean isEmpty = list == null || list.isEmpty();
-        binding.noNovelsLayout.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        if (isEmpty) {
+            EmptyState.show(binding.emptyState, R.drawable.ic_history, R.string.history_empty_title, R.string.no_history_error);
+        } else {
+            EmptyState.hide(binding.emptyState);
+        }
         binding.historyRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         binding.toolbar.getMenu().findItem(R.id.clear_history).setVisible(!isEmpty);
     }

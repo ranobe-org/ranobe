@@ -71,6 +71,8 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         DataSource source = sources.get(position);
         holder.binding.sourceName.setText(source.name);
+        holder.binding.sourceNew.setVisibility(source.isNew && source.isActive && !Ranobe.isSourceSeen(source.sourceId)
+                ? View.VISIBLE : View.GONE);
         holder.binding.sourceInitial.setText(source.name == null || source.name.isEmpty()
                 ? "" : source.name.substring(0, 1).toUpperCase(Locale.getDefault()));
 
@@ -164,6 +166,11 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.MyViewHold
                 int position = getAdapterPosition();
                 if (position == RecyclerView.NO_POSITION) return;
                 DataSource source = sources.get(position);
+                // one tap is enough to stop calling it new
+                if (source.isNew && !Ranobe.isSourceSeen(source.sourceId)) {
+                    Ranobe.markSourceSeen(source.sourceId);
+                    binding.sourceNew.setVisibility(View.GONE);
+                }
                 if (managing && source.isActive) {
                     binding.sourceToggle.toggle();
                 } else if (!source.isActive) {

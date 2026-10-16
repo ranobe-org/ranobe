@@ -8,6 +8,8 @@ import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.HttpClient;
+import org.ranobe.ranobe.sources.Genres;
+import org.ranobe.ranobe.sources.Recommendations;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
 import org.ranobe.ranobe.util.SourceUtils;
@@ -42,8 +44,13 @@ public class WuxiaWorld implements Source {
 
     @Override
     public List<Novel> novels(int page) throws IOException {
-        List<Novel> items = new ArrayList<>();
         String web = baseUrl.concat("/page/").concat(String.valueOf(page));
+        return listing(web);
+    }
+
+    // the latest page and the genre pages share this tile markup
+    private List<Novel> listing(String web) throws IOException {
+        List<Novel> items = new ArrayList<>();
         Element doc = Jsoup.parse(HttpClient.GET(web, new HashMap<>()));
 
         for (Element element : doc.select(".page-item-detail")) {
@@ -77,6 +84,7 @@ public class WuxiaWorld implements Source {
             genres.add(element.text().trim());
         }
         novel.genres = genres;
+        novel.genreLinks = Genres.links(doc.select(".genres-content > a"), baseUrl);
 
         for (Element element : doc.select(".post-content_item")) {
             String header = element.select(".summary-heading > h5").text().trim();
@@ -91,6 +99,7 @@ public class WuxiaWorld implements Source {
             }
         }
 
+        novel.recommendations = Recommendations.madara(doc, sourceId, novel.url);
         return novel;
     }
 
@@ -129,6 +138,7 @@ public class WuxiaWorld implements Source {
 
     @Override
     public List<Novel> search(Filter filters, int page) throws IOException {
+        if (filters.hasGenre()) return listing(Genres.wordpressPage(filters.getGenre(), page));
         List<Novel> items = new ArrayList<>();
 
         if (filters.hashKeyword()) {

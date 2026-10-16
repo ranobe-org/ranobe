@@ -5,6 +5,8 @@ import java.util.Objects;
 
 public class Filter {
     public static final String FILTER_KEYWORD = "keyword";
+    // the source's own page for a genre, from Novel.genreLinks
+    public static final String FILTER_GENRE = "genre";
     private final HashMap<String, String> params;
 
     public Filter() {
@@ -18,6 +20,14 @@ public class Filter {
     public boolean hashKeyword() {
         String val = params.get(FILTER_KEYWORD);
         return val != null;
+    }
+
+    public boolean hasGenre() {
+        return params.get(FILTER_GENRE) != null;
+    }
+
+    public String getGenre() {
+        return params.get(FILTER_GENRE);
     }
 
     public String getKeyword() {

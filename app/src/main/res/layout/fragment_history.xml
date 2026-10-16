@@ -24,33 +24,12 @@
             android:clipToPadding="false"
             android:paddingBottom="200dp" />
 
-        <LinearLayout
-            android:id="@+id/no_novels_layout"
+        <include
+            android:id="@+id/empty_state"
+            layout="@layout/view_empty_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/emoji"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="?colorOnSurface"
-                android:textSize="35sp" />
-
-            <TextView
-                android:id="@+id/error"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/no_history_error"
-                android:textAlignment="center"
-                android:textColor="?colorOnSurfaceVariant"
-                android:textSize="@dimen/text_big" />
-        </LinearLayout>
+            android:layout_gravity="center" />
 
     </FrameLayout>
 

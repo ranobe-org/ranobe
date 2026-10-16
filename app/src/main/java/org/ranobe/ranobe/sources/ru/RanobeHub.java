@@ -18,6 +18,8 @@ import org.ranobe.ranobe.util.SourceUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.HashMap;
 import java.util.List;
 
@@ -86,6 +88,43 @@ public class RanobeHub implements Source {
         return items;
     }
 
+    // "Похожие произведения", readers' picks for this book
+    private List<Novel> similar(Element doc, String selfUrl) {
+        List<Novel> items = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
+        seen.add(selfUrl);
+        for (Element item : doc.select("article.book-similar-item")) {
+            Element link = item.selectFirst("a[href^=/ranobe/]");
+            if (link == null) continue;
+            String url = baseUrl + link.attr("href").trim();
+            if (!seen.add(url)) continue;
+            Novel novel = new Novel(url, sourceId);
+            novel.name = item.select(".book-cover-copy > strong").text().trim();
+            if (novel.name.isEmpty()) novel.name = item.select("h3").text().trim();
+            novel.cover = cover(item.selectFirst("img.book-cover-image"));
+            items.add(novel);
+        }
+        return items;
+    }
+
+    // next/image urls wrap the real one: /_next/image?url=%2Fapi%2Fmedia%2F2326%3Fv%3D5&w=...
+    private String cover(Element img) {
+        if (img == null) return "";
+        String src = img.attr("src").trim();
+        int at = src.indexOf("url=");
+        if (src.startsWith("/_next/image") && at >= 0) {
+            String inner = src.substring(at + 4);
+            int end = inner.indexOf('&');
+            if (end >= 0) inner = inner.substring(0, end);
+            try {
+                src = java.net.URLDecoder.decode(inner, "UTF-8");
+            } catch (Exception ignored) {
+                return "";
+            }
+        }
+        return src.startsWith("http") ? src : baseUrl + src;
+    }
+
     @Override
     public Novel details(Novel novel) throws IOException {
         Element doc = Jsoup.parse(HttpClient.GET(novel.url, HEADERS));
@@ -109,6 +148,7 @@ public class RanobeHub implements Source {
         }
         novel.genres = genres;
         novel.status = doc.select("a.book-kicker-status").text().trim();
+        novel.recommendations = similar(doc, novel.url);
         return novel;
     }
 

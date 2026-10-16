@@ -2,8 +2,10 @@ package org.ranobe.ranobe.ui.views;
 
 import android.graphics.Rect;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 // equal gutters between columns and at both edges, so every column gets the same width
@@ -21,6 +23,16 @@ public class GridSpacingDecorator extends RecyclerView.ItemDecoration {
         int position = parent.getChildAdapterPosition(view);
         if (position == RecyclerView.NO_POSITION) return;
         int column = position % spanCount;
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params instanceof GridLayoutManager.LayoutParams) {
+            GridLayoutManager.LayoutParams grid = (GridLayoutManager.LayoutParams) params;
+            // full width rows, e.g. a loading footer, just keep the outer gutters
+            if (grid.getSpanSize() >= spanCount) {
+                outRect.set(spacing, 0, spacing, spacing);
+                return;
+            }
+            column = grid.getSpanIndex();
+        }
 
         outRect.left = spacing - column * spacing / spanCount;
         outRect.right = (column + 1) * spacing / spanCount;

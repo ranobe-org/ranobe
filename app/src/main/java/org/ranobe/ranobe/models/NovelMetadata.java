@@ -46,6 +46,10 @@ public class NovelMetadata implements Parcelable {
     public float rating;
     public int year;
     public long cachedDate;
+    // the source's suggestions as json, see NovelMapper
+    public String recommendations;
+    // genre links as json, see NovelMapper
+    public String genreLinks;
 
     public NovelMetadata(String url) {
         this.id = SourceUtils.generateId(url);
@@ -66,6 +70,8 @@ public class NovelMetadata implements Parcelable {
         rating = in.readFloat();
         year = in.readInt();
         cachedDate = in.readLong();
+        recommendations = in.readString();
+        genreLinks = in.readString();
     }
 
     @NonNull
@@ -108,5 +114,7 @@ public class NovelMetadata implements Parcelable {
         parcel.writeFloat(rating);
         parcel.writeInt(year);
         parcel.writeLong(cachedDate);
+        parcel.writeString(recommendations);
+        parcel.writeString(genreLinks);
     }
 }

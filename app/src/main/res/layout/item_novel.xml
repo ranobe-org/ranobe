@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- a cover in a horizontal row, e.g. the recommendations on the details page -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="100dp"
-    android:layout_height="220dp"
-    android:layout_marginTop="10dp"
-    android:paddingBottom="20dp">
+    android:layout_width="108dp"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="4dp"
+    android:orientation="vertical"
+    android:paddingBottom="8dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/novel_cover_layout"
-        style="@style/Widget.Material3.CardView.Elevated"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        style="@style/Widget.Material3.CardView.Filled"
+        android:layout_width="108dp"
+        android:layout_height="160dp"
         android:clickable="true"
         android:focusable="true"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp">
+        app:cardBackgroundColor="?colorSurfaceContainerHighest"
+        app:cardCornerRadius="12dp">
 
         <ImageView
             android:id="@+id/novel_cover"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:adjustViewBounds="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:contentDescription="@string/image"
             android:scaleType="centerCrop" />
 
@@ -31,12 +31,10 @@
         android:id="@+id/novel_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/novel_cover_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="6dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:padding="2dp"
-        android:textColor="?colorOnSurface"
-        android:textSize="@dimen/text_big" />
-</RelativeLayout>
+        android:textAppearance="?attr/textAppearanceBodySmall"
+        android:textColor="?colorOnSurface" />
+
+</LinearLayout>

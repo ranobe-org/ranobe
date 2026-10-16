@@ -32,9 +32,6 @@
     <string name="synopsis">Synopsis</string>
     <string name="downloading_all_chapters_confirmation">This will download all chapters. Do you want to continue?</string>
     <string name="new_chapter_updates">New Chapter Updates</string>
-    <string name="enjoy_premium_features_and_faster_updates_with_pro">Enjoy premium features and faster updates with Pro.</string>
-    <string name="ranobe_pro">Ranobe Pro</string>
-    <string name="get_pro">get pro - play store</string>
     <string name="enable_new_chapter_update_notifications_for_your_library">Enable new chapter update notifications for your library</string>
     <string name="enable">Enable</string>
     <string name="volume_key_scroll">Volume keys scroll</string>
@@ -70,8 +67,6 @@
     <string name="settings_theme">Theme</string>
     <string name="settings_theme_sub">Choose how Ranobe looks</string>
     <string name="new_chapter_updates_sub">Get notified when new chapters are available</string>
-    <string name="edition_pro">PRO</string>
-    <string name="edition_free">FREE</string>
     <string name="settings_tagline">Read light novels from your favourite sources</string>
     <string name="update_available">Version %1$s is available</string>
     <string name="settings_footer">Open source · Made with ♥ by the Ranobe community</string>
@@ -101,4 +96,105 @@
     <string name="search_chapters">Search chapters</string>
     <string name="reader_end">You\'re all caught up. No more chapters for now.</string>
     <string name="chapter_load_failed">Couldn\'t load the chapter</string>
+
+    <!-- EPUB export -->
+    <string name="title_downloads">Downloads</string>
+    <string name="downloads_sub">EPUBs are saved to Downloads/Ranobe</string>
+    <string name="downloads_empty">No downloads yet. Open a novel and tap Export EPUB to save it as a book.</string>
+    <string name="export_epub">Export EPUB</string>
+    <string name="export_dialog_title">Export as EPUB</string>
+    <string name="export_all_chapters">All chapters</string>
+    <string name="export_chapter_range">Chapter range</string>
+    <string name="export_from">From chapter</string>
+    <string name="export_to">To chapter</string>
+    <string name="export_dialog_hint">Chapters are fetched in the background while you keep using the app. Chapters already downloaded for offline reading are reused.</string>
+    <string name="export_start">Export</string>
+    <string name="export_invalid_range">Must not be lower than the first chapter</string>
+    <string name="export_started">Export started</string>
+    <string name="export_started_no_notifications">Export started. Allow notifications to see its progress.</string>
+    <string name="export_open_settings">Settings</string>
+    <string name="export_view">View</string>
+    <string name="export_pause">Pause</string>
+    <string name="export_resume">Resume</string>
+    <string name="export_cancel">Cancel</string>
+    <string name="export_keep">Keep</string>
+    <string name="export_build_anyway">Build anyway</string>
+    <string name="export_open">Open</string>
+    <string name="export_share">Share</string>
+    <string name="export_remove">Remove</string>
+    <string name="export_discard">Discard</string>
+    <string name="export_cancel_title">Cancel this export?</string>
+    <string name="export_cancel_message">The chapters fetched so far will be deleted.</string>
+    <string name="export_no_reader">No app can open EPUB files. Install an e-book reader and try again.</string>
+    <string name="export_status_queued">Waiting to start</string>
+    <string name="export_status_paused">Paused</string>
+    <string name="export_status_failed">Export failed</string>
+    <string name="export_status_completed">Saved to Downloads/%1$s · %2$s</string>
+    <string name="export_status_waiting_network">Waiting for network…</string>
+    <string name="export_status_chapters">Fetching chapter list…</string>
+    <string name="export_status_building">Building EPUB · %1$d%%</string>
+    <string name="export_status_chapter">Chapter %1$d of %2$d</string>
+    <plurals name="export_missing_chapters">
+        <item quantity="one">%d chapter couldn\'t be fetched</item>
+        <item quantity="other">%d chapters couldn\'t be fetched</item>
+    </plurals>
+    <plurals name="export_left_out_chapters">
+        <item quantity="one">%d chapter was left out</item>
+        <item quantity="other">%d chapters were left out</item>
+    </plurals>
+    <plurals name="export_more_queued">
+        <item quantity="one">%d more queued</item>
+        <item quantity="other">%d more queued</item>
+    </plurals>
+    <string name="export_no_chapters">This novel has no chapters to export.</string>
+    <string name="export_no_chapters_in_range">No chapters in the chosen range.</string>
+    <string name="export_empty_chapter">The source returned an empty chapter</string>
+    <string name="export_storage_full">Not enough storage space. Free some up and resume.</string>
+    <string name="export_book_title_range">%1$s (Ch. %2$s)</string>
+    <string name="export_chapter_title">Chapter %1$s</string>
+    <string name="export_retrying_in">Retrying in %1$ds: %2$s</string>
+    <string name="export_interrupted">Stopped when the app was closed. Resume to carry on.</string>
+    <string name="export_paused_by_system">Paused by Android after a long run. Open the app and resume.</string>
+    <string name="export_channel_progress">EPUB export progress</string>
+    <string name="export_channel_result">Finished EPUB exports</string>
+    <string name="export_done_title">EPUB ready</string>
+    <string name="export_failed_title">Couldn\'t finish %1$s</string>
+    <string name="export_error_offline">No internet connection.</string>
+    <string name="export_error_timeout">The source took too long to respond.</string>
+    <string name="export_error_memory">Ran out of memory.</string>
+    <string name="export_error_unknown">Something went wrong.</string>
+
+    <!-- shared empty states, search tabs, details cards -->
+    <string name="search_hint">Search titles</string>
+    <string name="search_hint_title">Find your next read</string>
+    <string name="search_hint_message">Type a title above to search %1$s. Swipe or tap a tab to search another source.</string>
+    <string name="search_failed">Search failed</string>
+    <string name="search_nothing_found">Nothing found</string>
+    <string name="search_nothing_found_hint">%2$s has nothing for “%1$s”. Try another spelling or a different source.</string>
+    <string name="search_no_sources_title">No sources to search</string>
+    <string name="search_no_sources">Every source with search is turned off. Turn one on from Explore.</string>
+    <string name="search_end">That\'s everything</string>
+    <string name="load_more_failed">Couldn\'t load more</string>
+    <string name="load_more_failed_reason">Couldn\'t load more: %1$s</string>
+    <string name="history_empty_title">No reading history</string>
+    <string name="library_empty_title">Your library is empty</string>
+    <string name="library_empty_action">Explore novels</string>
+    <string name="library_no_match">No novels in your library match that.</string>
+    <string name="browse_empty_title">Nothing here</string>
+    <string name="downloads_empty_title">No downloads yet</string>
+    <string name="all_chapters">Chapters</string>
+    <string name="all_chapters_desc">Browse every chapter, download them for offline reading</string>
+    <string name="last_read_chapter">Last read: %1$s</string>
+    <string name="export_epub_desc">Save as a book and read it in any e-book reader</string>
+
+    <!-- Cloudflare -->
+    <string name="cloudflare_blocked">%1$s wants to check that you\'re not a robot. Verify in the browser, then try again.</string>
+    <string name="cloudflare_verify">Verify in browser</string>
+    <string name="cloudflare_verify_title">Verify you\'re human</string>
+    <string name="cloudflare_verify_hint">Complete the check below if one shows up. This screen closes on its own once the site lets you in.</string>
+    <string name="cloudflare_verify_done">Done</string>
+    <string name="error_title">Something went wrong</string>
+    <string name="recommendations_title">You might also like</string>
+    <string name="search_genre_chip">Genre: %1$s</string>
+    <string name="source_new">NEW</string>
 </resources>

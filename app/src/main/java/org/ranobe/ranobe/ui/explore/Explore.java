@@ -111,8 +111,12 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected,
                 dataSources.add(dataSource);
             }
         }
-        // group by language, then alphabetically
+        // new sources nobody tapped yet first, then by language and alphabetically. Sorted only
+        // when the list is built, so a tapped source doesn't jump away under the finger
         Collections.sort(dataSources, (a, b) -> {
+            boolean aNew = a.isNew && !Ranobe.isSourceSeen(a.sourceId);
+            boolean bNew = b.isNew && !Ranobe.isSourceSeen(b.sourceId);
+            if (aNew != bNew) return aNew ? -1 : 1;
             int byLang = a.lang.compareTo(b.lang);
             return byLang != 0 ? byLang : a.name.compareToIgnoreCase(b.name);
         });

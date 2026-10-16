@@ -8,6 +8,8 @@ import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.HttpClient;
+import org.ranobe.ranobe.sources.Recommendations;
+import org.ranobe.ranobe.sources.Genres;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
 import org.ranobe.ranobe.util.SourceUtils;
@@ -78,6 +80,7 @@ public class WordRain69 implements Source {
             genres.add(element.text().trim());
         }
         novel.genres = genres;
+        novel.genreLinks = Genres.links(doc.select(".genres-content > a"), BASE_URL);
 
         for (Element element : doc.select(".post-content_item")) {
             String header = element.select(".summary-heading > h5").text().trim();
@@ -92,6 +95,7 @@ public class WordRain69 implements Source {
             }
         }
 
+        novel.recommendations = Recommendations.madara(doc, SOURCE_ID, novel.url);
         return novel;
     }
 
@@ -130,6 +134,9 @@ public class WordRain69 implements Source {
 
     @Override
     public List<Novel> search(Filter filters, int page) throws Exception {
+        if (filters.hasGenre()) {
+            return parseNovel(HttpClient.GET(Genres.wordpressPage(filters.getGenre(), page), new HashMap<>()));
+        }
         List<Novel> items = new ArrayList<>();
 
         if (filters.hashKeyword()) {

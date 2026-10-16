@@ -11,6 +11,7 @@ import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.HttpClient;
+import org.ranobe.ranobe.sources.Genres;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
 import org.ranobe.ranobe.util.SourceUtils;
@@ -97,8 +98,32 @@ public class RoyalRoad implements Source {
         }
 
         novel.genres = genres;
+        novel.genreLinks = Genres.links(doc.select("span.tags > a[href*=tagsAdd]"), baseUrl);
+        novel.recommendations = similar(novel.url);
 
         return novel;
+    }
+
+    // the page loads its "You might also like" list from this endpoint, missing it isn't worth failing over
+    private List<Novel> similar(String novelUrl) {
+        List<Novel> items = new ArrayList<>();
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("/fiction/(\\d+)").matcher(novelUrl);
+        if (!m.find()) return items;
+        try {
+            org.json.JSONArray array = new org.json.JSONArray(HttpClient.GET(baseUrl + "/fictions/similar?fictionId=" + m.group(1), new HashMap<>()));
+            for (int i = 0; i < array.length(); i++) {
+                org.json.JSONObject o = array.getJSONObject(i);
+                String path = o.optString("url", "");
+                if (path.isEmpty()) continue;
+                Novel item = new Novel(baseUrl + path, sourceId);
+                item.name = o.optString("title", "").trim();
+                item.cover = o.optString("cover", "").trim();
+                items.add(item);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return items;
     }
 
     private String getNovelId(String url) {
@@ -158,6 +183,9 @@ public class RoyalRoad implements Source {
 
     @Override
     public List<Novel> search(Filter filters, int page) throws IOException {
+        if (filters.hasGenre()) {
+            return parse(HttpClient.GET(Genres.queryPage(filters.getGenre(), "page", page), new HashMap<>()), true);
+        }
         if (filters.hashKeyword()) {
             String keyword = filters.getKeyword();
             String web = SourceUtils.buildUrl(baseUrl, "/fictions/search?title=", keyword, "&page=", String.valueOf(page));

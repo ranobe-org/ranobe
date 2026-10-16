@@ -4,75 +4,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="10dp"
     android:orientation="vertical"
     tools:context=".ui.search.Search">
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/progress"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?colorSurface"
+        app:title="@string/search" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_view"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:hint="@string/search_hint"
+        app:boxCornerRadiusBottomEnd="28dp"
+        app:boxCornerRadiusBottomStart="28dp"
+        app:boxCornerRadiusTopEnd="28dp"
+        app:boxCornerRadiusTopStart="28dp"
+        app:endIconMode="clear_text"
+        app:hintEnabled="false"
+        app:startIconDrawable="@drawable/ic_search">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/search_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_hint"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- a genre opened from a details page, closing it searches the words instead -->
+    <com.google.android.material.chip.Chip
+        android:id="@+id/genre_chip"
+        style="@style/Widget.Material3.Chip.Input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:indeterminate="true"
-        android:visibility="gone" />
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="4dp"
+        android:checkable="false"
+        android:visibility="gone"
+        app:chipIcon="@drawable/ic_explore"
+        app:closeIconVisible="true" />
 
-    <LinearLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="5dp"
-        android:baselineAligned="false"
-        android:orientation="horizontal">
+        android:layout_marginTop="4dp"
+        android:background="@android:color/transparent"
+        app:tabGravity="start"
+        app:tabMode="scrollable" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/search_view"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:focusable="true"
-            app:boxCornerRadiusBottomEnd="@dimen/radius"
-            app:boxCornerRadiusBottomStart="@dimen/radius"
-            app:boxCornerRadiusTopEnd="@dimen/radius"
-            app:boxCornerRadiusTopStart="@dimen/radius"
-            app:endIconDrawable="@drawable/ic_search"
-            app:endIconMode="custom"
-            app:helperText="what are you looking for?"
-            app:placeholderText="@string/start_typing">
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_field"
-                style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:lines="1">
-
-                <requestFocus />
-
-            </com.google.android.material.textfield.TextInputEditText>
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/empty"
+    <!-- every source is turned off -->
+    <include
+        android:id="@+id/empty_state"
+        layout="@layout/view_empty_state"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:padding="10dp"
-        android:text="@string/no_results_err"
-        android:textAlignment="center"
-        android:textColor="?colorOnSurfaceVariant"
-        android:textSize="@dimen/text_big"
-        android:visibility="gone" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/result_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="100dp" />
+        android:layout_marginTop="64dp" />
 
 </LinearLayout>
