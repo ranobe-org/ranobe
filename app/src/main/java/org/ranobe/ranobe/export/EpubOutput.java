@@ -25,17 +25,8 @@ import java.io.OutputStream;
  * The file only shows up once it is complete, a failed build leaves nothing behind.
  */
 public abstract class EpubOutput {
-    static final String MIME = "application/epub+zip";
     public static final String FOLDER = "Ranobe";
-
-    abstract OutputStream open() throws IOException;
-
-    /**
-     * Makes the finished file visible and returns its uri.
-     */
-    abstract Uri commit() throws IOException;
-
-    abstract void abort();
+    static final String MIME = "application/epub+zip";
 
     /**
      * Free bytes where the book will be written.
@@ -49,7 +40,8 @@ public abstract class EpubOutput {
     }
 
     static EpubOutput create(Context context, String displayName) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) return new MediaStoreOutput(context, displayName);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            return new MediaStoreOutput(context, displayName);
         return new FileOutput(context, displayName);
     }
 
@@ -82,6 +74,15 @@ public abstract class EpubOutput {
     private static boolean canWritePublic(Context context) {
         return ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
+
+    abstract OutputStream open() throws IOException;
+
+    /**
+     * Makes the finished file visible and returns its uri.
+     */
+    abstract Uri commit() throws IOException;
+
+    abstract void abort();
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private static class MediaStoreOutput extends EpubOutput {
@@ -140,6 +141,14 @@ public abstract class EpubOutput {
             this.displayName = displayName;
         }
 
+        // "Name.epub", then "Name (1).epub" and so on
+        private static File unique(File dir, String name) {
+            File file = new File(dir, name);
+            String base = name.substring(0, name.length() - ".epub".length());
+            for (int i = 1; file.exists(); i++) file = new File(dir, base + " (" + i + ").epub");
+            return file;
+        }
+
         @Override
         @SuppressWarnings("deprecation")
         OutputStream open() throws IOException {
@@ -148,7 +157,8 @@ public abstract class EpubOutput {
                     : context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
             if (base == null) throw new IOException("Storage isn't available");
             File dir = new File(base, FOLDER);
-            if (!dir.isDirectory() && !dir.mkdirs()) throw new IOException("Couldn't create " + dir);
+            if (!dir.isDirectory() && !dir.mkdirs())
+                throw new IOException("Couldn't create " + dir);
             target = unique(dir, displayName);
             part = new File(dir, target.getName() + ".part");
             return new FileOutputStream(part);
@@ -167,14 +177,6 @@ public abstract class EpubOutput {
         void abort() {
             //noinspection ResultOfMethodCallIgnored
             if (part != null) part.delete();
-        }
-
-        // "Name.epub", then "Name (1).epub" and so on
-        private static File unique(File dir, String name) {
-            File file = new File(dir, name);
-            String base = name.substring(0, name.length() - ".epub".length());
-            for (int i = 1; file.exists(); i++) file = new File(dir, base + " (" + i + ").epub");
-            return file;
         }
     }
 }

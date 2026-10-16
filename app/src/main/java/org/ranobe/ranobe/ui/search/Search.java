@@ -37,9 +37,6 @@ import java.util.List;
  */
 public class Search extends Fragment {
     private final List<DataSource> sources = new ArrayList<>();
-    private FragmentSearchBinding binding;
-    private SearchViewModel viewModel;
-    private TabLayoutMediator mediator;
     // remembers the tab the user picks, ignoring the pager restoring or tearing itself down
     private final ViewPager2.OnPageChangeCallback pageChanges = new ViewPager2.OnPageChangeCallback() {
         @Override
@@ -48,6 +45,9 @@ public class Search extends Fragment {
             Ranobe.setLastSearchSource(sources.get(position).sourceId);
         }
     };
+    private FragmentSearchBinding binding;
+    private SearchViewModel viewModel;
+    private TabLayoutMediator mediator;
 
     public Search() {
         // Required empty public constructor
@@ -109,7 +109,8 @@ public class Search extends Fragment {
         // the query can change from elsewhere (a genre tapped on a details page)
         viewModel.getQuery().observe(getViewLifecycleOwner(), text -> {
             CharSequence shown = binding.searchField.getText();
-            if (text != null && (shown == null || !text.contentEquals(shown))) binding.searchField.setText(text);
+            if (text != null && (shown == null || !text.contentEquals(shown)))
+                binding.searchField.setText(text);
             updateGenreChip();
         });
         binding.genreChip.setOnCloseIconClickListener(v -> {
@@ -145,7 +146,8 @@ public class Search extends Fragment {
             binding.pager.setCurrentItem(target, false);
             // a restored pager brings back its old page after this, the selected source wins
             binding.pager.post(() -> {
-                if (binding != null && binding.pager.getCurrentItem() != target) binding.pager.setCurrentItem(target, false);
+                if (binding != null && binding.pager.getCurrentItem() != target)
+                    binding.pager.setCurrentItem(target, false);
             });
         }
         binding.pager.registerOnPageChangeCallback(pageChanges);

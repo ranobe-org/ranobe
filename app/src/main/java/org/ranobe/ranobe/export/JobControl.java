@@ -5,8 +5,6 @@ package org.ranobe.ranobe.export;
  * through {@link #sleep(long)}, both throw {@link StoppedException} as soon as a stop is requested.
  */
 class JobControl {
-    enum Stop {PAUSE, CANCEL}
-
     private volatile Stop stop;
     private volatile String reason;
 
@@ -47,6 +45,8 @@ class JobControl {
         }
         check();
     }
+
+    enum Stop {PAUSE, CANCEL}
 
     static class StoppedException extends RuntimeException {
         StoppedException() {

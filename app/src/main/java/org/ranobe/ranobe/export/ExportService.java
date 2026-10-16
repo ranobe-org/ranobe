@@ -26,11 +26,11 @@ public class ExportService extends Service {
     private static final long WAKE_LOCK_TIMEOUT_MS = 6 * 60 * 60 * 1000L;
 
     private final Map<String, ExportJob.Status> seen = new HashMap<>();
-    private final Runnable onChanged = this::update;
     private ExportQueue queue;
     private ExportNotifications notifications;
     private PowerManager.WakeLock wakeLock;
     private boolean stopping;
+    private final Runnable onChanged = this::update;
 
     static void start(Context context) {
         try {

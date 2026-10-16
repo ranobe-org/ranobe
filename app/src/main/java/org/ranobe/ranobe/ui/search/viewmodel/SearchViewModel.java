@@ -130,7 +130,8 @@ public class SearchViewModel extends ViewModel {
         if (key.equals(paging.key)) {
             // same query (e.g. back from details): keep what is there, but don't leave a failed
             // first page sitting empty
-            if (state.items.isEmpty() && state.error != null && !state.loading) load(sourceId, paging);
+            if (state.items.isEmpty() && state.error != null && !state.loading)
+                load(sourceId, paging);
             return;
         }
         paging.reset(current, key, genreUrlFor(sourceId));

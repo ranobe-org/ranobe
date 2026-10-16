@@ -17,12 +17,9 @@ import java.util.Objects;
  * It has no row at all otherwise.
  */
 public class LoadFooterAdapter extends RecyclerView.Adapter<LoadFooterAdapter.Holder> {
-    public enum Mode {NONE, LOADING, FAILED, END}
-
     private final Runnable onRetry;
     private Mode mode = Mode.NONE;
     private String message;
-
     public LoadFooterAdapter(Runnable onRetry) {
         this.onRetry = onRetry;
     }
@@ -57,6 +54,8 @@ public class LoadFooterAdapter extends RecyclerView.Adapter<LoadFooterAdapter.Ho
     public int getItemCount() {
         return mode == Mode.NONE ? 0 : 1;
     }
+
+    public enum Mode {NONE, LOADING, FAILED, END}
 
     static class Holder extends RecyclerView.ViewHolder {
         final ItemLoadFooterBinding binding;

@@ -20,9 +20,9 @@ import org.ranobe.ranobe.ui.webview.WebViewActivity;
 
 public class Error extends Fragment {
     private static final String ERR_PARAM = "error";
-    private String error;
     private final ActivityResultLauncher<String> verify =
             registerForActivityResult(new WebViewActivity.Verify(), passed -> goBack());
+    private String error;
 
     public Error() {
         // Required empty public constructor

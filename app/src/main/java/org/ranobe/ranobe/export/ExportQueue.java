@@ -53,12 +53,11 @@ public class ExportQueue {
     private final List<ExportJob> jobs = new CopyOnWriteArrayList<>();
     private final MutableLiveData<List<ExportJob>> live = new MutableLiveData<>();
     private final List<Runnable> listeners = new CopyOnWriteArrayList<>();
-    private final Runnable dispatch = this::dispatch;
-
     private volatile ExportJob running;
     private volatile JobControl control;
     private boolean draining;
     private boolean dispatchPending;
+    private final Runnable dispatch = this::dispatch;
 
     private ExportQueue(Context context) {
         this.context = context.getApplicationContext();
@@ -75,6 +74,13 @@ public class ExportQueue {
     public static ExportQueue get(Context context) {
         if (instance == null) instance = new ExportQueue(context);
         return instance;
+    }
+
+    private static void deleteRecursively(File file) {
+        File[] children = file.listFiles();
+        if (children != null) for (File child : children) deleteRecursively(child);
+        //noinspection ResultOfMethodCallIgnored
+        file.delete();
     }
 
     public LiveData<List<ExportJob>> jobs() {
@@ -433,12 +439,5 @@ public class ExportQueue {
                 if (find(dir.getName()) == null) deleteRecursively(dir);
             }
         });
-    }
-
-    private static void deleteRecursively(File file) {
-        File[] children = file.listFiles();
-        if (children != null) for (File child : children) deleteRecursively(child);
-        //noinspection ResultOfMethodCallIgnored
-        file.delete();
     }
 }

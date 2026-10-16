@@ -46,33 +46,6 @@ final class EpubBuilder {
     private EpubBuilder() {
     }
 
-    static final class Book {
-        String id;
-        String title;
-        String author;
-        String description;
-        String language = "en";
-        String source;
-        File cover;
-        File baseDir;
-        final List<Section> sections = new ArrayList<>();
-    }
-
-    static final class Section {
-        final String title;
-        final File text;
-
-        Section(String title, File text) {
-            this.title = title;
-            this.text = text;
-        }
-    }
-
-    interface Progress {
-        // may throw to abort the build
-        void onChapter(int done, int total);
-    }
-
     static void write(Book book, OutputStream out, Progress progress) throws IOException {
         if (book.sections.isEmpty()) throw new IOException("No chapters to put in the book");
         String coverFormat = book.cover == null ? null : ImageInfo.format(book.cover);
@@ -134,11 +107,13 @@ final class EpubBuilder {
                 .append("    <dc:identifier id=\"book-id\">").append(esc(book.id)).append("</dc:identifier>\n")
                 .append("    <dc:title>").append(esc(book.title)).append("</dc:title>\n")
                 .append("    <dc:language>").append(esc(book.language)).append("</dc:language>\n");
-        if (!isBlank(book.author)) b.append("    <dc:creator>").append(esc(book.author)).append("</dc:creator>\n");
+        if (!isBlank(book.author))
+            b.append("    <dc:creator>").append(esc(book.author)).append("</dc:creator>\n");
         if (!isBlank(book.description)) {
             b.append("    <dc:description>").append(esc(book.description)).append("</dc:description>\n");
         }
-        if (!isBlank(book.source)) b.append("    <dc:source>").append(esc(book.source)).append("</dc:source>\n");
+        if (!isBlank(book.source))
+            b.append("    <dc:source>").append(esc(book.source)).append("</dc:source>\n");
         b.append("    <meta property=\"dcterms:modified\">").append(iso.format(new Date())).append("</meta>\n");
         // EPUB 2 readers find the cover through this
         if (coverFormat != null) b.append("    <meta name=\"cover\" content=\"img-cover\"/>\n");
@@ -191,7 +166,8 @@ final class EpubBuilder {
         }
         b.append("    </ol>\n  </nav>\n")
                 .append("  <nav epub:type=\"landmarks\" id=\"landmarks\" hidden=\"\">\n    <ol>\n");
-        if (hasCover) b.append("      <li><a epub:type=\"cover\" href=\"text/cover.xhtml\">Cover</a></li>\n");
+        if (hasCover)
+            b.append("      <li><a epub:type=\"cover\" href=\"text/cover.xhtml\">Cover</a></li>\n");
         b.append("      <li><a epub:type=\"titlepage\" href=\"text/title.xhtml\">Title page</a></li>\n")
                 .append("      <li><a epub:type=\"bodymatter\" href=\"").append(chapterHref(0)).append("\">Start</a></li>\n")
                 .append("    </ol>\n  </nav>\n</body>\n</html>\n");
@@ -234,14 +210,16 @@ final class EpubBuilder {
         b.append(xhtmlHead(book.language, book.title, true))
                 .append("<body epub:type=\"titlepage\">\n")
                 .append("  <h1>").append(esc(book.title)).append("</h1>\n");
-        if (!isBlank(book.author)) b.append("  <p class=\"meta\">").append(esc(book.author)).append("</p>\n");
+        if (!isBlank(book.author))
+            b.append("  <p class=\"meta\">").append(esc(book.author)).append("</p>\n");
         if (!isBlank(book.description)) {
             for (String paragraph : PARAGRAPH_BREAK.split(book.description.trim())) {
                 if (paragraph.trim().isEmpty()) continue;
                 b.append("  <p class=\"summary\">").append(lines(paragraph.trim())).append("</p>\n");
             }
         }
-        if (!isBlank(book.source)) b.append("  <p class=\"meta\">").append(esc(book.source)).append("</p>\n");
+        if (!isBlank(book.source))
+            b.append("  <p class=\"meta\">").append(esc(book.source)).append("</p>\n");
         b.append("</body>\n</html>\n");
         return b.toString();
     }
@@ -391,5 +369,32 @@ final class EpubBuilder {
 
     private static boolean isBlank(String s) {
         return s == null || s.trim().isEmpty();
+    }
+
+    interface Progress {
+        // may throw to abort the build
+        void onChapter(int done, int total);
+    }
+
+    static final class Book {
+        final List<Section> sections = new ArrayList<>();
+        String id;
+        String title;
+        String author;
+        String description;
+        String language = "en";
+        String source;
+        File cover;
+        File baseDir;
+    }
+
+    static final class Section {
+        final String title;
+        final File text;
+
+        Section(String title, File text) {
+            this.title = title;
+            this.text = text;
+        }
     }
 }

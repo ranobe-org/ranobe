@@ -64,8 +64,8 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          ./gradlew assembleRanobeRelease
-          cp app/build/outputs/apk/ranobe/release/app-ranobe-release.apk ranobe.apk
+          ./gradlew assembleRelease
+          cp app/build/outputs/apk/release/app-release.apk ranobe.apk
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2

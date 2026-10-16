@@ -65,7 +65,6 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
     private HistoryViewModel historyViewModel;
     private Novel novel;
     private ChapterAdapter adapter;
-    private EpubExportPrompt exportPrompt;
     private final BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -79,6 +78,7 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
             }
         }
     };
+    private EpubExportPrompt exportPrompt;
     private boolean scrolledToLastRead = false;
     // Pending chapter/action to start after permission is granted
     private Chapter pendingDownloadChapter = null;

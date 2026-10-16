@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- shared "nothing here yet" block: icon, title, a line of help, and an optional action -->
+<?xml version="1.0" encoding="utf-8"?><!-- shared "nothing here yet" block: icon, title, a line of help, and an optional action -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

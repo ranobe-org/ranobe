@@ -44,6 +44,15 @@ public class EpubExportPrompt {
                 result -> startPending());
     }
 
+    private static float parse(CharSequence text) {
+        if (text == null || text.toString().trim().isEmpty()) return Float.NaN;
+        try {
+            return Float.parseFloat(text.toString().trim().replace(',', '.'));
+        } catch (NumberFormatException e) {
+            return Float.NaN;
+        }
+    }
+
     public void show(Novel novel) {
         if (novel == null || !fragment.isAdded()) return;
         DialogEpubExportBinding binding = DialogEpubExportBinding.inflate(fragment.getLayoutInflater());
@@ -79,8 +88,10 @@ public class EpubExportPrompt {
         pendingFrom = from;
         pendingTo = to;
         List<String> missing = new ArrayList<>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) missing.add(Manifest.permission.POST_NOTIFICATIONS);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) missing.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            missing.add(Manifest.permission.POST_NOTIFICATIONS);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+            missing.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         for (int i = missing.size() - 1; i >= 0; i--) {
             if (ContextCompat.checkSelfPermission(fragment.requireContext(), missing.get(i)) == PackageManager.PERMISSION_GRANTED) {
                 missing.remove(i);
@@ -120,14 +131,5 @@ public class EpubExportPrompt {
             intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null));
         }
         fragment.startActivity(intent);
-    }
-
-    private static float parse(CharSequence text) {
-        if (text == null || text.toString().trim().isEmpty()) return Float.NaN;
-        try {
-            return Float.parseFloat(text.toString().trim().replace(',', '.'));
-        } catch (NumberFormatException e) {
-            return Float.NaN;
-        }
     }
 }

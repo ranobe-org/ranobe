@@ -41,22 +41,6 @@ public class WebViewActivity extends AppCompatActivity {
     private String url;
     private String initialClearance;
 
-    /**
-     * Opens the url, the result tells whether the check was passed.
-     */
-    public static class Verify extends ActivityResultContract<String, Boolean> {
-        @NonNull
-        @Override
-        public Intent createIntent(@NonNull Context context, String url) {
-            return new Intent(context, WebViewActivity.class).putExtra(EXTRA_URL, url);
-        }
-
-        @Override
-        public Boolean parseResult(int resultCode, @Nullable Intent intent) {
-            return resultCode == RESULT_OK;
-        }
-    }
-
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,5 +128,21 @@ public class WebViewActivity extends AppCompatActivity {
             binding.web.destroy();
         }
         super.onDestroy();
+    }
+
+    /**
+     * Opens the url, the result tells whether the check was passed.
+     */
+    public static class Verify extends ActivityResultContract<String, Boolean> {
+        @NonNull
+        @Override
+        public Intent createIntent(@NonNull Context context, String url) {
+            return new Intent(context, WebViewActivity.class).putExtra(EXTRA_URL, url);
+        }
+
+        @Override
+        public Boolean parseResult(int resultCode, @Nullable Intent intent) {
+            return resultCode == RESULT_OK;
+        }
     }
 }

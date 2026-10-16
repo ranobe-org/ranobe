@@ -17,15 +17,6 @@ import java.util.UUID;
  * The runner thread writes these fields and the UI reads them, hence the volatiles.
  */
 public class ExportJob {
-    public enum Status {
-        QUEUED, RUNNING, PAUSED,
-        // every chapter was tried but some couldn't be fetched, the user picks retry or build anyway
-        INCOMPLETE,
-        FAILED, COMPLETED
-    }
-
-    public enum Phase {CHAPTERS, CONTENT, BUILDING}
-
     public final String id;
     public final Novel novel;
     // inclusive chapter number range, NaN for open ends
@@ -34,7 +25,6 @@ public class ExportJob {
     public final long createdAt;
     // filled once the chapter list is fetched, in reading order
     public final List<Item> chapters = new ArrayList<>();
-
     public volatile Status status = Status.QUEUED;
     public volatile Phase phase = Phase.CHAPTERS;
     // last error, why the job is paused, or what it is waiting for
@@ -42,26 +32,57 @@ public class ExportJob {
     public volatile boolean waitingForNetwork;
     // set by "build anyway", chapters that couldn't be fetched are left out
     public volatile boolean allowMissing;
-
     public volatile int buildDone;
     public volatile int buildTotal;
-
     // result
     public volatile String outputUri;
     public volatile String outputName;
     public volatile long outputSize;
     public volatile int missingChapters;
-
     public ExportJob(Novel novel, float from, float to) {
         this(UUID.randomUUID().toString(), novel, from, to, System.currentTimeMillis());
     }
-
     private ExportJob(String id, Novel novel, float from, float to, long createdAt) {
         this.id = id;
         this.novel = novel;
         this.from = from;
         this.to = to;
         this.createdAt = createdAt;
+    }
+
+    public static ExportJob fromJson(JSONObject o) throws JSONException {
+        JSONObject n = o.getJSONObject("novel");
+        Novel novel = new Novel(n.getString("url"), n.getInt("sourceId"));
+        novel.name = n.optString("name", null);
+        novel.cover = n.optString("cover", null);
+        novel.summary = n.optString("summary", null);
+        novel.authors = strings(n.optJSONArray("authors"));
+        novel.genres = strings(n.optJSONArray("genres"));
+
+        ExportJob job = new ExportJob(o.getString("id"), novel,
+                (float) o.optDouble("from", Double.NaN), (float) o.optDouble("to", Double.NaN),
+                o.optLong("createdAt"));
+        job.status = Status.valueOf(o.getString("status"));
+        job.phase = Phase.valueOf(o.optString("phase", Phase.CHAPTERS.name()));
+        job.message = o.optString("message", null);
+        job.allowMissing = o.optBoolean("allowMissing");
+        job.outputUri = o.optString("outputUri", null);
+        job.outputName = o.optString("outputName", null);
+        job.outputSize = o.optLong("outputSize");
+        job.missingChapters = o.optInt("missingChapters");
+        JSONArray items = o.optJSONArray("chapters");
+        if (items != null) {
+            for (int i = 0; i < items.length(); i++)
+                job.chapters.add(Item.fromJson(items.getJSONObject(i)));
+        }
+        return job;
+    }
+
+    private static List<String> strings(JSONArray array) {
+        if (array == null) return null;
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) list.add(array.optString(i));
+        return list;
     }
 
     public boolean isActive() {
@@ -141,39 +162,14 @@ public class ExportJob {
                 .put("chapters", items);
     }
 
-    public static ExportJob fromJson(JSONObject o) throws JSONException {
-        JSONObject n = o.getJSONObject("novel");
-        Novel novel = new Novel(n.getString("url"), n.getInt("sourceId"));
-        novel.name = n.optString("name", null);
-        novel.cover = n.optString("cover", null);
-        novel.summary = n.optString("summary", null);
-        novel.authors = strings(n.optJSONArray("authors"));
-        novel.genres = strings(n.optJSONArray("genres"));
-
-        ExportJob job = new ExportJob(o.getString("id"), novel,
-                (float) o.optDouble("from", Double.NaN), (float) o.optDouble("to", Double.NaN),
-                o.optLong("createdAt"));
-        job.status = Status.valueOf(o.getString("status"));
-        job.phase = Phase.valueOf(o.optString("phase", Phase.CHAPTERS.name()));
-        job.message = o.optString("message", null);
-        job.allowMissing = o.optBoolean("allowMissing");
-        job.outputUri = o.optString("outputUri", null);
-        job.outputName = o.optString("outputName", null);
-        job.outputSize = o.optLong("outputSize");
-        job.missingChapters = o.optInt("missingChapters");
-        JSONArray items = o.optJSONArray("chapters");
-        if (items != null) {
-            for (int i = 0; i < items.length(); i++) job.chapters.add(Item.fromJson(items.getJSONObject(i)));
-        }
-        return job;
+    public enum Status {
+        QUEUED, RUNNING, PAUSED,
+        // every chapter was tried but some couldn't be fetched, the user picks retry or build anyway
+        INCOMPLETE,
+        FAILED, COMPLETED
     }
 
-    private static List<String> strings(JSONArray array) {
-        if (array == null) return null;
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < array.length(); i++) list.add(array.optString(i));
-        return list;
-    }
+    public enum Phase {CHAPTERS, CONTENT, BUILDING}
 
     /**
      * A chapter of the job, {@code done} once it was fetched or given up on.
@@ -195,6 +191,13 @@ public class ExportJob {
             return new Item(c.url, c.name, c.id);
         }
 
+        static Item fromJson(JSONObject o) throws JSONException {
+            Item item = new Item(o.getString("url"), o.optString("name", null), (float) o.getDouble("index"));
+            item.missing = o.optBoolean("missing");
+            item.done = o.optBoolean("done");
+            return item;
+        }
+
         Chapter toChapter(Novel novel) {
             Chapter c = new Chapter(novel.url);
             c.url = url;
@@ -210,13 +213,6 @@ public class ExportJob {
                     .put("index", (double) index)
                     .put("missing", missing)
                     .put("done", done);
-        }
-
-        static Item fromJson(JSONObject o) throws JSONException {
-            Item item = new Item(o.getString("url"), o.optString("name", null), (float) o.getDouble("index"));
-            item.missing = o.optBoolean("missing");
-            item.done = o.optBoolean("done");
-            return item;
         }
     }
 }

@@ -44,6 +44,13 @@ public final class Cloudflare {
             return size() > 20;
         }
     });
+    // the agent a blocked url was requested with, the browser has to use the same one
+    private static final Map<String, String> agents = Collections.synchronizedMap(new LinkedHashMap<String, String>() {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, String> eldest) {
+            return size() > 20;
+        }
+    });
 
     private Cloudflare() {
     }
@@ -55,14 +62,6 @@ public final class Cloudflare {
     public static String blockedUrl(@Nullable String message) {
         return message == null ? null : blocked.get(message);
     }
-
-    // the agent a blocked url was requested with, the browser has to use the same one
-    private static final Map<String, String> agents = Collections.synchronizedMap(new LinkedHashMap<String, String>() {
-        @Override
-        protected boolean removeEldestEntry(Map.Entry<String, String> eldest) {
-            return size() > 20;
-        }
-    });
 
     @Nullable
     public static String userAgentFor(String url) {
@@ -81,44 +80,6 @@ public final class Cloudflare {
                     || body.contains("<title>Just a moment...</title>");
         } catch (IOException e) {
             return false;
-        }
-    }
-
-    /**
-     * An application interceptor: retries a challenged request once the invisible WebView has
-     * earned the clearance cookie.
-     */
-    public static class Interceptor implements okhttp3.Interceptor {
-        private final Context context;
-
-        public Interceptor(Context context) {
-            this.context = context.getApplicationContext();
-        }
-
-        @NonNull
-        @Override
-        public Response intercept(@NonNull okhttp3.Interceptor.Chain chain) throws IOException {
-            Request request = chain.request();
-            Response response = chain.proceed(request);
-            if (!isChallenge(response)) return response;
-            response.close();
-
-            String url = request.url().toString();
-            String before = WebViewCookieJar.get(url, CLEARANCE_COOKIE);
-            synchronized (Cloudflare.class) {
-                // another request may have solved it while this one waited
-                String now = WebViewCookieJar.get(url, CLEARANCE_COOKIE);
-                if (now == null || now.equals(before)) {
-                    solve(context, request, before);
-                }
-            }
-
-            Response retried = chain.proceed(request.newBuilder().build());
-            if (!isChallenge(retried)) return retried;
-            retried.close();
-            String agent = request.header("User-Agent");
-            if (agent != null) agents.put(url, agent);
-            throw challenge(context, url, request.url().host());
         }
     }
 
@@ -200,6 +161,44 @@ public final class Cloudflare {
             return agent.replace("; wv)", ")").replaceAll("Version/\\d+(\\.\\d+)*\\s", "");
         } catch (Throwable e) {
             return null;
+        }
+    }
+
+    /**
+     * An application interceptor: retries a challenged request once the invisible WebView has
+     * earned the clearance cookie.
+     */
+    public static class Interceptor implements okhttp3.Interceptor {
+        private final Context context;
+
+        public Interceptor(Context context) {
+            this.context = context.getApplicationContext();
+        }
+
+        @NonNull
+        @Override
+        public Response intercept(@NonNull okhttp3.Interceptor.Chain chain) throws IOException {
+            Request request = chain.request();
+            Response response = chain.proceed(request);
+            if (!isChallenge(response)) return response;
+            response.close();
+
+            String url = request.url().toString();
+            String before = WebViewCookieJar.get(url, CLEARANCE_COOKIE);
+            synchronized (Cloudflare.class) {
+                // another request may have solved it while this one waited
+                String now = WebViewCookieJar.get(url, CLEARANCE_COOKIE);
+                if (now == null || now.equals(before)) {
+                    solve(context, request, before);
+                }
+            }
+
+            Response retried = chain.proceed(request.newBuilder().build());
+            if (!isChallenge(retried)) return retried;
+            retried.close();
+            String agent = request.header("User-Agent");
+            if (agent != null) agents.put(url, agent);
+            throw challenge(context, url, request.url().host());
         }
     }
 

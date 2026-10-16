@@ -39,6 +39,10 @@ final class ExportNotifications {
         createChannels();
     }
 
+    private static int jobNotificationId(ExportJob job) {
+        return 7100 + (job.id.hashCode() & 0xffff);
+    }
+
     private void createChannels() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
         NotificationManager nm = context.getSystemService(NotificationManager.class);
@@ -79,7 +83,8 @@ final class ExportNotifications {
                 .setProgress(100, current.percent(), ExportText.indeterminate(current))
                 .addAction(0, context.getString(R.string.export_pause), action(ExportActionReceiver.ACTION_PAUSE, current))
                 .addAction(0, context.getString(R.string.export_cancel), action(ExportActionReceiver.ACTION_CANCEL, current));
-        if (active > 1) b.setSubText(context.getResources().getQuantityString(R.plurals.export_more_queued, active - 1, active - 1));
+        if (active > 1)
+            b.setSubText(context.getResources().getQuantityString(R.plurals.export_more_queued, active - 1, active - 1));
         return b.build();
     }
 
@@ -143,10 +148,6 @@ final class ExportNotifications {
             return;
         }
         manager.notify(id, notification);
-    }
-
-    private static int jobNotificationId(ExportJob job) {
-        return 7100 + (job.id.hashCode() & 0xffff);
     }
 
     // opened with the home screen under it, so back lands in the app rather than closing it

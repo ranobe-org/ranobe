@@ -34,12 +34,12 @@ import org.ranobe.ranobe.export.ExportText;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.sources.SourceManager;
+import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
 import org.ranobe.ranobe.ui.chapters.Chapters;
 import org.ranobe.ranobe.ui.details.viewmodel.DetailsViewModel;
 import org.ranobe.ranobe.ui.downloads.DownloadsActivity;
 import org.ranobe.ranobe.ui.downloads.EpubExportPrompt;
 import org.ranobe.ranobe.ui.error.Error;
-import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
 import org.ranobe.ranobe.ui.history.viewmodel.HistoryViewModel;
 import org.ranobe.ranobe.ui.search.viewmodel.SearchViewModel;
 
@@ -49,13 +49,12 @@ import java.util.Locale;
 
 public class Details extends Fragment {
     private static final int SUMMARY_LINES = 6;
+    private final List<Novel> recommendations = new ArrayList<>();
     private FragmentDetailsBinding binding;
     private DetailsViewModel viewModel;
     private HistoryViewModel historyViewModel;
     private EpubExportPrompt exportPrompt;
     private ExportJob exportJob;
-
-    private final List<Novel> recommendations = new ArrayList<>();
     private Novel novel;
     private boolean inLibrary = false;
     private boolean summaryExpanded = false;
@@ -63,6 +62,12 @@ public class Details extends Fragment {
 
     public Details() {
         // Required
+    }
+
+    // some sources shout their tags, "WEAKTOSTRONG" reads better as "Weaktostrong"
+    private static String displayGenre(String genre) {
+        if (genre.length() < 2 || !genre.equals(genre.toUpperCase(Locale.ROOT))) return genre;
+        return genre.charAt(0) + genre.substring(1).toLowerCase(Locale.ROOT);
     }
 
     @Override
@@ -188,7 +193,8 @@ public class Details extends Fragment {
             binding.exportProgress.setIndeterminate(indeterminate);
         }
         binding.exportProgress.setVisibility(showProgress ? View.VISIBLE : View.GONE);
-        if (showProgress && !indeterminate) binding.exportProgress.setProgressCompat(exportJob.percent(), true);
+        if (showProgress && !indeterminate)
+            binding.exportProgress.setProgressCompat(exportJob.percent(), true);
     }
 
     private void setUpError(String error) {
@@ -277,12 +283,6 @@ public class Details extends Fragment {
             chip.setOnClickListener(v -> searchGenre(genre));
             binding.genresLayout.addView(chip);
         }
-    }
-
-    // some sources shout their tags, "WEAKTOSTRONG" reads better as "Weaktostrong"
-    private static String displayGenre(String genre) {
-        if (genre.length() < 2 || !genre.equals(genre.toUpperCase(Locale.ROOT))) return genre;
-        return genre.charAt(0) + genre.substring(1).toLowerCase(Locale.ROOT);
     }
 
     // the source's genre page when it has one, otherwise a search for the genre's name

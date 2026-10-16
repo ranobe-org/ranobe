@@ -13,8 +13,8 @@ import org.ranobe.ranobe.util.SourceUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Novel implements Parcelable {

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- compact genre tag on the details page, tapping it lists the genre -->
+<?xml version="1.0" encoding="utf-8"?><!-- compact genre tag on the details page, tapping it lists the genre -->
 <com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Widget.Material3.Chip.Assist"

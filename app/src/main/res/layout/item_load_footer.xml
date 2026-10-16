@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- the end of a paged list: a spinner while the next page loads, a retry when it failed -->
+<?xml version="1.0" encoding="utf-8"?><!-- the end of a paged list: a spinner while the next page loads, a retry when it failed -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -29,9 +28,9 @@
             android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:gravity="center"
             android:maxLines="2"
-            android:ellipsize="end"
             android:text="@string/load_more_failed"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?colorOnSurfaceVariant" />

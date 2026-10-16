@@ -1,11 +1,10 @@
 package org.ranobe.ranobe.database.mapper;
 
-import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.models.NovelMetadata;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ranobe.ranobe.models.Novel;
+import org.ranobe.ranobe.models.NovelMetadata;
 
 import java.util.ArrayList;
 import java.util.Iterator;

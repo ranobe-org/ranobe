@@ -37,6 +37,23 @@ public class WebViewCookieJar implements CookieJar {
         }
     }
 
+    /**
+     * The value of one cookie for this url, or null.
+     */
+    public static String get(String url, String name) {
+        try {
+            String header = CookieManager.getInstance().getCookie(url);
+            if (header == null) return null;
+            for (String pair : header.split(";")) {
+                String trimmed = pair.trim();
+                if (trimmed.startsWith(name + "=")) return trimmed.substring(name.length() + 1);
+            }
+        } catch (Throwable ignored) {
+            // no WebView
+        }
+        return null;
+    }
+
     @Override
     public void saveFromResponse(@NonNull HttpUrl url, @NonNull List<Cookie> cookies) {
         String target = url.toString();
@@ -54,22 +71,5 @@ public class WebViewCookieJar implements CookieJar {
             if (cookie != null) cookies.add(cookie);
         }
         return cookies;
-    }
-
-    /**
-     * The value of one cookie for this url, or null.
-     */
-    public static String get(String url, String name) {
-        try {
-            String header = CookieManager.getInstance().getCookie(url);
-            if (header == null) return null;
-            for (String pair : header.split(";")) {
-                String trimmed = pair.trim();
-                if (trimmed.startsWith(name + "=")) return trimmed.substring(name.length() + 1);
-            }
-        } catch (Throwable ignored) {
-            // no WebView
-        }
-        return null;
     }
 }

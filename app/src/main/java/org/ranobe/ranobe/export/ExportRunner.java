@@ -50,24 +50,6 @@ class ExportRunner {
     private static final int SAVE_EVERY = 10;
     private static final long MIN_FREE_BYTES = 50L * 1024 * 1024;
     private static final String[] STORED_FORMATS = {ImageInfo.JPEG, ImageInfo.PNG, ImageInfo.GIF};
-
-    interface Listener {
-        // frequent, may be throttled
-        void onProgress(ExportJob job);
-
-        // something worth saving happened
-        void onChanged(ExportJob job);
-    }
-
-    /**
-     * An error retrying won't fix.
-     */
-    static class FatalException extends Exception {
-        FatalException(String message) {
-            super(message);
-        }
-    }
-
     private final Context context;
     private final ExportJob job;
     private final JobControl control;
@@ -76,7 +58,6 @@ class ExportRunner {
     private final Listener listener;
     private final NetworkMonitor network;
     private final Source source;
-
     ExportRunner(Context context, ExportJob job, JobControl control, File workDir, Listener listener) {
         this.context = context.getApplicationContext();
         this.job = job;
@@ -88,202 +69,14 @@ class ExportRunner {
         this.source = SourceManager.getSource(job.novel.sourceId);
     }
 
-    void run() throws Exception {
-        if (!imageDir.isDirectory() && !imageDir.mkdirs()) throw new IOException("Couldn't create " + imageDir);
-
-        if (job.chapterCount() == 0) fetchChapters();
-        recheckFinishedChapters();
-        downloadCover();
-
-        job.phase = ExportJob.Phase.CONTENT;
-        listener.onChanged(job);
-        List<ExportJob.Item> items = items();
-        List<ExportJob.Item> failedInARow = new ArrayList<>();
-        int sinceSave = 0;
-        for (int i = 0; i < items.size(); i++) {
-            ExportJob.Item item = items.get(i);
-            if (item.done) continue;
-            ensureSpace(workDir.getUsableSpace(), MIN_FREE_BYTES);
-            try {
-                fetchChapter(i, item);
-                failedInARow.clear();
-                job.message = null;
-            } catch (JobControl.StoppedException e) {
-                throw e;
-            } catch (Exception e) {
-                job.message = describe(context, e);
-                item.missing = true;
-                failedInARow.add(item);
-                if (failedInARow.size() >= MAX_FAILURES_IN_A_ROW) {
-                    // try these again on the next run rather than leave them all out
-                    for (ExportJob.Item failed : failedInARow) {
-                        failed.missing = false;
-                        failed.done = false;
-                    }
-                    throw e;
-                }
-            }
-            item.done = true;
-            if (item.missing || ++sinceSave >= SAVE_EVERY) {
-                sinceSave = 0;
-                listener.onChanged(job);
-            } else {
-                listener.onProgress(job);
-            }
-        }
-        listener.onChanged(job);
-
-        int missing = job.missingCount();
-        if (missing > 0 && !job.allowMissing) {
-            job.missingChapters = missing;
-            job.status = ExportJob.Status.INCOMPLETE;
-            job.message = context.getResources().getQuantityString(R.plurals.export_missing_chapters, missing, missing);
-            return;
-        }
-        build();
-    }
-
-    private List<ExportJob.Item> items() {
-        synchronized (job.chapters) {
-            return new ArrayList<>(job.chapters);
-        }
-    }
-
-    private void fetchChapters() throws Exception {
-        job.phase = ExportJob.Phase.CHAPTERS;
-        listener.onChanged(job);
-        List<Chapter> all = withRetries(() -> {
-            List<Chapter> chapters = source.chapters(job.novel);
-            if (chapters == null || chapters.isEmpty()) throw new IOException("The source returned no chapters");
-            return chapters;
-        });
-        List<ExportJob.Item> picked = new ArrayList<>();
-        for (Chapter c : ListUtils.sortById(all)) {
-            if (job.inRange(c.id)) picked.add(ExportJob.Item.of(c));
-        }
-        if (picked.isEmpty()) {
-            throw new FatalException(context.getString(job.hasRange() ? R.string.export_no_chapters_in_range : R.string.export_no_chapters));
-        }
-        synchronized (job.chapters) {
-            job.chapters.clear();
-            job.chapters.addAll(picked);
-        }
-        listener.onChanged(job);
-    }
-
-    // the work folder is in the cache, Android may have cleared some of it while the job was paused
-    private void recheckFinishedChapters() {
-        boolean changed = false;
-        List<ExportJob.Item> items = items();
-        for (int i = 0; i < items.size(); i++) {
-            ExportJob.Item item = items.get(i);
-            if (item.done && !item.missing && !chapterFile(i).isFile()) {
-                item.done = false;
-                changed = true;
-            }
-        }
-        if (changed) listener.onChanged(job);
-    }
-
-    // a missing cover isn't worth failing over, the book just goes without one
-    private void downloadCover() {
-        String cover = job.novel.cover;
-        if (cover == null || !cover.trim().startsWith("http") || existing(workDir, "cover") != null) return;
-        try {
-            withRetries(() -> fetchImage(cover.trim(), workDir, "cover"));
-        } catch (JobControl.StoppedException e) {
-            throw e;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void fetchChapter(int position, ExportJob.Item item) throws Exception {
-        String content = offlineContent(item);
-        if (content == null) {
-            content = withRetries(() -> {
-                Chapter result = source.chapter(item.toChapter(job.novel));
-                if (result == null || result.content == null || result.content.trim().isEmpty()) {
-                    throw new IOException(context.getString(R.string.export_empty_chapter));
-                }
-                return result.content;
-            });
-        }
-        String text = localizeImages(content);
-        File target = chapterFile(position);
-        File temp = new File(target.getPath() + ".part");
-        try (OutputStream out = new FileOutputStream(temp)) {
-            out.write(text.getBytes(StandardCharsets.UTF_8));
-        }
-        if (!temp.renameTo(target)) {
-            //noinspection ResultOfMethodCallIgnored
-            temp.delete();
-            throw new IOException("Couldn't save " + target.getName());
-        }
-    }
-
-    // chapters downloaded for offline reading are already in the database
-    private String offlineContent(ExportJob.Item item) {
-        try {
-            Chapter saved = RanobeDatabase.database().chapters().getSync(item.url);
-            if (saved != null && saved.content != null && !saved.content.trim().isEmpty()) return saved.content;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * Points every image of the chapter at a copy in the work folder. Images that can't be
-     * fetched keep their url and are left out of the book.
-     */
-    private String localizeImages(String content) {
-        Matcher matcher = SourceUtils.IMAGE_TAG.matcher(content);
-        StringBuffer result = new StringBuffer();
-        while (matcher.find()) {
-            control.check();
-            String url = matcher.group(1).trim();
-            String replacement = url;
-            String name = "i" + Long.toHexString(SourceUtils.generateId(url));
-            File file = existing(imageDir, name);
-            try {
-                if (file == null && url.startsWith("http")) {
-                    file = withRetries(() -> fetchImage(url, imageDir, name));
-                } else if (file == null && new File(url).isFile()) {
-                    // saved by the offline download
-                    file = storeImage(copy(new File(url), new File(imageDir, name + ".part")), imageDir, name);
-                }
-            } catch (JobControl.StoppedException e) {
-                throw e;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (file != null) replacement = "images/" + file.getName();
-            matcher.appendReplacement(result, Matcher.quoteReplacement(SourceUtils.imageTag(replacement)));
-        }
-        matcher.appendTail(result);
-        return result.toString();
-    }
-
-    private File fetchImage(String url, File dir, String name) throws IOException {
-        File temp = new File(dir, name + ".part");
-        try {
-            HttpClient.DOWNLOAD(url, new HashMap<>(), temp);
-            if (temp.length() == 0) throw new IOException("Empty image");
-            return storeImage(temp, dir, name);
-        } finally {
-            //noinspection ResultOfMethodCallIgnored
-            temp.delete();
-        }
-    }
-
     // keeps JPEG, PNG and GIF as they are, anything else (usually WebP) is re-encoded
     private static File storeImage(File temp, File dir, String name) throws IOException {
         try {
             String format = ImageInfo.format(temp);
             if (format != null && ImageInfo.isEpubCore(format)) {
                 File target = new File(dir, name + "." + format);
-                if (!temp.renameTo(target)) throw new IOException("Couldn't save " + target.getName());
+                if (!temp.renameTo(target))
+                    throw new IOException("Couldn't save " + target.getName());
                 return target;
             }
 
@@ -348,6 +141,219 @@ class ExportRunner {
         return null;
     }
 
+    static String formatIndex(float index) {
+        if (index == Math.rint(index)) return String.valueOf((long) index);
+        return String.valueOf(index);
+    }
+
+    /**
+     * A short, user facing explanation of a failure.
+     */
+    static String describe(Context context, Throwable e) {
+        if (e instanceof FatalException) return e.getMessage();
+        if (e instanceof UnknownHostException || e instanceof ConnectException) {
+            return context.getString(R.string.export_error_offline);
+        }
+        if (e instanceof SocketTimeoutException)
+            return context.getString(R.string.export_error_timeout);
+        if (e instanceof OutOfMemoryError) return context.getString(R.string.export_error_memory);
+        String message = e.getLocalizedMessage();
+        return message == null || message.trim().isEmpty() ? context.getString(R.string.export_error_unknown) : message;
+    }
+
+    void run() throws Exception {
+        if (!imageDir.isDirectory() && !imageDir.mkdirs())
+            throw new IOException("Couldn't create " + imageDir);
+
+        if (job.chapterCount() == 0) fetchChapters();
+        recheckFinishedChapters();
+        downloadCover();
+
+        job.phase = ExportJob.Phase.CONTENT;
+        listener.onChanged(job);
+        List<ExportJob.Item> items = items();
+        List<ExportJob.Item> failedInARow = new ArrayList<>();
+        int sinceSave = 0;
+        for (int i = 0; i < items.size(); i++) {
+            ExportJob.Item item = items.get(i);
+            if (item.done) continue;
+            ensureSpace(workDir.getUsableSpace(), MIN_FREE_BYTES);
+            try {
+                fetchChapter(i, item);
+                failedInARow.clear();
+                job.message = null;
+            } catch (JobControl.StoppedException e) {
+                throw e;
+            } catch (Exception e) {
+                job.message = describe(context, e);
+                item.missing = true;
+                failedInARow.add(item);
+                if (failedInARow.size() >= MAX_FAILURES_IN_A_ROW) {
+                    // try these again on the next run rather than leave them all out
+                    for (ExportJob.Item failed : failedInARow) {
+                        failed.missing = false;
+                        failed.done = false;
+                    }
+                    throw e;
+                }
+            }
+            item.done = true;
+            if (item.missing || ++sinceSave >= SAVE_EVERY) {
+                sinceSave = 0;
+                listener.onChanged(job);
+            } else {
+                listener.onProgress(job);
+            }
+        }
+        listener.onChanged(job);
+
+        int missing = job.missingCount();
+        if (missing > 0 && !job.allowMissing) {
+            job.missingChapters = missing;
+            job.status = ExportJob.Status.INCOMPLETE;
+            job.message = context.getResources().getQuantityString(R.plurals.export_missing_chapters, missing, missing);
+            return;
+        }
+        build();
+    }
+
+    private List<ExportJob.Item> items() {
+        synchronized (job.chapters) {
+            return new ArrayList<>(job.chapters);
+        }
+    }
+
+    private void fetchChapters() throws Exception {
+        job.phase = ExportJob.Phase.CHAPTERS;
+        listener.onChanged(job);
+        List<Chapter> all = withRetries(() -> {
+            List<Chapter> chapters = source.chapters(job.novel);
+            if (chapters == null || chapters.isEmpty())
+                throw new IOException("The source returned no chapters");
+            return chapters;
+        });
+        List<ExportJob.Item> picked = new ArrayList<>();
+        for (Chapter c : ListUtils.sortById(all)) {
+            if (job.inRange(c.id)) picked.add(ExportJob.Item.of(c));
+        }
+        if (picked.isEmpty()) {
+            throw new FatalException(context.getString(job.hasRange() ? R.string.export_no_chapters_in_range : R.string.export_no_chapters));
+        }
+        synchronized (job.chapters) {
+            job.chapters.clear();
+            job.chapters.addAll(picked);
+        }
+        listener.onChanged(job);
+    }
+
+    // the work folder is in the cache, Android may have cleared some of it while the job was paused
+    private void recheckFinishedChapters() {
+        boolean changed = false;
+        List<ExportJob.Item> items = items();
+        for (int i = 0; i < items.size(); i++) {
+            ExportJob.Item item = items.get(i);
+            if (item.done && !item.missing && !chapterFile(i).isFile()) {
+                item.done = false;
+                changed = true;
+            }
+        }
+        if (changed) listener.onChanged(job);
+    }
+
+    // a missing cover isn't worth failing over, the book just goes without one
+    private void downloadCover() {
+        String cover = job.novel.cover;
+        if (cover == null || !cover.trim().startsWith("http") || existing(workDir, "cover") != null)
+            return;
+        try {
+            withRetries(() -> fetchImage(cover.trim(), workDir, "cover"));
+        } catch (JobControl.StoppedException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fetchChapter(int position, ExportJob.Item item) throws Exception {
+        String content = offlineContent(item);
+        if (content == null) {
+            content = withRetries(() -> {
+                Chapter result = source.chapter(item.toChapter(job.novel));
+                if (result == null || result.content == null || result.content.trim().isEmpty()) {
+                    throw new IOException(context.getString(R.string.export_empty_chapter));
+                }
+                return result.content;
+            });
+        }
+        String text = localizeImages(content);
+        File target = chapterFile(position);
+        File temp = new File(target.getPath() + ".part");
+        try (OutputStream out = new FileOutputStream(temp)) {
+            out.write(text.getBytes(StandardCharsets.UTF_8));
+        }
+        if (!temp.renameTo(target)) {
+            //noinspection ResultOfMethodCallIgnored
+            temp.delete();
+            throw new IOException("Couldn't save " + target.getName());
+        }
+    }
+
+    // chapters downloaded for offline reading are already in the database
+    private String offlineContent(ExportJob.Item item) {
+        try {
+            Chapter saved = RanobeDatabase.database().chapters().getSync(item.url);
+            if (saved != null && saved.content != null && !saved.content.trim().isEmpty())
+                return saved.content;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Points every image of the chapter at a copy in the work folder. Images that can't be
+     * fetched keep their url and are left out of the book.
+     */
+    private String localizeImages(String content) {
+        Matcher matcher = SourceUtils.IMAGE_TAG.matcher(content);
+        StringBuffer result = new StringBuffer();
+        while (matcher.find()) {
+            control.check();
+            String url = matcher.group(1).trim();
+            String replacement = url;
+            String name = "i" + Long.toHexString(SourceUtils.generateId(url));
+            File file = existing(imageDir, name);
+            try {
+                if (file == null && url.startsWith("http")) {
+                    file = withRetries(() -> fetchImage(url, imageDir, name));
+                } else if (file == null && new File(url).isFile()) {
+                    // saved by the offline download
+                    file = storeImage(copy(new File(url), new File(imageDir, name + ".part")), imageDir, name);
+                }
+            } catch (JobControl.StoppedException e) {
+                throw e;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (file != null) replacement = "images/" + file.getName();
+            matcher.appendReplacement(result, Matcher.quoteReplacement(SourceUtils.imageTag(replacement)));
+        }
+        matcher.appendTail(result);
+        return result.toString();
+    }
+
+    private File fetchImage(String url, File dir, String name) throws IOException {
+        File temp = new File(dir, name + ".part");
+        try {
+            HttpClient.DOWNLOAD(url, new HashMap<>(), temp);
+            if (temp.length() == 0) throw new IOException("Empty image");
+            return storeImage(temp, dir, name);
+        } finally {
+            //noinspection ResultOfMethodCallIgnored
+            temp.delete();
+        }
+    }
+
     private void build() throws Exception {
         job.phase = ExportJob.Phase.BUILDING;
         job.buildDone = 0;
@@ -375,7 +381,8 @@ class ExportRunner {
         }
         File[] images = imageDir.listFiles();
         if (images != null) for (File image : images) bytes += image.length();
-        if (book.sections.isEmpty()) throw new FatalException(context.getString(R.string.export_no_chapters));
+        if (book.sections.isEmpty())
+            throw new FatalException(context.getString(R.string.export_no_chapters));
         // text compresses well, the images don't
         ensureSpace(EpubOutput.freeSpace(context), bytes + 20L * 1024 * 1024);
 
@@ -465,23 +472,21 @@ class ExportRunner {
         return context.getString(R.string.export_chapter_title, formatIndex(item.index));
     }
 
-    static String formatIndex(float index) {
-        if (index == Math.rint(index)) return String.valueOf((long) index);
-        return String.valueOf(index);
+    interface Listener {
+        // frequent, may be throttled
+        void onProgress(ExportJob job);
+
+        // something worth saving happened
+        void onChanged(ExportJob job);
     }
 
     /**
-     * A short, user facing explanation of a failure.
+     * An error retrying won't fix.
      */
-    static String describe(Context context, Throwable e) {
-        if (e instanceof FatalException) return e.getMessage();
-        if (e instanceof UnknownHostException || e instanceof ConnectException) {
-            return context.getString(R.string.export_error_offline);
+    static class FatalException extends Exception {
+        FatalException(String message) {
+            super(message);
         }
-        if (e instanceof SocketTimeoutException) return context.getString(R.string.export_error_timeout);
-        if (e instanceof OutOfMemoryError) return context.getString(R.string.export_error_memory);
-        String message = e.getLocalizedMessage();
-        return message == null || message.trim().isEmpty() ? context.getString(R.string.export_error_unknown) : message;
     }
 
     private static class CountingOutputStream extends FilterOutputStream {

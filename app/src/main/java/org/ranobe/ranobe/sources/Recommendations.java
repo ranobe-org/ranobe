@@ -36,7 +36,8 @@ public final class Recommendations {
             String title = link.attr("title").trim();
             novel.name = title.isEmpty() ? link.text().trim() : title;
             Element img = wrap.selectFirst("img");
-            if (img != null) novel.cover = fullSizeImage(firstNonEmpty(img.attr("data-src"), img.attr("src")));
+            if (img != null)
+                novel.cover = fullSizeImage(firstNonEmpty(img.attr("data-src"), img.attr("src")));
             items.add(novel);
             if (items.size() >= MAX) break;
         }

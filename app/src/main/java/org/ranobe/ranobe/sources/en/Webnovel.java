@@ -33,6 +33,81 @@ import java.util.Set;
 public class Webnovel implements Source {
     public static final int SOURCE_ID = 22;
     private static final String SITE = "https://www.webnovel.com";
+    // letters from any script but latin mark another language's edition
+    private static final java.util.regex.Pattern LATIN_ONLY =
+            java.util.regex.Pattern.compile("[\\p{IsLatin}\\p{IsCommon}\\p{IsInherited}]*\\p{IsLatin}[\\p{IsLatin}\\p{IsCommon}\\p{IsInherited}]*");
+
+    private static Document get(String url) throws Exception {
+        String html = HttpClient.GET(url, headers());
+        return Jsoup.parse(html, SITE);
+    }
+
+    // any query word in the title, or every query word in the description
+    static boolean matches(String keyword, String title, String description) {
+        String name = title.toLowerCase(Locale.ROOT);
+        String about = description == null ? "" : description.toLowerCase(Locale.ROOT);
+        boolean all = true;
+        boolean any = false;
+        for (String word : keyword.toLowerCase(Locale.ROOT).split("[^\\p{L}\\p{N}]+")) {
+            if (word.length() < 2) continue;
+            if (name.contains(word)) any = true;
+            if (!about.contains(word) && !name.contains(word)) all = false;
+        }
+        return any || all;
+    }
+
+    // the mobile site fills its lists in with javascript, the desktop one renders them
+    private static HashMap<String, String> headers() {
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("User-Agent", HttpClient.desktopUserAgent());
+        headers.put("Accept-Language", "en-US,en;q=0.9");
+        return headers;
+    }
+
+    // book urls are /book/{slug}_{id} or /book/{id}, chapters add another segment
+    private static String bookUrl(String href) {
+        if (href == null || href.isEmpty()) return null;
+        String url = absolute(href).split("[?#]")[0];
+        int at = url.indexOf("/book/");
+        if (at < 0) return null;
+        String rest = url.substring(at + "/book/".length());
+        int slash = rest.indexOf('/');
+        if (slash >= 0) rest = rest.substring(0, slash);
+        return rest.isEmpty() ? null : SITE + "/book/" + rest;
+    }
+
+    private static String absolute(String href) {
+        String url = href.trim();
+        if (url.startsWith("//")) return "https:" + url;
+        if (url.startsWith("/")) return SITE + url;
+        return url;
+    }
+
+    private static String image(Element img) {
+        if (img == null) return "";
+        String src = firstNonEmpty(img.attr("data-original"), img.attr("data-src"), img.attr("src"));
+        if (src.startsWith("data:")) return "";
+        return src.startsWith("//") ? "https:" + src : src;
+    }
+
+    private static Element firstOf(Element root, String... selectors) {
+        for (String selector : selectors) {
+            Element found = root.selectFirst(selector);
+            if (found != null) return found;
+        }
+        return null;
+    }
+
+    private static String text(Element element) {
+        return element == null ? "" : element.text().trim();
+    }
+
+    private static String firstNonEmpty(String... values) {
+        for (String value : values) {
+            if (value != null && !value.trim().isEmpty()) return value.trim();
+        }
+        return "";
+    }
 
     @Override
     public DataSource metadata() {
@@ -164,17 +239,14 @@ public class Webnovel implements Source {
         return novel;
     }
 
-    // letters from any script but latin mark another language's edition
-    private static final java.util.regex.Pattern LATIN_ONLY =
-            java.util.regex.Pattern.compile("[\\p{IsLatin}\\p{IsCommon}\\p{IsInherited}]*\\p{IsLatin}[\\p{IsLatin}\\p{IsCommon}\\p{IsInherited}]*");
-
     // the "You May Also Like" row, it mixes in other languages' editions, only latin titles are kept
     private List<Novel> alsoLike(Document doc, String selfUrl) {
         List<Novel> items = new ArrayList<>();
         Element row = doc.selectFirst("ul.j_books_you_also_like");
         if (row == null) return items;
         for (Novel novel : parseList(row)) {
-            if (!novel.url.equals(selfUrl) && LATIN_ONLY.matcher(novel.name).matches()) items.add(novel);
+            if (!novel.url.equals(selfUrl) && LATIN_ONLY.matcher(novel.name).matches())
+                items.add(novel);
         }
         return items;
     }
@@ -211,81 +283,10 @@ public class Webnovel implements Source {
     public Chapter chapter(Chapter chapter) throws Exception {
         Document doc = get(chapter.url);
         Element body = firstOf(doc, ".cha-words", ".cha-content", ".chapter_content");
-        if (body == null) throw new IllegalStateException("This chapter is locked or couldn't be read");
+        if (body == null)
+            throw new IllegalStateException("This chapter is locked or couldn't be read");
         body.select(".para-comment, .j_comment, script, style, pirate").remove();
         chapter.content = SourceUtils.contentFromHtml(body);
         return chapter;
-    }
-
-    private static Document get(String url) throws Exception {
-        String html = HttpClient.GET(url, headers());
-        return Jsoup.parse(html, SITE);
-    }
-
-    // any query word in the title, or every query word in the description
-    static boolean matches(String keyword, String title, String description) {
-        String name = title.toLowerCase(Locale.ROOT);
-        String about = description == null ? "" : description.toLowerCase(Locale.ROOT);
-        boolean all = true;
-        boolean any = false;
-        for (String word : keyword.toLowerCase(Locale.ROOT).split("[^\\p{L}\\p{N}]+")) {
-            if (word.length() < 2) continue;
-            if (name.contains(word)) any = true;
-            if (!about.contains(word) && !name.contains(word)) all = false;
-        }
-        return any || all;
-    }
-
-    // the mobile site fills its lists in with javascript, the desktop one renders them
-    private static HashMap<String, String> headers() {
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("User-Agent", HttpClient.desktopUserAgent());
-        headers.put("Accept-Language", "en-US,en;q=0.9");
-        return headers;
-    }
-
-    // book urls are /book/{slug}_{id} or /book/{id}, chapters add another segment
-    private static String bookUrl(String href) {
-        if (href == null || href.isEmpty()) return null;
-        String url = absolute(href).split("[?#]")[0];
-        int at = url.indexOf("/book/");
-        if (at < 0) return null;
-        String rest = url.substring(at + "/book/".length());
-        int slash = rest.indexOf('/');
-        if (slash >= 0) rest = rest.substring(0, slash);
-        return rest.isEmpty() ? null : SITE + "/book/" + rest;
-    }
-
-    private static String absolute(String href) {
-        String url = href.trim();
-        if (url.startsWith("//")) return "https:" + url;
-        if (url.startsWith("/")) return SITE + url;
-        return url;
-    }
-
-    private static String image(Element img) {
-        if (img == null) return "";
-        String src = firstNonEmpty(img.attr("data-original"), img.attr("data-src"), img.attr("src"));
-        if (src.startsWith("data:")) return "";
-        return src.startsWith("//") ? "https:" + src : src;
-    }
-
-    private static Element firstOf(Element root, String... selectors) {
-        for (String selector : selectors) {
-            Element found = root.selectFirst(selector);
-            if (found != null) return found;
-        }
-        return null;
-    }
-
-    private static String text(Element element) {
-        return element == null ? "" : element.text().trim();
-    }
-
-    private static String firstNonEmpty(String... values) {
-        for (String value : values) {
-            if (value != null && !value.trim().isEmpty()) return value.trim();
-        }
-        return "";
     }
 }

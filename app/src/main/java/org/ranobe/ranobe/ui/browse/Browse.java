@@ -44,12 +44,11 @@ public class Browse extends Fragment implements NovelAdapter.OnNovelItemClickLis
     private FragmentBrowseBinding binding;
 
     private BrowseViewModel viewModel;
-    private NovelAdapter adapter;
-    private GridLayoutManager layoutManager;
-
-    private int sourceId = -1;
     private final ActivityResultLauncher<String> verify =
             registerForActivityResult(new WebViewActivity.Verify(), passed -> viewModel.loadMore());
+    private NovelAdapter adapter;
+    private GridLayoutManager layoutManager;
+    private int sourceId = -1;
 
     public Browse() {
     }

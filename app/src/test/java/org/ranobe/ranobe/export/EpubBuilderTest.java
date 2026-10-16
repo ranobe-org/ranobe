@@ -29,6 +29,32 @@ public class EpubBuilderTest {
     @Rule
     public TemporaryFolder temp = new TemporaryFolder();
 
+    private static void parse(String name, byte[] xml) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+            // the DOCTYPE has no DTD, nothing to fetch
+            factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            factory.newDocumentBuilder().parse(new ByteArrayInputStream(xml));
+        } catch (Exception e) {
+            throw new AssertionError(name + " isn't well formed: " + e.getMessage(), e);
+        }
+    }
+
+    private static void write(File file, byte[] data) throws IOException {
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            out.write(data);
+        }
+    }
+
+    private static byte[] read(InputStream in) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buffer = new byte[8192];
+        int n;
+        while ((n = in.read(buffer)) != -1) out.write(buffer, 0, n);
+        return out.toByteArray();
+    }
+
     @Test
     public void writesAWellFormedBook() throws Exception {
         File dir = temp.newFolder("job");
@@ -118,31 +144,5 @@ public class EpubBuilderTest {
         book.title = "Empty";
         EpubBuilder.write(book, new ByteArrayOutputStream(), (done, total) -> {
         });
-    }
-
-    private static void parse(String name, byte[] xml) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(true);
-            // the DOCTYPE has no DTD, nothing to fetch
-            factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-            factory.newDocumentBuilder().parse(new ByteArrayInputStream(xml));
-        } catch (Exception e) {
-            throw new AssertionError(name + " isn't well formed: " + e.getMessage(), e);
-        }
-    }
-
-    private static void write(File file, byte[] data) throws IOException {
-        try (FileOutputStream out = new FileOutputStream(file)) {
-            out.write(data);
-        }
-    }
-
-    private static byte[] read(InputStream in) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        byte[] buffer = new byte[8192];
-        int n;
-        while ((n = in.read(buffer)) != -1) out.write(buffer, 0, n);
-        return out.toByteArray();
     }
 }

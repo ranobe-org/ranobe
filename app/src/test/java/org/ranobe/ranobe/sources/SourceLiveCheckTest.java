@@ -9,8 +9,8 @@ import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.HttpClient;
 import org.ranobe.ranobe.sources.en.AllNovel;
-import org.ranobe.ranobe.sources.ru.RanobeHub;
 import org.ranobe.ranobe.sources.en.FreeWebNovel;
+import org.ranobe.ranobe.sources.ru.RanobeHub;
 
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +81,8 @@ public class SourceLiveCheckTest {
         assertFalse(page1.isEmpty());
         assertFalse(page2.isEmpty());
         assertFalse(page1.get(0).url.equals(page2.get(0).url));
-        for (Novel n : page1) System.out.println("RH list: " + n.name + " | " + n.status + " | " + n.url + " | " + n.cover);
+        for (Novel n : page1)
+            System.out.println("RH list: " + n.name + " | " + n.status + " | " + n.url + " | " + n.cover);
         System.out.println("RH page2: " + page2.size() + " " + page2.get(0).name);
 
         Novel novel = source.details(page1.get(0));

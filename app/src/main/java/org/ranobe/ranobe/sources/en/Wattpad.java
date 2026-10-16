@@ -10,7 +10,6 @@ import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.HttpClient;
-import org.ranobe.ranobe.sources.Genres;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
 
@@ -34,6 +33,27 @@ public class Wattpad implements Source {
     private static final String LIST_FIELDS = "stories(id,title,cover,user(name)),nextUrl";
     private static final Pattern STORY_ID = Pattern.compile("/story/(\\d+)");
     private static final Pattern PART_ID = Pattern.compile("wattpad\\.com/(\\d+)");
+
+    private static String storyId(String url) {
+        Matcher m = STORY_ID.matcher(url);
+        if (!m.find()) throw new IllegalArgumentException("Not a Wattpad story: " + url);
+        return m.group(1);
+    }
+
+    private static int offset(int page) {
+        return Math.max(0, page - 1) * PAGE_SIZE;
+    }
+
+    private static List<String> strings(JSONArray array) {
+        List<String> list = new ArrayList<>();
+        if (array == null) return list;
+        for (int i = 0; i < array.length(); i++) list.add(array.optString(i));
+        return list;
+    }
+
+    private static String get(String url) throws Exception {
+        return HttpClient.GET(url, new HashMap<>());
+    }
 
     @Override
     public DataSource metadata() {
@@ -148,26 +168,5 @@ public class Wattpad implements Source {
             items.add(novel);
         }
         return items;
-    }
-
-    private static String storyId(String url) {
-        Matcher m = STORY_ID.matcher(url);
-        if (!m.find()) throw new IllegalArgumentException("Not a Wattpad story: " + url);
-        return m.group(1);
-    }
-
-    private static int offset(int page) {
-        return Math.max(0, page - 1) * PAGE_SIZE;
-    }
-
-    private static List<String> strings(JSONArray array) {
-        List<String> list = new ArrayList<>();
-        if (array == null) return list;
-        for (int i = 0; i < array.length(); i++) list.add(array.optString(i));
-        return list;
-    }
-
-    private static String get(String url) throws Exception {
-        return HttpClient.GET(url, new HashMap<>());
     }
 }

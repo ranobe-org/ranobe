@@ -47,9 +47,9 @@ public class SearchSourceFragment extends Fragment implements NovelAdapter.OnNov
     private LoadFooterAdapter footer;
     private GridLayoutManager layoutManager;
     private int sourceId;
-    private String sourceName;
     private final ActivityResultLauncher<String> verify =
             registerForActivityResult(new WebViewActivity.Verify(), passed -> viewModel.retry(sourceId));
+    private String sourceName;
 
     public static SearchSourceFragment newInstance(int sourceId, String name) {
         SearchSourceFragment fragment = new SearchSourceFragment();

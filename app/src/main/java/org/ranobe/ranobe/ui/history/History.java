@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.ranobe.ranobe.R;
-import org.ranobe.ranobe.ui.views.EmptyState;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.database.mapper.ChapterMapper;
 import org.ranobe.ranobe.databinding.FragmentHistoryBinding;
@@ -26,6 +25,7 @@ import org.ranobe.ranobe.models.ReadHistory;
 import org.ranobe.ranobe.ui.history.adapter.HistoryAdapter;
 import org.ranobe.ranobe.ui.history.viewmodel.HistoryViewModel;
 import org.ranobe.ranobe.ui.reader.ReaderActivity;
+import org.ranobe.ranobe.ui.views.EmptyState;
 
 import java.util.ArrayList;
 import java.util.List;
