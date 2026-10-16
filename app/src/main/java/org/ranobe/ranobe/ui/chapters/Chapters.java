@@ -42,6 +42,8 @@ import org.ranobe.ranobe.models.ReadHistory;
 import org.ranobe.ranobe.service.DownloadService;
 import org.ranobe.ranobe.ui.chapters.adapter.ChapterAdapter;
 import org.ranobe.ranobe.ui.chapters.viewmodel.ChaptersViewModel;
+import org.ranobe.ranobe.ui.downloads.DownloadsActivity;
+import org.ranobe.ranobe.ui.downloads.EpubExportPrompt;
 import org.ranobe.ranobe.ui.error.Error;
 import org.ranobe.ranobe.ui.history.viewmodel.HistoryViewModel;
 import org.ranobe.ranobe.ui.reader.ReaderActivity;
@@ -76,6 +78,7 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
             }
         }
     };
+    private EpubExportPrompt exportPrompt;
     private boolean scrolledToLastRead = false;
     // Pending chapter/action to start after permission is granted
     private Chapter pendingDownloadChapter = null;
@@ -105,6 +108,7 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
         }
         viewModel = new ViewModelProvider(requireActivity()).get(ChaptersViewModel.class);
         historyViewModel = new ViewModelProvider(requireActivity()).get(HistoryViewModel.class);
+        exportPrompt = new EpubExportPrompt(this);
     }
 
     @Override
@@ -321,6 +325,10 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
             setSearchView();
         } else if (id == R.id.download_all) {
             downloadAll();
+        } else if (id == R.id.export_epub) {
+            exportPrompt.show(novel);
+        } else if (id == R.id.downloads) {
+            startActivity(new Intent(requireContext(), DownloadsActivity.class));
         }
         return true;
     }

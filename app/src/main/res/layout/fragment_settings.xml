@@ -81,20 +81,6 @@
                                 android:textColor="?colorOnPrimaryContainer"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/edition_badge"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:background="@drawable/bg_setting_icon"
-                                android:backgroundTint="?colorPrimary"
-                                android:paddingHorizontal="8dp"
-                                android:paddingVertical="2dp"
-                                android:textAppearance="?attr/textAppearanceLabelSmall"
-                                android:textColor="?colorOnPrimary"
-                                android:textStyle="bold"
-                                tools:text="@string/edition_free" />
-
                         </LinearLayout>
 
                         <TextView
@@ -150,17 +136,6 @@
 
                 </LinearLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/pro_app"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/get_pro"
-                    android:visibility="gone"
-                    app:icon="@drawable/ic_open_in_new"
-                    app:iconGravity="textEnd"
-                    app:iconSize="18dp" />
-
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
@@ -170,8 +145,7 @@
             style="@style/SectionTitle"
             android:text="@string/settings_appearance" />
 
-        <com.google.android.material.card.MaterialCardView
-            style="@style/SectionCard">
+        <com.google.android.material.card.MaterialCardView style="@style/SectionCard">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -236,8 +210,7 @@
             style="@style/SectionTitle"
             android:text="@string/settings_reading" />
 
-        <com.google.android.material.card.MaterialCardView
-            style="@style/SectionCard">
+        <com.google.android.material.card.MaterialCardView style="@style/SectionCard">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -252,8 +225,17 @@
                     app:settingSubtitle="@string/new_chapter_updates_sub"
                     app:settingTitle="@string/new_chapter_updates" />
 
-                <com.google.android.material.divider.MaterialDivider
-                    style="@style/SettingsDivider" />
+                <com.google.android.material.divider.MaterialDivider style="@style/SettingsDivider" />
+
+                <org.ranobe.ranobe.ui.views.SettingOptionView
+                    android:id="@+id/downloads_option"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:settingIcon="@drawable/ic_download"
+                    app:settingSubtitle="@string/downloads_sub"
+                    app:settingTitle="@string/title_downloads" />
+
+                <com.google.android.material.divider.MaterialDivider style="@style/SettingsDivider" />
 
                 <org.ranobe.ranobe.ui.views.SettingOptionView
                     android:id="@+id/volume_scroll_option"
@@ -282,8 +264,7 @@
             style="@style/SectionTitle"
             android:text="@string/settings_about" />
 
-        <com.google.android.material.card.MaterialCardView
-            style="@style/SectionCard">
+        <com.google.android.material.card.MaterialCardView style="@style/SectionCard">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -299,8 +280,7 @@
                     app:settingSubtitle="github.com/ranobe-org/ranobe"
                     app:settingTitle="GitHub" />
 
-                <com.google.android.material.divider.MaterialDivider
-                    style="@style/SettingsDivider" />
+                <com.google.android.material.divider.MaterialDivider style="@style/SettingsDivider" />
 
                 <org.ranobe.ranobe.ui.views.SettingOptionView
                     android:id="@+id/discord_link"
@@ -311,8 +291,7 @@
                     app:settingSubtitle="discord.gg/6CQ6u64dca"
                     app:settingTitle="Discord" />
 
-                <com.google.android.material.divider.MaterialDivider
-                    style="@style/SettingsDivider" />
+                <com.google.android.material.divider.MaterialDivider style="@style/SettingsDivider" />
 
                 <org.ranobe.ranobe.ui.views.SettingOptionView
                     android:id="@+id/music_player_link"
@@ -323,8 +302,7 @@
                     app:settingSubtitle="@string/mp_lite_subtitle"
                     app:settingTitle="Music Player Lite" />
 
-                <com.google.android.material.divider.MaterialDivider
-                    style="@style/SettingsDivider" />
+                <com.google.android.material.divider.MaterialDivider style="@style/SettingsDivider" />
 
                 <org.ranobe.ranobe.ui.views.SettingOptionView
                     android:id="@+id/ranobem_link"

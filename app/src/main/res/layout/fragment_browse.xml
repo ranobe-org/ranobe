@@ -48,17 +48,12 @@
             android:indeterminate="true"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/empty"
+        <include
+            android:id="@+id/empty_state"
+            layout="@layout/view_empty_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="24dp"
-            android:text="@string/browse_empty"
-            android:textAlignment="center"
-            android:textAppearance="?attr/textAppearanceBodyLarge"
-            android:textColor="?colorOnSurfaceVariant"
-            android:visibility="gone" />
+            android:layout_gravity="center" />
 
     </FrameLayout>
 

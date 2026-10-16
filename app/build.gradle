@@ -19,29 +19,23 @@ android {
         }
     }
 
-    flavorDimensions "version"
-    productFlavors {
-        downloader {
-            dimension "version"
-            applicationId "org.ranobe.downloader"
-            versionName "v0.0.16-downloader"
-        }
-
-        pro {
-            dimension "version"
-            applicationId "org.ranobe.downloader.pro"
-            versionName "v0.0.16-downloader-pro"
-        }
-
-        ranobe {
-            dimension "version"
-            applicationId "org.ranobe.ranobe"
-            versionName "v0.0.16"
+    signingConfigs {
+        // populated by CI (.github/workflows/release.yml); local release builds stay unsigned
+        if (System.getenv("KEYSTORE_PATH")) {
+            release {
+                storeFile file(System.getenv("KEYSTORE_PATH"))
+                storePassword System.getenv("KEYSTORE_PASSWORD")
+                keyAlias System.getenv("KEY_ALIAS")
+                keyPassword System.getenv("KEY_PASSWORD")
+            }
         }
     }
 
     buildTypes {
         release {
+            if (System.getenv("KEYSTORE_PATH")) {
+                signingConfig signingConfigs.release
+            }
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -89,6 +83,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.15.3'
     implementation 'com.github.bumptech.glide:glide:4.15.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     implementation "com.squareup.okhttp3:okhttp:4.12.0"
     implementation 'androidx.room:room-runtime:2.7.1'
@@ -98,7 +93,7 @@ dependencies {
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 
 
-    proImplementation "androidx.work:work-runtime:2.11.2"
+    implementation "androidx.work:work-runtime:2.11.2"
 }
 
 java {

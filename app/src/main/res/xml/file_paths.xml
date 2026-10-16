@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><!-- finished EPUBs on Android 9 and older, see export.EpubOutput -->
+<paths>
+    <external-path
+        name="downloads"
+        path="Download/" />
+    <external-files-path
+        name="app_downloads"
+        path="Download/" />
+</paths>

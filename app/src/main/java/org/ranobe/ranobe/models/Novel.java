@@ -11,7 +11,10 @@ import androidx.room.PrimaryKey;
 
 import org.ranobe.ranobe.util.SourceUtils;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Novel implements Parcelable {
@@ -40,6 +43,12 @@ public class Novel implements Parcelable {
     public float rating;
     public int year;
     public int lastKnownChapterCount;
+    // other novels the source suggests on this one's page, filled by Source.details(), never stored
+    @Ignore
+    public List<Novel> recommendations = new ArrayList<>();
+    // genre name -> the source's page listing that genre, for sources that can search by genre
+    @Ignore
+    public Map<String, String> genreLinks = new LinkedHashMap<>();
 
     public Novel(String url) {
         this.id = SourceUtils.generateId(url);

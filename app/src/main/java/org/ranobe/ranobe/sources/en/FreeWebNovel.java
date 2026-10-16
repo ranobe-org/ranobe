@@ -11,6 +11,8 @@ import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.HttpClient;
+import org.ranobe.ranobe.sources.Genres;
+import org.ranobe.ranobe.sources.Recommendations;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
 
@@ -57,6 +59,28 @@ public class FreeWebNovel implements Source {
                 item.cover = getCover(element.select("div.pic"));
                 items.add(item);
             }
+        }
+        return items;
+    }
+
+    // the "Related Novels" box beside the details
+    private List<Novel> related(Element doc, String selfUrl) {
+        List<Novel> items = new ArrayList<>();
+        for (Element heading : doc.select("h3.tit")) {
+            if (!heading.text().contains("Related Novels")) continue;
+            Element box = heading.closest("div.col-l");
+            if (box == null) continue;
+            for (Element li : box.select("ul.ul-list6 > li")) {
+                Element link = li.selectFirst("div.txt a.con[href]");
+                if (link == null) continue;
+                String url = BASE_URL + link.attr("href").trim();
+                if (url.equals(selfUrl)) continue;
+                Novel item = new Novel(url, SOURCE_ID);
+                item.name = Recommendations.firstNonEmpty(link.attr("title"), link.text());
+                item.cover = getCover(li.select("div.pic"));
+                items.add(item);
+            }
+            break;
         }
         return items;
     }
@@ -127,9 +151,11 @@ public class FreeWebNovel implements Source {
                 novel.authors = element.select("a").eachText();
             } else if (check.contains("Genre")) {
                 novel.genres = element.select("a").eachText();
+                novel.genreLinks = Genres.links(element.select("a"), BASE_URL);
             }
         }
 
+        novel.recommendations = related(doc, novel.url);
         return novel;
     }
 
@@ -169,6 +195,10 @@ public class FreeWebNovel implements Source {
 
     @Override
     public List<Novel> search(Filter filters, int page) throws Exception {
+        if (filters.hasGenre()) {
+            String url = filters.getGenre().replaceAll("/+$", "");
+            return parseNovel(HttpClient.GET(page <= 1 ? url : url + "/" + page, new HashMap<>()));
+        }
         if (filters.hashKeyword() && page == 1) {
             String keyword = filters.getKeyword();
             String web = BASE_URL + "/search/";

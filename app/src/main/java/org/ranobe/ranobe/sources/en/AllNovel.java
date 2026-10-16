@@ -9,6 +9,7 @@ import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Lang;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.network.HttpClient;
+import org.ranobe.ranobe.sources.Genres;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.util.NumberUtils;
 import org.ranobe.ranobe.util.SourceUtils;
@@ -129,6 +130,7 @@ public class AllNovel implements Source {
                 novel.authors = element.select("a").eachText();
             } else if (label.startsWith("Genre")) {
                 novel.genres = element.select("a").eachText();
+                novel.genreLinks = Genres.links(element.select("a"), baseUrl);
             } else if (label.startsWith("Status")) {
                 novel.status = element.select("a").text().trim();
             }
@@ -179,6 +181,9 @@ public class AllNovel implements Source {
 
     @Override
     public List<Novel> search(Filter filters, int page) throws Exception {
+        if (filters.hasGenre()) {
+            return parse(HttpClient.GET(Genres.queryPage(filters.getGenre(), "page", page), new HashMap<>()));
+        }
         if (filters.hashKeyword()) {
             String keyword = filters.getKeyword();
             String web = SourceUtils.buildUrl(baseUrl, "/search?keyword=", keyword, "&page=", String.valueOf(page));

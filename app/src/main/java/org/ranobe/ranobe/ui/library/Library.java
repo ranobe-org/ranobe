@@ -21,6 +21,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -31,10 +32,9 @@ import org.ranobe.ranobe.database.RanobeDatabase;
 import org.ranobe.ranobe.databinding.FragmentLibraryBinding;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
-import org.ranobe.ranobe.ui.views.GetPro;
+import org.ranobe.ranobe.ui.views.EmptyState;
 import org.ranobe.ranobe.util.DisplayUtils;
 import org.ranobe.ranobe.util.ListUtils;
-import org.ranobe.ranobe.util.NumberUtils;
 import org.ranobe.ranobe.worker.ChapterUpdateScheduler;
 
 import java.util.ArrayList;
@@ -131,12 +131,6 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
     }
 
     private void handleNewChaptersToggle() {
-        if (!Ranobe.isPro()) {
-            GetPro pro = new GetPro();
-            pro.show(getParentFragmentManager(), GetPro.TAG);
-            return;
-        }
-
         boolean enabled = Ranobe.isNewChapterUpdatesEnabled();
         if (enabled) {
             new MaterialAlertDialogBuilder(requireContext())
@@ -197,7 +191,7 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
     private void syncNewChaptersIcon() {
         MenuItem item = binding.toolbar.getMenu().findItem(R.id.new_chapters);
         if (item == null) return;
-        boolean enabled = Ranobe.isPro() && Ranobe.isNewChapterUpdatesEnabled();
+        boolean enabled = Ranobe.isNewChapterUpdatesEnabled();
         item.setIcon(enabled ? R.drawable.ic_notifications_active : R.drawable.ic_disabled);
     }
 
@@ -232,14 +226,13 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
         }
 
         if (filtered.isEmpty() && allNovels.isEmpty()) {
-            showNoNovels();
+            EmptyState.show(binding.emptyState, R.drawable.ic_library, R.string.library_empty_title,
+                    getString(R.string.no_novels_error), R.string.library_empty_action, v -> openExplore());
         } else if (filtered.isEmpty()) {
             // library has novels, just none matching the search
-            binding.emoji.setText(null);
-            binding.error.setText(R.string.no_results_err);
+            EmptyState.show(binding.emptyState, R.drawable.ic_search, R.string.search_nothing_found, R.string.library_no_match);
         } else {
-            binding.emoji.setText(null);
-            binding.error.setText(null);
+            EmptyState.hide(binding.emptyState);
         }
 
         adapter.submit(filtered);
@@ -257,9 +250,9 @@ public class Library extends Fragment implements NovelAdapter.OnNovelItemClickLi
                 .show();
     }
 
-    private void showNoNovels() {
-        binding.error.setText(R.string.no_novels_error);
-        binding.emoji.setText(Ranobe.SILLY_EMOJI[NumberUtils.getRandom(Ranobe.SILLY_EMOJI.length)]);
+    private void openExplore() {
+        BottomNavigationView navbar = requireActivity().findViewById(R.id.navbar);
+        if (navbar != null) navbar.setSelectedItemId(R.id.explore_fragment);
     }
 
     @Override

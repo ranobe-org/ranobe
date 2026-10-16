@@ -17,6 +17,8 @@ import org.ranobe.ranobe.sources.en.ReadLightNovel;
 import org.ranobe.ranobe.sources.en.ReadWebNovels;
 import org.ranobe.ranobe.sources.en.RoyalRoad;
 import org.ranobe.ranobe.sources.en.VipNovel;
+import org.ranobe.ranobe.sources.en.Wattpad;
+import org.ranobe.ranobe.sources.en.Webnovel;
 import org.ranobe.ranobe.sources.en.WordRain69;
 import org.ranobe.ranobe.sources.en.WuxiaWorld;
 import org.ranobe.ranobe.sources.ru.RanobeHub;
@@ -72,6 +74,8 @@ public class SourceManager {
         sources.put(18, NovelBin.class);
         sources.put(19, MyDramaNovel.class);
         sources.put(20, RoyalRoad.class);
+        sources.put(21, Wattpad.class);
+        sources.put(22, Webnovel.class);
 
         return Collections.unmodifiableMap(sources);
     }

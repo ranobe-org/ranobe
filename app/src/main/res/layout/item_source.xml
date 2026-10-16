@@ -50,14 +50,41 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/source_name"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
-            android:textColor="?colorOnSurface" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- shrinks before the badge does, a long name is cut rather than the badge -->
+            <TextView
+                android:id="@+id/source_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textColor="?colorOnSurface" />
+
+            <!-- recently added, until the source is tapped once -->
+            <TextView
+                android:id="@+id/source_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_setting_icon"
+                android:backgroundTint="?colorPrimary"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:text="@string/source_new"
+                android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textColor="?colorOnPrimary"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/source_content"

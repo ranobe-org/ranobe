@@ -23,4 +23,14 @@
         app:iconTint="?colorOnSurfaceVariant"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/export_epub"
+        android:title="@string/export_epub"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/downloads"
+        android:title="@string/title_downloads"
+        app:showAsAction="never" />
+
 </menu>

@@ -27,8 +27,8 @@ import org.ranobe.ranobe.R;
 import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.databinding.FragmentSettingsBinding;
 import org.ranobe.ranobe.network.repository.GithubRepo;
+import org.ranobe.ranobe.ui.downloads.DownloadsActivity;
 import org.ranobe.ranobe.ui.settings.viewmodel.SettingsViewModel;
-import org.ranobe.ranobe.ui.views.GetPro;
 import org.ranobe.ranobe.worker.ChapterUpdateScheduler;
 
 public class Settings extends Fragment {
@@ -69,9 +69,6 @@ public class Settings extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        boolean isPro = Ranobe.isPro();
-        binding.proApp.setVisibility(isPro ? View.GONE : View.VISIBLE);
-        binding.editionBadge.setText(isPro ? R.string.edition_pro : R.string.edition_free);
         binding.appVersion.setText(BuildConfig.VERSION_NAME);
 
         // the row only labels the segmented control below it
@@ -86,6 +83,8 @@ public class Settings extends Fragment {
 
         binding.chapterUpdatesOption.setOnClickListener(v -> handleChapterUpdatesClick());
         syncChapterUpdatesToggle();
+
+        binding.downloadsOption.setOnClickListener(v -> startActivity(new Intent(requireContext(), DownloadsActivity.class)));
 
         boolean volumeScrollEnabled = Ranobe.isVolumeKeyScrollEnabled();
         binding.volumeScrollOption.setChecked(volumeScrollEnabled);
@@ -112,7 +111,6 @@ public class Settings extends Fragment {
         binding.musicPlayerLink.setOnClickListener(v -> openLink(Ranobe.MP_LITE_GITHUB_LINK));
         binding.discordLink.setOnClickListener(v -> openLink(Ranobe.DISCORD_INVITE_LINK));
         binding.ranobemLink.setOnClickListener(v -> openLink(Ranobe.RANOBE_M_LINK));
-        binding.proApp.setOnClickListener(v -> openLink(Ranobe.RANOBE_PRO_APP_LINK));
 
         setCurrentThemeMode();
 
@@ -163,14 +161,10 @@ public class Settings extends Fragment {
     }
 
     private void syncChapterUpdatesToggle() {
-        binding.chapterUpdatesOption.setChecked(Ranobe.isPro() && Ranobe.isNewChapterUpdatesEnabled());
+        binding.chapterUpdatesOption.setChecked(Ranobe.isNewChapterUpdatesEnabled());
     }
 
     private void handleChapterUpdatesClick() {
-        if (!Ranobe.isPro()) {
-            new GetPro().show(getParentFragmentManager(), GetPro.TAG);
-            return;
-        }
         boolean enabled = Ranobe.isNewChapterUpdatesEnabled();
         if (enabled) {
             new MaterialAlertDialogBuilder(requireContext())

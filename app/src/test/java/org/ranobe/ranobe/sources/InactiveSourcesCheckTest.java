@@ -4,7 +4,14 @@ import org.junit.Test;
 import org.ranobe.ranobe.models.Chapter;
 import org.ranobe.ranobe.models.Filter;
 import org.ranobe.ranobe.models.Novel;
-import org.ranobe.ranobe.sources.en.*;
+import org.ranobe.ranobe.sources.en.LightNovelPub;
+import org.ranobe.ranobe.sources.en.MyDramaNovel;
+import org.ranobe.ranobe.sources.en.Neovel;
+import org.ranobe.ranobe.sources.en.NewNovel;
+import org.ranobe.ranobe.sources.en.NovelBin;
+import org.ranobe.ranobe.sources.en.Ranobe;
+import org.ranobe.ranobe.sources.en.VipNovel;
+import org.ranobe.ranobe.sources.en.WordRain69;
 
 import java.util.List;
 
@@ -37,12 +44,43 @@ public class InactiveSourcesCheckTest {
         }
     }
 
-    @Test public void wordRain69() { check(new WordRain69()); }
-    @Test public void myDramaNovel() { check(new MyDramaNovel()); }
-    @Test public void neovel() { check(new Neovel()); }
-    @Test public void novelBin() { check(new NovelBin()); }
-    @Test public void ranobe() { check(new Ranobe()); }
-    @Test public void vipNovel() { check(new VipNovel()); }
-    @Test public void newNovel() { check(new NewNovel()); }
-    @Test public void lightNovelPub() { check(new LightNovelPub()); }
+    @Test
+    public void wordRain69() {
+        check(new WordRain69());
+    }
+
+    @Test
+    public void myDramaNovel() {
+        check(new MyDramaNovel());
+    }
+
+    @Test
+    public void neovel() {
+        check(new Neovel());
+    }
+
+    @Test
+    public void novelBin() {
+        check(new NovelBin());
+    }
+
+    @Test
+    public void ranobe() {
+        check(new Ranobe());
+    }
+
+    @Test
+    public void vipNovel() {
+        check(new VipNovel());
+    }
+
+    @Test
+    public void newNovel() {
+        check(new NewNovel());
+    }
+
+    @Test
+    public void lightNovelPub() {
+        check(new LightNovelPub());
+    }
 }

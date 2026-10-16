@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.ConnectionPool;
+import okhttp3.CookieJar;
 import okhttp3.FormBody;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -27,9 +28,22 @@ import okhttp3.ResponseBody;
 
 public class HttpClient {
     // okhttp's default "okhttp/x.y" agent gets challenged or throttled by most novel sites
-    private static final String USER_AGENT = "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 "
+    private static final String FALLBACK_USER_AGENT = "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 "
             + "(KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36";
     private static volatile OkHttpClient client = null;
+    private static volatile String userAgent = null;
+
+    /**
+     * The agent sent with every request, the device's own browser engine when there is one so
+     * Cloudflare clearances earned in a WebView keep working.
+     */
+    public static String userAgent() {
+        if (userAgent == null) {
+            String agent = Cloudflare.webViewUserAgent();
+            userAgent = agent != null ? agent : FALLBACK_USER_AGENT;
+        }
+        return userAgent;
+    }
 
     private static OkHttpClient client() {
         if (client == null) {
@@ -40,14 +54,23 @@ public class HttpClient {
                 File baseDir = context != null ? context.getCacheDir() : new File(tmp != null ? tmp : ".");
                 File cacheDir = new File(baseDir, "cache-files");
                 Cache cache = new Cache(cacheDir, 50 * 1024 * 1024); //50 MiB, chapter pages are large
-                client = new OkHttpClient
+                OkHttpClient.Builder builder = new OkHttpClient
                         .Builder()
                         .connectTimeout(15, TimeUnit.SECONDS)
                         .readTimeout(30, TimeUnit.SECONDS)
                         .writeTimeout(30, TimeUnit.SECONDS)
                         // keep sockets alive across screens so repeat requests to a source skip TLS setup
                         .connectionPool(new ConnectionPool(10, 5, TimeUnit.MINUTES))
-                        .addInterceptor(new DefaultHeadersInterceptor())
+                        .addInterceptor(new DefaultHeadersInterceptor());
+                // on a device: share cookies with WebView and get past Cloudflare checks through it
+                if (context != null) {
+                    CookieJar cookies = WebViewCookieJar.createOrNull();
+                    if (cookies != null) {
+                        builder.cookieJar(cookies);
+                        builder.addInterceptor(new Cloudflare.Interceptor(context));
+                    }
+                }
+                client = builder
                         .addInterceptor(new OfflineCacheInterceptor())
                         .addNetworkInterceptor(new CacheInterceptor())
                         .cache(cache)
@@ -55,6 +78,16 @@ public class HttpClient {
             }
         }
         return client;
+    }
+
+    /**
+     * The same browser as {@link #userAgent()}, but as desktop Chrome, for sites whose mobile
+     * pages are only filled in by javascript.
+     */
+    public static String desktopUserAgent() {
+        return userAgent()
+                .replaceFirst("\\(Linux; Android[^)]*\\)", "(X11; Linux x86_64)")
+                .replace(" Mobile Safari/", " Safari/");
     }
 
     public static String GET(String url, HashMap<String, String> headers) throws IOException {
@@ -109,7 +142,7 @@ public class HttpClient {
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
             if (request.header("User-Agent") != null) return chain.proceed(request);
-            return chain.proceed(request.newBuilder().header("User-Agent", USER_AGENT).build());
+            return chain.proceed(request.newBuilder().header("User-Agent", userAgent()).build());
         }
     }
 

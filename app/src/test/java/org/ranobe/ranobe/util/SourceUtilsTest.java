@@ -5,6 +5,7 @@ import static org.ranobe.ranobe.util.SourceUtils.buildUrl;
 import static org.ranobe.ranobe.util.SourceUtils.cleanContent;
 import static org.ranobe.ranobe.util.SourceUtils.generateId;
 
+import org.jsoup.Jsoup;
 import org.junit.Test;
 
 public class SourceUtilsTest {
@@ -31,4 +32,28 @@ public class SourceUtilsTest {
         generateId("someurl");
     }
 
+
+    @Test
+    public void contentFromHtml_KeepsParagraphsAndImages() {
+        String html = "<div class='words'><div><div><p>First   line.</p><i></i></div></div>"
+                + "<div><p>Second <em>line</em>.</p></div>"
+                + "<p><img src='https://example.com/a.png'></p>"
+                + "<blockquote><p>Quoted</p></blockquote></div>";
+        String content = SourceUtils.contentFromHtml(Jsoup.parse(html).selectFirst("div.words"));
+        assertEquals("First line.\n\nSecond line.\n\n[img]https://example.com/a.png[/img]\n\nQuoted", content);
+    }
+
+    @Test
+    public void contentFromHtml_FallsBackToText() {
+        assertEquals("just text", SourceUtils.contentFromHtml(Jsoup.parse("<div>just text</div>").selectFirst("div")));
+    }
+
+    @Test
+    public void parseIsoDay_AcceptsWithAndWithoutMillis() {
+        String day = java.text.SimpleDateFormat.getDateInstance(java.text.SimpleDateFormat.MEDIUM)
+                .format(new java.util.GregorianCalendar(2019, java.util.Calendar.DECEMBER, 3, 12, 0).getTime());
+        assertEquals(day, SourceUtils.parseIsoDay("2019-12-03T12:00:00Z"));
+        assertEquals(day, SourceUtils.parseIsoDay("2019-12-03T12:00:00.000Z"));
+        assertEquals("", SourceUtils.parseIsoDay("not a date"));
+    }
 }

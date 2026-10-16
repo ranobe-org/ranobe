@@ -9,7 +9,7 @@
     <string name="dark">Тёмная</string>
     <string name="automatic">Авто</string>
     <string name="start_typing">Начните печатать…</string>
-<!--    <string name="search_helper_text">что вы хотите найти?</string>-->
+    <!--    <string name="search_helper_text">что вы хотите найти?</string>-->
     <string name="set_the_font_size">Размер шрифта</string>
     <string name="set_the_theme">Тема страницы</string>
     <string name="aa">Aa</string>
@@ -33,9 +33,6 @@
     <string name="synopsis">Описание</string>
     <string name="downloading_all_chapters_confirmation">Скачать все главы? Продолжить?</string>
     <string name="new_chapter_updates">Новые главы</string>
-    <string name="enjoy_premium_features_and_faster_updates_with_pro">Получите премиум‑функции и более быстрые обновления с Pro‑версией.</string>
-    <string name="ranobe_pro">Ranobe Pro</string>
-    <string name="get_pro">Получить Pro – Play Market</string>
     <string name="enable_new_chapter_update_notifications_for_your_library">Разрешить уведомления о новых главах для вашей библиотеки</string>
     <string name="enable">Включить</string>
     <string name="volume_key_scroll">Прокрутка кнопками громкости</string>
@@ -71,8 +68,6 @@
     <string name="settings_theme">Тема</string>
     <string name="settings_theme_sub">Выберите внешний вид Ranobe</string>
     <string name="new_chapter_updates_sub">Сообщать о выходе новых глав</string>
-    <string name="edition_pro">PRO</string>
-    <string name="edition_free">FREE</string>
     <string name="settings_tagline">Читайте ранобэ из любимых источников</string>
     <string name="update_available">Доступна версия %1$s</string>
     <string name="settings_footer">Открытый исходный код · Сделано с ♥ сообществом Ranobe</string>
@@ -102,4 +97,111 @@
     <string name="search_chapters">Поиск глав</string>
     <string name="reader_end">Вы всё прочитали. Новых глав пока нет.</string>
     <string name="chapter_load_failed">Не удалось загрузить главу</string>
+
+    <!-- EPUB export -->
+    <string name="title_downloads">Загрузки</string>
+    <string name="downloads_sub">EPUB сохраняются в Downloads/Ranobe</string>
+    <string name="downloads_empty">Загрузок пока нет. Откройте новеллу и нажмите «Экспорт в EPUB», чтобы сохранить её как книгу.</string>
+    <string name="export_epub">Экспорт в EPUB</string>
+    <string name="export_dialog_title">Экспорт в EPUB</string>
+    <string name="export_all_chapters">Все главы</string>
+    <string name="export_chapter_range">Диапазон глав</string>
+    <string name="export_from">С главы</string>
+    <string name="export_to">По главу</string>
+    <string name="export_dialog_hint">Главы загружаются в фоне, пока вы пользуетесь приложением. Уже скачанные для офлайн-чтения главы используются повторно.</string>
+    <string name="export_start">Экспорт</string>
+    <string name="export_invalid_range">Не может быть меньше первой главы</string>
+    <string name="export_started">Экспорт начат</string>
+    <string name="export_started_no_notifications">Экспорт начат. Разрешите уведомления, чтобы видеть прогресс.</string>
+    <string name="export_open_settings">Настройки</string>
+    <string name="export_view">Открыть</string>
+    <string name="export_pause">Пауза</string>
+    <string name="export_resume">Продолжить</string>
+    <string name="export_cancel">Отмена</string>
+    <string name="export_keep">Оставить</string>
+    <string name="export_build_anyway">Собрать всё равно</string>
+    <string name="export_open">Открыть</string>
+    <string name="export_share">Поделиться</string>
+    <string name="export_remove">Убрать</string>
+    <string name="export_discard">Удалить</string>
+    <string name="export_cancel_title">Отменить экспорт?</string>
+    <string name="export_cancel_message">Уже загруженные главы будут удалены.</string>
+    <string name="export_no_reader">Нет приложения для открытия EPUB. Установите читалку и попробуйте снова.</string>
+    <string name="export_status_queued">Ожидает запуска</string>
+    <string name="export_status_paused">На паузе</string>
+    <string name="export_status_failed">Ошибка экспорта</string>
+    <string name="export_status_completed">Сохранено в Downloads/%1$s · %2$s</string>
+    <string name="export_status_waiting_network">Ожидание сети…</string>
+    <string name="export_status_chapters">Загрузка списка глав…</string>
+    <string name="export_status_building">Сборка EPUB · %1$d%%</string>
+    <string name="export_status_chapter">Глава %1$d из %2$d</string>
+    <plurals name="export_missing_chapters">
+        <item quantity="one">Не удалось загрузить %d главу</item>
+        <item quantity="few">Не удалось загрузить %d главы</item>
+        <item quantity="many">Не удалось загрузить %d глав</item>
+        <item quantity="other">Не удалось загрузить %d главы</item>
+    </plurals>
+    <plurals name="export_left_out_chapters">
+        <item quantity="one">Пропущена %d глава</item>
+        <item quantity="few">Пропущено %d главы</item>
+        <item quantity="many">Пропущено %d глав</item>
+        <item quantity="other">Пропущено %d главы</item>
+    </plurals>
+    <plurals name="export_more_queued">
+        <item quantity="one">Ещё %d в очереди</item>
+        <item quantity="few">Ещё %d в очереди</item>
+        <item quantity="many">Ещё %d в очереди</item>
+        <item quantity="other">Ещё %d в очереди</item>
+    </plurals>
+    <string name="export_no_chapters">У этой новеллы нет глав для экспорта.</string>
+    <string name="export_no_chapters_in_range">В выбранном диапазоне нет глав.</string>
+    <string name="export_empty_chapter">Источник вернул пустую главу</string>
+    <string name="export_storage_full">Недостаточно места. Освободите память и продолжите.</string>
+    <string name="export_book_title_range">%1$s (гл. %2$s)</string>
+    <string name="export_chapter_title">Глава %1$s</string>
+    <string name="export_retrying_in">Повтор через %1$d с: %2$s</string>
+    <string name="export_interrupted">Остановлено при закрытии приложения. Продолжите, чтобы закончить.</string>
+    <string name="export_paused_by_system">Приостановлено Android после долгой работы. Откройте приложение и продолжите.</string>
+    <string name="export_channel_progress">Прогресс экспорта EPUB</string>
+    <string name="export_channel_result">Готовые EPUB</string>
+    <string name="export_done_title">EPUB готов</string>
+    <string name="export_failed_title">Не удалось завершить %1$s</string>
+    <string name="export_error_offline">Нет подключения к интернету.</string>
+    <string name="export_error_timeout">Источник слишком долго не отвечает.</string>
+    <string name="export_error_memory">Недостаточно памяти.</string>
+    <string name="export_error_unknown">Что-то пошло не так.</string>
+
+    <!-- shared empty states, search tabs, details cards -->
+    <string name="search_hint">Поиск по названию</string>
+    <string name="search_hint_title">Найдите, что почитать</string>
+    <string name="search_hint_message">Введите название, чтобы искать в %1$s. Листайте или нажмите на вкладку, чтобы искать в другом источнике.</string>
+    <string name="search_failed">Ошибка поиска</string>
+    <string name="search_nothing_found">Ничего не найдено</string>
+    <string name="search_nothing_found_hint">В %2$s нет результатов для «%1$s». Попробуйте другое написание или другой источник.</string>
+    <string name="search_no_sources_title">Нет источников для поиска</string>
+    <string name="search_no_sources">Все источники с поиском отключены. Включите один в разделе «Обзор».</string>
+    <string name="search_end">Это всё</string>
+    <string name="load_more_failed">Не удалось загрузить ещё</string>
+    <string name="load_more_failed_reason">Не удалось загрузить ещё: %1$s</string>
+    <string name="history_empty_title">История пуста</string>
+    <string name="library_empty_title">Библиотека пуста</string>
+    <string name="library_empty_action">Найти новеллы</string>
+    <string name="library_no_match">В библиотеке нет подходящих новелл.</string>
+    <string name="browse_empty_title">Здесь пусто</string>
+    <string name="downloads_empty_title">Загрузок пока нет</string>
+    <string name="all_chapters">Главы</string>
+    <string name="all_chapters_desc">Все главы, загрузка для офлайн-чтения</string>
+    <string name="last_read_chapter">Последняя: %1$s</string>
+    <string name="export_epub_desc">Сохраните как книгу и читайте в любой читалке</string>
+
+    <!-- Cloudflare -->
+    <string name="cloudflare_blocked">%1$s хочет убедиться, что вы не робот. Пройдите проверку в браузере и попробуйте снова.</string>
+    <string name="cloudflare_verify">Проверить в браузере</string>
+    <string name="cloudflare_verify_title">Подтвердите, что вы человек</string>
+    <string name="cloudflare_verify_hint">Пройдите проверку ниже, если она появится. Экран закроется сам, когда сайт вас пропустит.</string>
+    <string name="cloudflare_verify_done">Готово</string>
+    <string name="error_title">Что-то пошло не так</string>
+    <string name="recommendations_title">Вам может понравиться</string>
+    <string name="search_genre_chip">Жанр: %1$s</string>
+    <string name="source_new">НОВЫЙ</string>
 </resources>

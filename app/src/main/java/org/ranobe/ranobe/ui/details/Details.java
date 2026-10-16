@@ -13,9 +13,12 @@ import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.snackbar.Snackbar;
@@ -25,13 +28,20 @@ import org.ranobe.ranobe.config.Ranobe;
 import org.ranobe.ranobe.config.RanobeSettings;
 import org.ranobe.ranobe.database.RanobeDatabase;
 import org.ranobe.ranobe.databinding.FragmentDetailsBinding;
+import org.ranobe.ranobe.export.ExportJob;
+import org.ranobe.ranobe.export.ExportQueue;
+import org.ranobe.ranobe.export.ExportText;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.sources.SourceManager;
+import org.ranobe.ranobe.ui.browse.adapter.NovelAdapter;
 import org.ranobe.ranobe.ui.chapters.Chapters;
 import org.ranobe.ranobe.ui.details.viewmodel.DetailsViewModel;
+import org.ranobe.ranobe.ui.downloads.DownloadsActivity;
+import org.ranobe.ranobe.ui.downloads.EpubExportPrompt;
 import org.ranobe.ranobe.ui.error.Error;
 import org.ranobe.ranobe.ui.history.viewmodel.HistoryViewModel;
+import org.ranobe.ranobe.ui.search.viewmodel.SearchViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +49,12 @@ import java.util.Locale;
 
 public class Details extends Fragment {
     private static final int SUMMARY_LINES = 6;
+    private final List<Novel> recommendations = new ArrayList<>();
     private FragmentDetailsBinding binding;
     private DetailsViewModel viewModel;
     private HistoryViewModel historyViewModel;
-
+    private EpubExportPrompt exportPrompt;
+    private ExportJob exportJob;
     private Novel novel;
     private boolean inLibrary = false;
     private boolean summaryExpanded = false;
@@ -50,6 +62,12 @@ public class Details extends Fragment {
 
     public Details() {
         // Required
+    }
+
+    // some sources shout their tags, "WEAKTOSTRONG" reads better as "Weaktostrong"
+    private static String displayGenre(String genre) {
+        if (genre.length() < 2 || !genre.equals(genre.toUpperCase(Locale.ROOT))) return genre;
+        return genre.charAt(0) + genre.substring(1).toLowerCase(Locale.ROOT);
     }
 
     @Override
@@ -60,6 +78,7 @@ public class Details extends Fragment {
         }
         viewModel = new ViewModelProvider(requireActivity()).get(DetailsViewModel.class);
         historyViewModel = new ViewModelProvider(requireActivity()).get(HistoryViewModel.class);
+        exportPrompt = new EpubExportPrompt(this);
     }
 
     @Override
@@ -99,6 +118,8 @@ public class Details extends Fragment {
         binding.readChapter.setOnClickListener(v -> navigateToChapterList());
         binding.addToLib.setOnClickListener(v -> toggleLibrary());
         binding.share.setOnClickListener(v -> shareLink());
+        binding.chaptersCard.setOnClickListener(v -> navigateToChapterList());
+        binding.exportCard.setOnClickListener(v -> onExportClick());
         binding.back.setOnClickListener(v -> Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigateUp());
         binding.summaryToggle.setOnClickListener(v -> {
             summaryExpanded = !summaryExpanded;
@@ -106,6 +127,9 @@ public class Details extends Fragment {
             binding.summaryToggle.setText(summaryExpanded ? R.string.show_less : R.string.show_more);
         });
         binding.progress.show();
+
+        binding.recommendations.setLayoutManager(new LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false));
+        binding.recommendations.setAdapter(new NovelAdapter(recommendations, this::openRecommendation));
 
         // backdrop fades into the page background so the header blends in
         int surface = MaterialColors.getColor(binding.getRoot(), com.google.android.material.R.attr.colorSurface);
@@ -127,13 +151,50 @@ public class Details extends Fragment {
     private void setUpObservers() {
         viewModel.getError().observe(getViewLifecycleOwner(), this::setUpError);
         viewModel.getDetails(novel).observe(getViewLifecycleOwner(), this::setUpUi);
-        historyViewModel.getLastReadByNovel(novel.url).observe(getViewLifecycleOwner(), readHistory ->
-                binding.readChapter.setText(readHistory != null ? R.string.continue_reading : R.string.start_reading));
+        historyViewModel.getLastReadByNovel(novel.url).observe(getViewLifecycleOwner(), readHistory -> {
+            binding.readChapter.setText(readHistory != null ? R.string.continue_reading : R.string.start_reading);
+            boolean named = readHistory != null && readHistory.name != null && !readHistory.name.trim().isEmpty();
+            binding.chaptersStatus.setText(named
+                    ? getString(R.string.last_read_chapter, readHistory.name.trim())
+                    : getString(R.string.all_chapters_desc));
+        });
+        ExportQueue.get(requireContext()).jobs().observe(getViewLifecycleOwner(), jobs -> showExport());
         RanobeDatabase.database().novels().getByUrl(novel.url).observe(getViewLifecycleOwner(), saved -> {
             inLibrary = saved != null;
             binding.addToLib.setIconResource(inLibrary ? R.drawable.ic_favorite : R.drawable.ic_add_to_lib);
             binding.addToLib.setContentDescription(getString(inLibrary ? R.string.remove_from_library : R.string.add_to_library));
         });
+    }
+
+    // an existing export is managed on the downloads screen, otherwise start one
+    private void onExportClick() {
+        if (novel == null) return;
+        if (exportJob != null) {
+            startActivity(new Intent(requireContext(), DownloadsActivity.class));
+        } else {
+            exportPrompt.show(novel);
+        }
+    }
+
+    private void showExport() {
+        if (binding == null || novel == null) return;
+        exportJob = ExportQueue.get(requireContext()).findForNovel(novel.url);
+        if (exportJob == null) {
+            binding.exportStatus.setText(R.string.export_epub_desc);
+            binding.exportProgress.setVisibility(View.GONE);
+            return;
+        }
+        binding.exportStatus.setText(ExportText.status(requireContext(), exportJob));
+        boolean showProgress = exportJob.status != ExportJob.Status.COMPLETED;
+        boolean indeterminate = ExportText.indeterminate(exportJob);
+        if (binding.exportProgress.isIndeterminate() != indeterminate) {
+            // switching modes only works while hidden
+            binding.exportProgress.setVisibility(View.INVISIBLE);
+            binding.exportProgress.setIndeterminate(indeterminate);
+        }
+        binding.exportProgress.setVisibility(showProgress ? View.VISIBLE : View.GONE);
+        if (showProgress && !indeterminate)
+            binding.exportProgress.setProgressCompat(exportJob.percent(), true);
     }
 
     private void setUpError(String error) {
@@ -177,8 +238,27 @@ public class Details extends Fragment {
             binding.summaryToggle.setVisibility(cut || summaryExpanded ? View.VISIBLE : View.GONE);
         });
 
+        showRecommendations(novel.recommendations);
+
         binding.progress.hide();
         binding.progress.setVisibility(View.GONE);
+    }
+
+    private void showRecommendations(List<Novel> items) {
+        recommendations.clear();
+        if (items != null) recommendations.addAll(items);
+        binding.recommendationsSection.setVisibility(recommendations.isEmpty() ? View.GONE : View.VISIBLE);
+        RecyclerView.Adapter<?> adapter = binding.recommendations.getAdapter();
+        if (adapter != null) adapter.notifyDataSetChanged();
+    }
+
+    // another details page on top of this one, back returns here
+    private void openRecommendation(Novel item) {
+        if (item.sourceId > 0) RanobeSettings.get().setCurrentSource(item.sourceId).save();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Ranobe.KEY_NOVEL, item);
+        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main)
+                .navigate(R.id.details_fragment, bundle);
     }
 
     // "★ 4.3 · 2012 · Source": only the parts this source provides
@@ -199,9 +279,20 @@ public class Details extends Fragment {
         for (String genre : genres) {
             if (genre.trim().isEmpty()) continue;
             Chip chip = (Chip) inflater.inflate(R.layout.item_genre_chip, binding.genresLayout, false);
-            chip.setText(genre.trim());
+            chip.setText(displayGenre(genre.trim()));
+            chip.setOnClickListener(v -> searchGenre(genre));
             binding.genresLayout.addView(chip);
         }
+    }
+
+    // the source's genre page when it has one, otherwise a search for the genre's name
+    private void searchGenre(String genre) {
+        if (novel == null) return;
+        String link = novel.genreLinks == null ? null : novel.genreLinks.get(genre);
+        SearchViewModel search = new ViewModelProvider(requireActivity()).get(SearchViewModel.class);
+        search.searchGenre(displayGenre(genre.trim()), link, novel.sourceId);
+        BottomNavigationView navbar = requireActivity().findViewById(R.id.navbar);
+        if (navbar != null) navbar.setSelectedItemId(R.id.search_fragment);
     }
 
     private void toggleLibrary() {
