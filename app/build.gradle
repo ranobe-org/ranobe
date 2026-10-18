@@ -9,8 +9,8 @@ android {
         applicationId "org.ranobe.ranobe"
         minSdk 23
         targetSdkVersion 36
-        versionCode 17
-        versionName "v0.0.17"
+        versionCode 18
+        versionName "v0.0.18"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -66,6 +66,12 @@ android {
                     "DebugProbesKt.bin",
             ]
         }
+    }
+
+    dependenciesInfo {
+        // the dependency blob is encrypted for Google only, F-Droid/IzzyOnDroid can't verify it
+        includeInApk = false
+        includeInBundle = false
     }
 
     buildFeatures {
