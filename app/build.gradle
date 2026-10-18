@@ -68,6 +68,12 @@ android {
         }
     }
 
+    dependenciesInfo {
+        // the dependency blob is encrypted for Google only, F-Droid/IzzyOnDroid can't verify it
+        includeInApk = false
+        includeInBundle = false
+    }
+
     buildFeatures {
         viewBinding true
         buildConfig true
