@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.snackbar.Snackbar;
@@ -291,8 +290,8 @@ public class Details extends Fragment {
         String link = novel.genreLinks == null ? null : novel.genreLinks.get(genre);
         SearchViewModel search = new ViewModelProvider(requireActivity()).get(SearchViewModel.class);
         search.searchGenre(displayGenre(genre.trim()), link, novel.sourceId);
-        BottomNavigationView navbar = requireActivity().findViewById(R.id.navbar);
-        if (navbar != null) navbar.setSelectedItemId(R.id.search_fragment);
+        // a real navigation (not a tab switch) so back returns to this novel
+        Navigation.findNavController(requireView()).navigate(R.id.details_fragment_to_search);
     }
 
     private void toggleLibrary() {
