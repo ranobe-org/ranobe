@@ -204,4 +204,6 @@
     <string name="recommendations_title">Вам может понравиться</string>
     <string name="search_genre_chip">Жанр: %1$s</string>
     <string name="source_new">НОВЫЙ</string>
+    <string name="read_on_site">Читать на %1$s</string>
+    <string name="read_on_site_desc">Этот источник ведёт разработчик Ranobe. Чтение на сайте напрямую поддерживает авторов.</string>
 </resources>

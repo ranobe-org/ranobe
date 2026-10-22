@@ -9,8 +9,8 @@ android {
         applicationId "org.ranobe.ranobe"
         minSdk 23
         targetSdkVersion 36
-        versionCode 18
-        versionName "v0.0.18"
+        versionCode 19
+        versionName "v0.0.19"
 
         javaCompileOptions {
             annotationProcessorOptions {

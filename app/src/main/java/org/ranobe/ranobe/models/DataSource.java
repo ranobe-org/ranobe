@@ -14,6 +14,8 @@ public class DataSource {
     public boolean isSearchable = true;
     // recently added, Explore shows a "new" badge until the source is tapped once
     public boolean isNew = false;
+    // the source is run by the app's developer, its details page offers to read on the site instead
+    public boolean hasOwnSite = false;
 
     @NonNull
     @Override

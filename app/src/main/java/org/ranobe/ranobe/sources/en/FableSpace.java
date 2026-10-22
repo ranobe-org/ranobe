@@ -43,6 +43,7 @@ public class FableSpace implements Source {
         source.logo = baseUrl + "/favicon.ico";
         source.isActive = true;
         source.isNew = true;
+        source.hasOwnSite = true;
         return source;
     }
 
