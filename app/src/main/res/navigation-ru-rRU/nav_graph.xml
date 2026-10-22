@@ -49,6 +49,9 @@
         <action
             android:id="@id/details_fragment_to_chapters"
             app:destination="@id/chapters_fragment" />
+        <action
+            android:id="@+id/details_fragment_to_search"
+            app:destination="@id/search_fragment" />
     </fragment>
     <fragment
         android:id="@id/chapters_fragment"

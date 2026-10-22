@@ -2,6 +2,7 @@ package org.ranobe.ranobe.ui.details;
 
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -18,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.snackbar.Snackbar;
@@ -31,6 +31,7 @@ import org.ranobe.ranobe.databinding.FragmentDetailsBinding;
 import org.ranobe.ranobe.export.ExportJob;
 import org.ranobe.ranobe.export.ExportQueue;
 import org.ranobe.ranobe.export.ExportText;
+import org.ranobe.ranobe.models.DataSource;
 import org.ranobe.ranobe.models.Novel;
 import org.ranobe.ranobe.sources.Source;
 import org.ranobe.ranobe.sources.SourceManager;
@@ -105,6 +106,22 @@ public class Details extends Fragment {
         if (novel == null) return;
         if (novel.name != null) binding.novelName.setText(novel.name);
         if (novel.cover != null) loadCover(novel.cover);
+        showSitePromo();
+    }
+
+    // only for sources run by the developer
+    private void showSitePromo() {
+        if (novel == null || novel.sourceId <= 0) return;
+        DataSource source = SourceManager.getSource(novel.sourceId).metadata();
+        if (!source.hasOwnSite) return;
+        binding.siteTitle.setText(getString(R.string.read_on_site, source.name));
+        binding.siteCard.setVisibility(View.VISIBLE);
+    }
+
+    private void openOnSite() {
+        if (novel == null || novel.url == null) return;
+        Uri link = Uri.parse(novel.url).buildUpon().appendQueryParameter("utm_source", "ranobe-android").build();
+        startActivity(new Intent(Intent.ACTION_VIEW, link));
     }
 
     private void loadCover(String cover) {
@@ -118,6 +135,7 @@ public class Details extends Fragment {
         binding.readChapter.setOnClickListener(v -> navigateToChapterList());
         binding.addToLib.setOnClickListener(v -> toggleLibrary());
         binding.share.setOnClickListener(v -> shareLink());
+        binding.siteCard.setOnClickListener(v -> openOnSite());
         binding.chaptersCard.setOnClickListener(v -> navigateToChapterList());
         binding.exportCard.setOnClickListener(v -> onExportClick());
         binding.back.setOnClickListener(v -> Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigateUp());
@@ -291,8 +309,8 @@ public class Details extends Fragment {
         String link = novel.genreLinks == null ? null : novel.genreLinks.get(genre);
         SearchViewModel search = new ViewModelProvider(requireActivity()).get(SearchViewModel.class);
         search.searchGenre(displayGenre(genre.trim()), link, novel.sourceId);
-        BottomNavigationView navbar = requireActivity().findViewById(R.id.navbar);
-        if (navbar != null) navbar.setSelectedItemId(R.id.search_fragment);
+        // a real navigation (not a tab switch) so back returns to this novel
+        Navigation.findNavController(requireView()).navigate(R.id.details_fragment_to_search);
     }
 
     private void toggleLibrary() {

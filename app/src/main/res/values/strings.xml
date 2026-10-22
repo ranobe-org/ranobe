@@ -197,4 +197,6 @@
     <string name="recommendations_title">You might also like</string>
     <string name="search_genre_chip">Genre: %1$s</string>
     <string name="source_new">NEW</string>
+    <string name="read_on_site">Read on %1$s</string>
+    <string name="read_on_site_desc">This source is run by the Ranobe developer. Reading on the site supports the authors directly.</string>
 </resources>

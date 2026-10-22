@@ -126,7 +126,9 @@ public class Webnovel implements Source {
 
     @Override
     public List<Novel> novels(int page) throws Exception {
-        Document doc = get(SITE + "/stories/novel?orderBy=1&pageIndex=" + page);
+        // the site's own sort options: 1 popular, 2 recommended, 3 collections, 4 rating, 5 time updated.
+        // Latest updates, so the first page has something new whenever it is opened
+        Document doc = get(SITE + "/stories/novel?orderBy=5&pageIndex=" + page);
         return parseList(doc);
     }
 

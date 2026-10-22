@@ -3,6 +3,7 @@ package org.ranobe.ranobe.sources;
 import org.ranobe.ranobe.sources.en.AllNovel;
 import org.ranobe.ranobe.sources.en.AzyNovel;
 import org.ranobe.ranobe.sources.en.BoxNovel;
+import org.ranobe.ranobe.sources.en.FableSpace;
 import org.ranobe.ranobe.sources.en.FreeWebNovel;
 import org.ranobe.ranobe.sources.en.LightNovelBtt;
 import org.ranobe.ranobe.sources.en.LightNovelHeaven;
@@ -76,6 +77,7 @@ public class SourceManager {
         sources.put(20, RoyalRoad.class);
         sources.put(21, Wattpad.class);
         sources.put(22, Webnovel.class);
+        sources.put(23, FableSpace.class);
 
         return Collections.unmodifiableMap(sources);
     }

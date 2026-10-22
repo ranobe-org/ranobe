@@ -8,6 +8,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
@@ -34,6 +35,20 @@ public class MainActivity extends AppCompatActivity {
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupWithNavController(binding.navbar, navController);
+        // every tab opens at its own root. The default saves and restores a tab's whole back stack,
+        // which brings a half-finished path (a novel, then a search from it) back when returning.
+        binding.navbar.setOnItemSelectedListener(item -> {
+            NavOptions options = new NavOptions.Builder()
+                    .setLaunchSingleTop(true)
+                    .setPopUpTo(navController.getGraph().getStartDestinationId(), false, false)
+                    .build();
+            try {
+                navController.navigate(item.getItemId(), null, options);
+                return true;
+            } catch (IllegalArgumentException e) {
+                return false;
+            }
+        });
 
         if (getIntent().getBooleanExtra(Ranobe.EXTRA_NAVIGATE_TO_LIBRARY, false)) {
             binding.navbar.setSelectedItemId(R.id.library_fragment);
