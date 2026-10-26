@@ -56,7 +56,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:contentDescription="@string/app_name"
-                            android:src="@mipmap/ic_launcher_round" />
+                            android:src="@mipmap/ic_launcher_foreground" />
 
                     </com.google.android.material.card.MaterialCardView>
 

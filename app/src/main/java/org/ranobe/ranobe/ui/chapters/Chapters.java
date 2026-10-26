@@ -351,11 +351,11 @@ public class Chapters extends BottomSheetDialogFragment implements ChapterAdapte
 
     @SuppressLint("NotifyDataSetChanged")
     private void doDownloadAll() {
+        List<Chapter> toDownload = new ArrayList<>();
         for (Chapter chapter : originalItems) {
-            if (!downloadedUrls.contains(chapter.url)) {
-                DownloadService.enqueue(requireContext(), chapter, novel.sourceId);
-            }
+            if (!downloadedUrls.contains(chapter.url)) toDownload.add(chapter);
         }
+        DownloadService.enqueueAll(requireContext(), toDownload, novel.sourceId);
         adapter.notifyDataSetChanged();
     }
 

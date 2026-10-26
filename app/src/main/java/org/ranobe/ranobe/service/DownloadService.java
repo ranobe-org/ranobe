@@ -45,9 +45,23 @@ public class DownloadService extends Service {
     private int completedCount = 0;
 
     public static void enqueue(Context context, Chapter chapter, int sourceId) {
-        if (pendingUrls.contains(chapter.url)) return;
-        pendingUrls.add(chapter.url);
+        if (add(chapter, sourceId)) start(context);
+    }
+
+    /** Queues many chapters but starts the service only once. */
+    public static void enqueueAll(Context context, Iterable<Chapter> chapters, int sourceId) {
+        boolean added = false;
+        for (Chapter chapter : chapters) added |= add(chapter, sourceId);
+        if (added) start(context);
+    }
+
+    private static boolean add(Chapter chapter, int sourceId) {
+        if (!pendingUrls.add(chapter.url)) return false;
         queue.add(new DownloadItem(chapter, sourceId));
+        return true;
+    }
+
+    private static void start(Context context) {
         context.startService(new Intent(context, DownloadService.class));
     }
 
