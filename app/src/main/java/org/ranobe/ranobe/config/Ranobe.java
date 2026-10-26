@@ -113,7 +113,9 @@ public class Ranobe {
     }
 
     public static Float getReaderFont(Context context) {
-        return getSharedPref(context).getFloat(Ranobe.SETTINGS_READER_FONT, 15);
+        float size = getSharedPref(context).getFloat(Ranobe.SETTINGS_READER_FONT, 15);
+        // Slider throws if the value is off-step or outside valueFrom..valueTo
+        return (float) Math.max(10, Math.min(50, Math.round(size)));
     }
 
     public static void saveCurrentSource(int sourceId) {

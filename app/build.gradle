@@ -7,10 +7,10 @@ android {
 
     defaultConfig {
         applicationId "org.ranobe.ranobe"
-        minSdk 23
+        minSdk 24
         targetSdkVersion 36
-        versionCode 19
-        versionName "v0.0.19"
+        versionCode 20
+        versionName "v0.0.20"
 
         javaCompileOptions {
             annotationProcessorOptions {

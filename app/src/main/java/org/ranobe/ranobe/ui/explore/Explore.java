@@ -137,6 +137,10 @@ public class Explore extends Fragment implements SourceAdapter.OnSourceSelected,
     private void navigateToBrowse(int sourceId) {
         NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
 
+        // ignore double taps: the action only exists on the explore destination
+        if (controller.getCurrentDestination() == null
+                || controller.getCurrentDestination().getId() != R.id.explore_fragment) return;
+
         Bundle bundle = new Bundle();
         bundle.putInt(Ranobe.KEY_SOURCE_ID, sourceId);
         controller.navigate(R.id.explore_fragment_to_browse, bundle);
