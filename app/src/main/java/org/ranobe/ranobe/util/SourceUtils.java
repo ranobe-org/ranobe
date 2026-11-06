@@ -1,6 +1,7 @@
 package org.ranobe.ranobe.util;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,12 +41,27 @@ public class SourceUtils {
             // nested blocks are handled on their own (select() counts the block itself too)
             int nested = block.select("p, li, blockquote").size() - (block.is("p, li, blockquote") ? 1 : 0);
             if (nested > 0) continue;
-            String text = block.text().trim();
+            String text = blockText(block);
             if (!text.isEmpty()) appendBlock(out, text);
         }
         // plain text with no paragraph tags at all
         if (out.length() == 0) return root.wholeText().trim();
         return out.toString();
+    }
+
+    // like text(), but a <br> stays a line break instead of turning into a space
+    private static String blockText(Element block) {
+        Element copy = block.clone();
+        // the parser never leaves a NUL in text, so it can't clash with the page's own content
+        for (Element br : copy.select("br")) br.replaceWith(new TextNode("\u0000"));
+        StringBuilder text = new StringBuilder();
+        for (String line : copy.text().split("\u0000")) {
+            String trimmed = line.trim();
+            if (trimmed.isEmpty()) continue;
+            if (text.length() > 0) text.append('\n');
+            text.append(trimmed);
+        }
+        return text.toString();
     }
 
     private static void appendBlock(StringBuilder out, String block) {

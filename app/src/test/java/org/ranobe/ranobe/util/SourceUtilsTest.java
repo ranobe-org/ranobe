@@ -44,6 +44,14 @@ public class SourceUtilsTest {
     }
 
     @Test
+    public void contentFromHtml_KeepsLineBreaksInsideParagraphs() {
+        String html = "<div class='words'><p>Roses are red,<br>violets are blue.<br/><br></p>"
+                + "<p><em>Line</em> one<br> line two</p></div>";
+        String content = SourceUtils.contentFromHtml(Jsoup.parse(html).selectFirst("div.words"));
+        assertEquals("Roses are red,\nviolets are blue.\n\nLine one\nline two", content);
+    }
+
+    @Test
     public void contentFromHtml_FallsBackToText() {
         assertEquals("just text", SourceUtils.contentFromHtml(Jsoup.parse("<div>just text</div>").selectFirst("div")));
     }
